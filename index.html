@@ -385,7 +385,9 @@
                 var key = prompt("Please enter the Wi-Fi Access Key:");
                 if (key != null && key.trim().toUpperCase() === "SAMPARK") {
                     alert("Access Granted! Connecting to Wi-Fi...");
-                    window.location.href = "WIFI:S:Koner's Home;T:WPA;P:Homeof06;H:false;;";
+                    setTimeout(function() {
+                        window.location.href = "WIFI:S:Koner's Home;T:WPA;P:Homeof06;H:false;;";
+                    }, 2000);
                 } else if (key != null) {
                     alert("Incorrect Wi-Fi Access Key. Please try again.");
                 }
