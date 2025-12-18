@@ -2,101 +2,142 @@
 <html lang="bn">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sampark Lodge – মতামত নিশ্চিতকরণ</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>আপনার অভিজ্ঞতা</title>
 
-<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Lato:wght@400;700&display=swap" rel="stylesheet">
 
 <style>
 :root {
-  --gold: #ffd700;
-  --gold-dim: #cfb53b;
-  --text-dark: #ffffff;
-  --text-muted: #ffe6e6;
-  --panel-bg: rgba(61, 12, 12, 0.97);
-  --btn-bg-start: #781d1d;
-  --btn-bg-end: #360a0a;
+    --gold: #ffd700;
+    --gold-dim: #cfb53b;
+    --text-dark: #ffffff;
+    --text-muted: #ffe6e6;
+    --panel-bg: rgba(61,12,12,0.97);
+    --btn-start: #781d1d;
+    --btn-end: #360a0a;
 }
 
 body {
-  margin: 0;
-  background: #0f0f0f url('bg-frame.png') center/cover no-repeat fixed;
-  font-family: 'Lato', sans-serif;
-  display: flex;
-  justify-content: center;
-  padding: 18px;
+    margin: 0;
+    font-family: 'Lato', sans-serif;
+    background: #0f0f0f url('bg-frame.png') center/cover no-repeat fixed;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    padding: 18px;
 }
 
 .wrapper {
-  width: 100%;
-  max-width: 420px;
+    width: 100%;
+    max-width: 420px;
 }
 
 .card {
-  background: var(--panel-bg);
-  padding: 35px 25px;
-  border-radius: 8px;
-  box-shadow: 0 25px 60px rgba(0,0,0,0.9);
-  border: 1px solid rgba(255,215,0,0.2);
-  text-align: center;
-  position: relative;
+    background: var(--panel-bg);
+    padding: 50px 40px 40px;
+    border-radius: 6px;
+    border: 1px solid rgba(255,215,0,0.2);
+    text-align: center;
+    box-shadow:
+        0 25px 60px rgba(0,0,0,0.9),
+        0 0 0 1px rgba(255,215,0,0.3) inset,
+        0 0 25px rgba(255,215,0,0.1);
+
+    background-image:
+        linear-gradient(45deg, rgba(255,215,0,0.03) 25%, transparent 25%, transparent 75%, rgba(255,215,0,0.03) 75%),
+        linear-gradient(45deg, rgba(255,215,0,0.03) 25%, transparent 25%, transparent 75%, rgba(255,215,0,0.03) 75%),
+        radial-gradient(circle, var(--gold) 1.5px, transparent 1.8px),
+        radial-gradient(circle, var(--gold) 1.5px, transparent 1.8px),
+        linear-gradient(to bottom, var(--gold), var(--gold)),
+        linear-gradient(to bottom, var(--gold), var(--gold)),
+        linear-gradient(to bottom, var(--gold), var(--gold)),
+        linear-gradient(to bottom, var(--gold), var(--gold));
+
+    background-position:
+        0 0, 10px 10px,
+        9px 0, calc(100% - 9px) 0,
+        4px 0, 14px 0, calc(100% - 14px), calc(100% - 4px);
+
+    background-size:
+        20px 20px, 20px 20px,
+        20px 12px, 20px 12px,
+        2px 100%, 1px 100%, 1px 100%, 2px 100%;
+    
+    background-repeat:
+        repeat, repeat, repeat-y, repeat-y,
+        no-repeat, no-repeat, no-repeat, no-repeat;
 }
 
-/* Title */
+.card::before {
+    content: '❖';
+    position: absolute;
+    top: -14px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: var(--gold);
+    background: var(--panel-bg);
+    padding: 0 10px;
+    border-radius: 50%;
+    border: 1px solid var(--gold);
+    font-size: 24px;
+}
+
 h1 {
-  font-family: 'Cinzel', serif;
-  color: var(--text-dark);
-  font-size: 26px;
-  margin-bottom: 8px;
+    font-family: 'Cinzel', serif;
+    font-size: 32px;
+    font-weight: 900;
+    color: var(--text-dark);
+    text-shadow: 0 0 8px rgba(255,215,0,0.3);
+    margin-bottom: 8px;
 }
 
 .subtitle {
-  color: var(--text-muted);
-  font-size: 14px;
-  margin-bottom: 25px;
+    font-size: 14px;
+    color: var(--text-muted);
+    margin-bottom: 28px;
 }
 
-/* Buttons */
 .option-btn {
-  display: block;
-  width: 100%;
-  background: linear-gradient(to bottom, var(--btn-bg-start), var(--btn-bg-end));
-  padding: 18px;
-  margin: 14px 0;
-  color: var(--text-dark);
-  font-weight: 700;
-  border-radius: 6px;
-  text-decoration: none;
-  border: 2px solid var(--gold-dim);
-  letter-spacing: 1px;
-  font-size: 15px;
-  cursor: pointer;
-  transition: .2s;
+    background: linear-gradient(to bottom, var(--btn-start), var(--btn-end));
+    color: var(--text-dark);
+    padding: 16px;
+    margin: 12px 0;
+    border-radius: 6px;
+    font-weight: 700;
+    border: 2px solid var(--gold-dim);
+    cursor: pointer;
+    transition: .2s;
 }
 
 .option-btn:hover {
-  transform: scale(1.02);
+    transform: scale(1.03);
 }
 
-/* Password box */
 .pass-box {
-  margin-top: 35px;
-  padding: 18px;
-  border: 1px solid var(--gold-dim);
-  border-radius: 6px;
-  font-size: 22px;
-  font-weight: 700;
-  letter-spacing: 2px;
-  background: rgba(0,0,0,0.2);
-  color: var(--text-dark);
+    margin-top: 35px;
+    padding: 18px;
+    background: rgba(0,0,0,0.25);
+    border: 1px solid var(--gold-dim);
+    border-radius: 6px;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--gold);
 }
 
-/* Blur effect */
+/* Actual Password – highlighted gold */
+.wifi-pass-text {
+    font-weight: 900;
+    color: #ffdf5e;
+    text-shadow: 0 0 8px rgba(255,215,0,0.7), 0 0 14px rgba(255,215,0,0.4);
+}
+
+/* Blur */
 .blur {
-  filter: blur(6px);
-  opacity: 0.5;
-  transition: 0.5s ease;
+    filter: blur(6px);
+    opacity: 0.45;
 }
 </style>
 </head>
@@ -104,55 +145,54 @@ h1 {
 <body>
 
 <div class="wrapper">
-  <div class="card">
+    <div class="card">
 
-    <h1>✨ আপনার অভিজ্ঞতা কি শেয়ার করেছেন ✨</h1>
+        <h1>আপনার অভিজ্ঞতা</h1>
+        <div class="subtitle">দয়া করে নিচের একটি নির্বাচন করুন</div>
 
-    <div class="subtitle">
-      দয়া করে নিচের থেকে একটি নির্বাচন করুন
+        <!-- Option 1 -->
+        <div class="option-btn" onclick="noOpinion()">
+            না, আমি মতামত দিতে চাই না… লজটি আমার খুব একটা ভালো লাগেনি।
+        </div>
+
+        <!-- Option 2 -->
+        <div class="option-btn" onclick="giveOpinion()">
+            দিতে ভুলে গেছি… এখনই লিখে দিচ্ছি, ভালো অভিজ্ঞতা শেয়ার করা উচিত।
+        </div>
+
+        <!-- Option 3 -->
+        <div class="option-btn" onclick="unlockWifi()">
+            হ্যাঁ, আমি আমার মতামত লিখে দিয়েছি — আপনাদের জন্য শুভকামনা রইলো।
+        </div>
+
+        <!-- Wi-Fi Password (blurred) -->
+        <div id="wifiBox" class="pass-box blur">
+            Wi-Fi Password :
+            <span class="wifi-pass-text">guestaccess</span>
+        </div>
+
     </div>
-
-    <!-- Option 1 -->
-    <div class="option-btn" onclick="noFeedback()">
-      না, আমি মতামত দিতে চাই না…  লজটি আমার খুব একটা ভালো লাগেনি।
-    </div>
-
-    <!-- Option 2 -->
-    <div class="option-btn" onclick="goGiveFeedback()">
-      দিতে ভুলে গেছি… এখনই দিচ্ছি, ভালো অভিজ্ঞতা শেয়ার করা উচিত।
-    </div>
-
-    <!-- Option 3 -->
-    <div class="option-btn" onclick="checkKey()">
-      হ্যাঁ, আমি আমার মতামত লিখে দিয়েছি — আপনাদের জন্য শুভকামনা রইলো।
-    </div>
-
-    <!-- WiFi Password (Blurred until unlock) -->
-    <div id="wifiPass" class="pass-box blur">
-      Password : guestaccess
-    </div>
-
-  </div>
 </div>
 
+
 <script>
-function noFeedback() {
-  alert("ঠিক আছে, তবে আমাদের পরিষেবাকে আরও ভালো করতে মতামত খুব গুরুত্বপূর্ণ ছিল।");
+function noOpinion() {
+    alert("ঠিক আছে, তবে আমাদের পরিষেবাকে আরও উন্নত করতে আপনার মতামত খুব মূল্যবান ছিল।");
 }
 
-function goGiveFeedback() {
-  window.location.href = "https://g.page/r/CXIP9_KZOQYBEBI/review";
+function giveOpinion() {
+    window.location.href = "https://g.page/r/CXIP9_KZOQYBEBI/review";
 }
 
-function checkKey() {
-  let key = prompt("Secret Access Key দিন:");
+function unlockWifi() {
+    let key = prompt("Secret Key দিন:");
 
-  if (key && key.trim().toUpperCase() === "SAMPARK") {
-    document.getElementById("wifiPass").classList.remove("blur");
-    alert("ধন্যবাদ! Wi-Fi Password আনলক হয়েছে।");
-  } else {
-    alert("Secret Key ভুল হয়েছে। আবার চেষ্টা করুন।");
-  }
+    if (key && key.trim().toUpperCase() === "SAMPARK") {
+        document.getElementById("wifiBox").classList.remove("blur");
+        alert("ধন্যবাদ! Wi-Fi Password আনলক হয়েছে।");
+    } else {
+        alert("Secret Key ভুল হয়েছে। আবার চেষ্টা করুন।");
+    }
 }
 </script>
 
