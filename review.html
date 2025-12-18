@@ -2,87 +2,44 @@
 <html lang="bn">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>আপনার অভিজ্ঞতা</title>
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Lato:wght@400;700&display=swap" rel="stylesheet">
 
 <style>
+
 :root {
-    --gold: #ffd700;
-    --gold-dim: #cfb53b;
-    --text-dark: #ffffff;
-    --text-muted: #ffe6e6;
-    --panel-bg: rgba(61,12,12,0.97);
-    --btn-start: #781d1d;
-    --btn-end: #360a0a;
+    --gold: #d6b56a;
+    --gold-bright: #ffdd8d;
+    --text-dark: #4a3a1f;
 }
 
 body {
     margin: 0;
+    background: url('page-bg.jpg') center/cover no-repeat fixed;
     font-family: 'Lato', sans-serif;
-    background: #0f0f0f url('bg-frame.png') center/cover no-repeat fixed;
-    min-height: 100vh;
     display: flex;
     justify-content: center;
-    padding: 18px;
+    padding: 25px;
 }
 
-.wrapper {
+.container {
     width: 100%;
-    max-width: 420px;
+    max-width: 430px;
 }
 
 .card {
-    background: var(--panel-bg);
-    padding: 50px 40px 40px;
-    border-radius: 6px;
-    border: 1px solid rgba(255,215,0,0.2);
-    text-align: center;
-    box-shadow:
-        0 25px 60px rgba(0,0,0,0.9),
-        0 0 0 1px rgba(255,215,0,0.3) inset,
-        0 0 25px rgba(255,215,0,0.1);
-
-    background-image:
-        linear-gradient(45deg, rgba(255,215,0,0.03) 25%, transparent 25%, transparent 75%, rgba(255,215,0,0.03) 75%),
-        linear-gradient(45deg, rgba(255,215,0,0.03) 25%, transparent 25%, transparent 75%, rgba(255,215,0,0.03) 75%),
-        radial-gradient(circle, var(--gold) 1.5px, transparent 1.8px),
-        radial-gradient(circle, var(--gold) 1.5px, transparent 1.8px),
-        linear-gradient(to bottom, var(--gold), var(--gold)),
-        linear-gradient(to bottom, var(--gold), var(--gold)),
-        linear-gradient(to bottom, var(--gold), var(--gold)),
-        linear-gradient(to bottom, var(--gold), var(--gold));
-
-    background-position:
-        0 0, 10px 10px,
-        9px 0, calc(100% - 9px) 0,
-        4px 0, 14px 0, calc(100% - 14px), calc(100% - 4px);
-
-    background-size:
-        20px 20px, 20px 20px,
-        20px 12px, 20px 12px,
-        2px 100%, 1px 100%, 1px 100%, 2px 100%;
-    
-    background-repeat:
-        repeat, repeat, repeat-y, repeat-y,
-        no-repeat, no-repeat, no-repeat, no-repeat;
-}
-
-.card::before {
-    content: '❖';
-    position: absolute;
-    top: -14px;
-    left: 50%;
-    transform: translateX(-50%);
-    color: var(--gold);
-    background: var(--panel-bg);
-    padding: 0 10px;
-    border-radius: 50%;
+    background: rgba(255,255,255,0.55);
+    padding: 50px 30px;
+    border-radius: 16px;
     border: 1px solid var(--gold);
-    font-size: 24px;
+    text-align: center;
+    backdrop-filter: blur(4px);
+    box-shadow:
+        0 0 0 3px rgba(255,255,255,0.7),
+        0 0 0 6px rgba(214,181,106,0.7),
+        0 8px 35px rgba(0,0,0,0.25);
 }
 
 h1 {
@@ -90,94 +47,86 @@ h1 {
     font-size: 32px;
     font-weight: 900;
     color: var(--text-dark);
-    text-shadow: 0 0 8px rgba(255,215,0,0.3);
-    margin-bottom: 8px;
+    margin-bottom: 12px;
 }
 
 .subtitle {
-    font-size: 14px;
-    color: var(--text-muted);
-    margin-bottom: 28px;
+    color: #6b5732;
+    margin-bottom: 25px;
 }
 
-.option-btn {
-    background: linear-gradient(to bottom, var(--btn-start), var(--btn-end));
-    color: var(--text-dark);
+.btn {
     padding: 16px;
     margin: 12px 0;
-    border-radius: 6px;
+    background: linear-gradient(to bottom, #f8e5c4, #e7c991, #d9b678);
+    border: 2px solid var(--gold);
+    border-radius: 10px;
+    box-shadow:
+        inset 0 1px 2px #fff,
+        inset 0 -2px 3px rgba(0,0,0,0.16),
+        0 4px 12px rgba(0,0,0,0.17);
     font-weight: 700;
-    border: 2px solid var(--gold-dim);
-    cursor: pointer;
-    transition: .2s;
+    color: #4a3a1f;
 }
 
-.option-btn:hover {
+.btn:hover {
     transform: scale(1.03);
 }
 
 .pass-box {
-    margin-top: 35px;
+    margin-top: 38px;
+    border: 2px solid var(--gold);
     padding: 18px;
-    background: rgba(0,0,0,0.25);
-    border: 1px solid var(--gold-dim);
-    border-radius: 6px;
+    border-radius: 10px;
+    background: rgba(255,255,255,0.35);
     font-size: 20px;
     font-weight: 700;
-    color: var(--gold);
+    color: #6b5732;
 }
 
-/* Actual Password – highlighted gold */
 .wifi-pass-text {
     font-weight: 900;
-    color: #ffdf5e;
-    text-shadow: 0 0 8px rgba(255,215,0,0.7), 0 0 14px rgba(255,215,0,0.4);
+    color: var(--gold-bright);
+    text-shadow: 0 0 9px rgba(255,215,0,0.6);
 }
 
-/* Blur */
 .blur {
     filter: blur(6px);
     opacity: 0.45;
 }
 </style>
-</head>
 
+</head>
 <body>
 
-<div class="wrapper">
+<div class="container">
     <div class="card">
 
         <h1>আপনার অভিজ্ঞতা</h1>
         <div class="subtitle">দয়া করে নিচের একটি নির্বাচন করুন</div>
 
-        <!-- Option 1 -->
-        <div class="option-btn" onclick="noOpinion()">
-            না, আমি মতামত দিতে চাই না… লজটি আমার খুব একটা ভালো লাগেনি।
+        <div class="btn" onclick="noOpinion()">
+            না, আমি মতামত দিতে চাই না… লজটি আমার কাছে খুব ভালো লাগেনি।
         </div>
 
-        <!-- Option 2 -->
-        <div class="option-btn" onclick="giveOpinion()">
-            দিতে ভুলে গেছি… এখনই লিখে দিচ্ছি, ভালো অভিজ্ঞতা শেয়ার করা উচিত।
+        <div class="btn" onclick="giveOpinion()">
+            দিতে ভুলে গেছি… এখনই লিখে দিচ্ছি!
         </div>
 
-        <!-- Option 3 -->
-        <div class="option-btn" onclick="unlockWifi()">
-            হ্যাঁ, আমি আমার মতামত লিখে দিয়েছি — আপনাদের জন্য শুভকামনা রইলো।
+        <div class="btn" onclick="unlockWifi()">
+            হ্যাঁ, আমি আমার মতামত লিখে দিয়েছি।
         </div>
 
-        <!-- Wi-Fi Password (blurred) -->
         <div id="wifiBox" class="pass-box blur">
-            Wi-Fi Password :
-            <span class="wifi-pass-text">guestaccess</span>
+            Wi-Fi Password: <span class="wifi-pass-text">guestaccess</span>
         </div>
 
     </div>
 </div>
 
-
 <script>
 function noOpinion() {
-    alert("ঠিক আছে, তবে আমাদের পরিষেবাকে আরও উন্নত করতে আপনার মতামত খুব মূল্যবান ছিল।");
+    alert("ঠিক আছে, তবে আপনার মতামত আমাদের সেবাকে আরও ভালো করতে সাহায্য করতো।");
 }
 
 function giveOpinion() {
@@ -186,12 +135,11 @@ function giveOpinion() {
 
 function unlockWifi() {
     let key = prompt("Secret Key দিন:");
-
     if (key && key.trim().toUpperCase() === "SAMPARK") {
         document.getElementById("wifiBox").classList.remove("blur");
         alert("ধন্যবাদ! Wi-Fi Password আনলক হয়েছে।");
     } else {
-        alert("Secret Key ভুল হয়েছে। আবার চেষ্টা করুন।");
+        alert("Secret Key ভুল হয়েছে।");
     }
 }
 </script>
