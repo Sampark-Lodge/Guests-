@@ -1,144 +1,113 @@
 <!DOCTYPE html>
 <html lang="bn">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>আপনার অভিজ্ঞতা</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+    <title>Review Confirmation</title>
 
-<style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&display=swap" rel="stylesheet">
 
-body{
-    margin:0;
-    padding:25px;
-    background:#ddd url('assets/bg.png') center/cover no-repeat fixed;
-    display:flex;
-    justify-content:center;
-    font-family:'Lato',sans-serif;
-}
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: url('./assets/bg.png') center/cover no-repeat fixed;
+            font-family: 'Cinzel', serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
 
-.card{
-    width:100%;
-    max-width:430px;
-    padding:45px 25px 35px;
-    border-radius:20px;
-    position:relative;
-    text-align:center;
-    background:rgba(255,255,255,0.55);
-    backdrop-filter:blur(5px);
-    border:1px solid rgba(180,140,70,0.5);
-    box-shadow:
-        0 0 0 3px rgba(255,255,255,0.8),
-        0 0 0 6px rgba(165,130,60,0.4),
-        0 18px 50px rgba(0,0,0,0.28);
-}
+        .frame {
+            width: 92%;
+            max-width: 430px;
+            background: url('./assets/frame.png') center/100% 100% no-repeat;
+            padding: 50px 28px 70px 28px;
+            text-align: center;
+        }
 
-.card::before{
-    content:"";
-    position:absolute;
-    inset:0;
-    background:url('assets/frame.png') center/100% 100% no-repeat;
-    pointer-events:none;
-}
+        h2 {
+            color: #4A3B1A;
+            font-weight: 900;
+            font-size: 28px;
+            margin-bottom: 12px;
+        }
 
-h1{
-    font-family:'Cinzel',serif;
-    font-size:32px;
-    margin-bottom:5px;
-    color:#4e3f21;
-    font-weight:900;
-}
+        .question {
+            font-size: 15px;
+            color: #5a4725;
+            margin-bottom: 35px;
+        }
 
-.sub{
-    color:#7b673b;
-    margin-bottom:30px;
-}
+        .option {
+            background: url('./assets/button.png') center/100% 100% no-repeat;
+            padding: 14px;
+            margin: 10px 0;
+            font-weight: 700;
+            color: #4A3B1A;
+            font-size: 16px;
+        }
 
-.btn{
-    margin:12px 0;
-    padding:16px;
-    border-radius:12px;
-    font-size:18px;
-    font-weight:700;
-    color:#493b20;
-    background:url('assets/button.png') center/100% 100% no-repeat;
-}
+        .blur-box {
+            margin-top: 35px;
+            padding: 20px;
+            background: rgba(255,255,255,0.4);
+            backdrop-filter: blur(6px);
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: 800;
+            color: #a0843a;
+        }
 
-.btn:hover{
-    transform:scale(1.03);
-}
+        .password-text {
+            filter: blur(10px);
+            transition: 0.4s ease-in-out;
+        }
 
-.passbox{
-    margin-top:38px;
-    padding:18px;
-    border-radius:12px;
-    background:rgba(255,255,255,0.45);
-    font-size:20px;
-    font-weight:700;
-    border:2px solid #d6b56a;
-    color:#6d542d;
-}
-
-.blur{
-    filter:blur(6px);
-    opacity:0.45;
-}
-
-.pass{
-    color:#ffdd8d;
-    font-weight:900;
-    text-shadow:0 0 10px rgba(255,215,120,0.8);
-}
-
-</style>
+        .show {
+            filter: blur(0px);
+        }
+    </style>
 </head>
 
 <body>
 
-<div class="card">
+<div class="frame">
 
-<h1>আপনার অভিজ্ঞতা</h1>
-<div class="sub">দয়া করে নিচের একটি নির্বাচন করুন</div>
+    <h2>আপনার অনুভূতি</h2>
+    <div class="question">দয়া করে নিচের একটি নির্বাচন করুন</div>
 
-<div class="btn" onclick="noOpinion()">
-না, আমি মতামত দিতে চাই না…  লজটি ভালো লাগেনি।
-</div>
+    <div class="option" onclick="wrong()">না, আমি মতামত দিতে চাই না…</div>
 
-<div class="btn" onclick="giveOpinion()">
-দিতে ভুলে গেছি… এখনই লিখে দিচ্ছি!
-</div>
+    <div class="option" onclick="later()">দিতে ভুলে গেছি… এখনই দিতে চাই</div>
 
-<div class="btn" onclick="unlockWifi()">
-হ্যাঁ, আমি আমার মতামত লিখে দিয়েছি।
-</div>
+    <div class="option" onclick="showKey()">হ্যাঁ, আমি ইতিমধ্যেই মতামত দিয়েছি</div>
 
-<div id="wifiBox" class="passbox blur">
-Wi-Fi Password: <span class="pass">guestaccess</span>
-</div>
+    <div id="wifiBox" class="blur-box" style="display:none;">
+        Wi-Fi Password : <span id="pass" class="password-text">guestaccess</span>
+    </div>
 
 </div>
 
 <script>
-
-function noOpinion(){
-    alert("ঠিক আছে, তবে আপনার মতামত আমাদের জন্য খুব মূল্যবান ছিল।");
+function wrong() {
+    alert("আপনার মতামত আমাদের জন্য গুরুত্বপূর্ণ। দয়া করে পুনরায় বিবেচনা করুন।");
 }
 
-function giveOpinion(){
-    window.location.href="https://g.page/r/CXIP9_KZOQYBEBI/review";
+function later() {
+    window.location.href = "https://g.page/r/CXIP9_KZOQYBEBI/review";
 }
 
-function unlockWifi(){
-    let key=prompt("Secret Key দিন:");
-    if(key && key.trim().toUpperCase()==="SAMPARK"){
-        document.getElementById("wifiBox").classList.remove("blur");
-        alert("ধন্যবাদ! Wi-Fi Password আনলক হয়েছে।");
-    } else {
-        alert("Secret Key ভুল হয়েছে।");
-    }
+function showKey() {
+    document.getElementById("wifiBox").style.display = "block";
+    setTimeout(() => {
+        document.getElementById("pass").classList.add("show");
+    }, 400);
 }
-
 </script>
 
 </body>
