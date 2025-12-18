@@ -9,139 +9,136 @@
 
 <style>
 
-:root {
-    --gold: #d6b56a;
-    --gold-bright: #ffdd8d;
-    --text-dark: #4a3a1f;
+body{
+    margin:0;
+    padding:25px;
+    background:#ddd url('assets/bg.png') center/cover no-repeat fixed;
+    display:flex;
+    justify-content:center;
+    font-family:'Lato',sans-serif;
 }
 
-body {
-    margin: 0;
-    background: url('page-bg.jpg') center/cover no-repeat fixed;
-    font-family: 'Lato', sans-serif;
-    display: flex;
-    justify-content: center;
-    padding: 25px;
-}
-
-.container {
-    width: 100%;
-    max-width: 430px;
-}
-
-.card {
-    background: rgba(255,255,255,0.55);
-    padding: 50px 30px;
-    border-radius: 16px;
-    border: 1px solid var(--gold);
-    text-align: center;
-    backdrop-filter: blur(4px);
+.card{
+    width:100%;
+    max-width:430px;
+    padding:45px 25px 35px;
+    border-radius:20px;
+    position:relative;
+    text-align:center;
+    background:rgba(255,255,255,0.55);
+    backdrop-filter:blur(5px);
+    border:1px solid rgba(180,140,70,0.5);
     box-shadow:
-        0 0 0 3px rgba(255,255,255,0.7),
-        0 0 0 6px rgba(214,181,106,0.7),
-        0 8px 35px rgba(0,0,0,0.25);
+        0 0 0 3px rgba(255,255,255,0.8),
+        0 0 0 6px rgba(165,130,60,0.4),
+        0 18px 50px rgba(0,0,0,0.28);
 }
 
-h1 {
-    font-family: 'Cinzel', serif;
-    font-size: 32px;
-    font-weight: 900;
-    color: var(--text-dark);
-    margin-bottom: 12px;
+.card::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    background:url('assets/frame.png') center/100% 100% no-repeat;
+    pointer-events:none;
 }
 
-.subtitle {
-    color: #6b5732;
-    margin-bottom: 25px;
+h1{
+    font-family:'Cinzel',serif;
+    font-size:32px;
+    margin-bottom:5px;
+    color:#4e3f21;
+    font-weight:900;
 }
 
-.btn {
-    padding: 16px;
-    margin: 12px 0;
-    background: linear-gradient(to bottom, #f8e5c4, #e7c991, #d9b678);
-    border: 2px solid var(--gold);
-    border-radius: 10px;
-    box-shadow:
-        inset 0 1px 2px #fff,
-        inset 0 -2px 3px rgba(0,0,0,0.16),
-        0 4px 12px rgba(0,0,0,0.17);
-    font-weight: 700;
-    color: #4a3a1f;
+.sub{
+    color:#7b673b;
+    margin-bottom:30px;
 }
 
-.btn:hover {
-    transform: scale(1.03);
+.btn{
+    margin:12px 0;
+    padding:16px;
+    border-radius:12px;
+    font-size:18px;
+    font-weight:700;
+    color:#493b20;
+    background:url('assets/button.png') center/100% 100% no-repeat;
 }
 
-.pass-box {
-    margin-top: 38px;
-    border: 2px solid var(--gold);
-    padding: 18px;
-    border-radius: 10px;
-    background: rgba(255,255,255,0.35);
-    font-size: 20px;
-    font-weight: 700;
-    color: #6b5732;
+.btn:hover{
+    transform:scale(1.03);
 }
 
-.wifi-pass-text {
-    font-weight: 900;
-    color: var(--gold-bright);
-    text-shadow: 0 0 9px rgba(255,215,0,0.6);
+.passbox{
+    margin-top:38px;
+    padding:18px;
+    border-radius:12px;
+    background:rgba(255,255,255,0.45);
+    font-size:20px;
+    font-weight:700;
+    border:2px solid #d6b56a;
+    color:#6d542d;
 }
 
-.blur {
-    filter: blur(6px);
-    opacity: 0.45;
+.blur{
+    filter:blur(6px);
+    opacity:0.45;
 }
+
+.pass{
+    color:#ffdd8d;
+    font-weight:900;
+    text-shadow:0 0 10px rgba(255,215,120,0.8);
+}
+
 </style>
-
 </head>
+
 <body>
 
-<div class="container">
-    <div class="card">
+<div class="card">
 
-        <h1>আপনার অভিজ্ঞতা</h1>
-        <div class="subtitle">দয়া করে নিচের একটি নির্বাচন করুন</div>
+<h1>আপনার অভিজ্ঞতা</h1>
+<div class="sub">দয়া করে নিচের একটি নির্বাচন করুন</div>
 
-        <div class="btn" onclick="noOpinion()">
-            না, আমি মতামত দিতে চাই না… লজটি আমার কাছে খুব ভালো লাগেনি।
-        </div>
+<div class="btn" onclick="noOpinion()">
+না, আমি মতামত দিতে চাই না…  লজটি ভালো লাগেনি।
+</div>
 
-        <div class="btn" onclick="giveOpinion()">
-            দিতে ভুলে গেছি… এখনই লিখে দিচ্ছি!
-        </div>
+<div class="btn" onclick="giveOpinion()">
+দিতে ভুলে গেছি… এখনই লিখে দিচ্ছি!
+</div>
 
-        <div class="btn" onclick="unlockWifi()">
-            হ্যাঁ, আমি আমার মতামত লিখে দিয়েছি।
-        </div>
+<div class="btn" onclick="unlockWifi()">
+হ্যাঁ, আমি আমার মতামত লিখে দিয়েছি।
+</div>
 
-        <div id="wifiBox" class="pass-box blur">
-            Wi-Fi Password: <span class="wifi-pass-text">guestaccess</span>
-        </div>
+<div id="wifiBox" class="passbox blur">
+Wi-Fi Password: <span class="pass">guestaccess</span>
+</div>
 
-    </div>
 </div>
 
 <script>
-function noOpinion() {
-    alert("ঠিক আছে, তবে আপনার মতামত আমাদের সেবাকে আরও ভালো করতে সাহায্য করতো।");
+
+function noOpinion(){
+    alert("ঠিক আছে, তবে আপনার মতামত আমাদের জন্য খুব মূল্যবান ছিল।");
 }
 
-function giveOpinion() {
-    window.location.href = "https://g.page/r/CXIP9_KZOQYBEBI/review";
+function giveOpinion(){
+    window.location.href="https://g.page/r/CXIP9_KZOQYBEBI/review";
 }
 
-function unlockWifi() {
-    let key = prompt("Secret Key দিন:");
-    if (key && key.trim().toUpperCase() === "SAMPARK") {
+function unlockWifi(){
+    let key=prompt("Secret Key দিন:");
+    if(key && key.trim().toUpperCase()==="SAMPARK"){
         document.getElementById("wifiBox").classList.remove("blur");
         alert("ধন্যবাদ! Wi-Fi Password আনলক হয়েছে।");
     } else {
         alert("Secret Key ভুল হয়েছে।");
     }
 }
+
 </script>
 
 </body>
