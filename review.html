@@ -6,72 +6,80 @@
 
     <title>Review Confirmation</title>
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&display=swap" rel="stylesheet">
 
     <style>
+
         body {
             margin: 0;
             padding: 0;
-            background: url('./assets/bg.png') center/cover no-repeat fixed;
+            background: white;  /* Outside white */
             font-family: 'Cinzel', serif;
             display: flex;
-            align-items: center;
             justify-content: center;
+            align-items: center;
             min-height: 100vh;
         }
 
+        /* Frame with bg inside */
         .frame {
             width: 92%;
             max-width: 430px;
-            background: url('./assets/frame.png') center/100% 100% no-repeat;
-            padding: 50px 28px 70px 28px;
+
+            background:
+                url('./assets/bg.png') center/cover no-repeat,
+                url('./assets/frame.png') center/100% 100% no-repeat;
+
+            padding: 60px 28px 80px 28px;
             text-align: center;
         }
 
         h2 {
-            color: #4A3B1A;
+            font-size: 30px;
             font-weight: 900;
-            font-size: 28px;
-            margin-bottom: 12px;
+            color: #4a3b1a;
+            margin-bottom: 15px;
         }
 
         .question {
-            font-size: 15px;
+            font-size: 16px;
             color: #5a4725;
             margin-bottom: 35px;
         }
 
         .option {
             background: url('./assets/button.png') center/100% 100% no-repeat;
-            padding: 14px;
-            margin: 10px 0;
+            padding: 16px;
+            margin: 12px auto;
+            width: 100%;
             font-weight: 700;
-            color: #4A3B1A;
-            font-size: 16px;
+            font-size: 17px;
+            color: #4a3b1a;
         }
 
         .blur-box {
-            margin-top: 35px;
+            margin-top: 40px;
             padding: 20px;
-            background: rgba(255,255,255,0.4);
+            background: rgba(255,255,255,0.5);
             backdrop-filter: blur(6px);
             border-radius: 10px;
-            font-size: 18px;
-            font-weight: 800;
+            font-size: 20px;
+            font-weight: 900;
             color: #a0843a;
+            display: none;
         }
 
         .password-text {
-            filter: blur(10px);
+            filter: blur(12px);
             transition: 0.4s ease-in-out;
         }
 
         .show {
             filter: blur(0px);
         }
+
     </style>
+
 </head>
 
 <body>
@@ -83,31 +91,43 @@
 
     <div class="option" onclick="wrong()">না, আমি মতামত দিতে চাই না…</div>
 
-    <div class="option" onclick="later()">দিতে ভুলে গেছি… এখনই দিতে চাই</div>
+    <div class="option" onclick="later()">দিতে ভুলে গেছি, এখনই দেব</div>
 
-    <div class="option" onclick="showKey()">হ্যাঁ, আমি ইতিমধ্যেই মতামত দিয়েছি</div>
+    <div class="option" onclick="verifyKey()">হ্যাঁ, আমি ইতিমধ্যেই দিয়েছি</div>
 
-    <div id="wifiBox" class="blur-box" style="display:none;">
+    <div id="wifiBox" class="blur-box">
         Wi-Fi Password : <span id="pass" class="password-text">guestaccess</span>
     </div>
 
 </div>
 
 <script>
+
 function wrong() {
-    alert("আপনার মতামত আমাদের জন্য গুরুত্বপূর্ণ। দয়া করে পুনরায় বিবেচনা করুন।");
+    alert("আপনার মতামত আমাদের জন্য অত্যন্ত গুরুত্বপূর্ণ। দয়া করে পুনরায় ভাবুন।");
 }
 
 function later() {
     window.location.href = "https://g.page/r/CXIP9_KZOQYBEBI/review";
 }
 
-function showKey() {
-    document.getElementById("wifiBox").style.display = "block";
-    setTimeout(() => {
-        document.getElementById("pass").classList.add("show");
-    }, 400);
+function verifyKey() {
+    let key = prompt("Secret Key দিন:");
+
+    if (!key) return;
+
+    if (key.trim().toUpperCase() === "SAMPARK") {
+        document.getElementById("wifiBox").style.display = "block";
+
+        setTimeout(() => {
+            document.getElementById("pass").classList.add("show");
+        }, 300);
+
+    } else {
+        alert("ভুল Key। আবার চেষ্টা করুন।");
+    }
 }
+
 </script>
 
 </body>
