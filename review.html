@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sampark Lodge – মতামত নিশ্চিতকরণ</title>
+
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --gold: #ffd700;
+  --gold-dim: #cfb53b;
+  --text-dark: #ffffff;
+  --text-muted: #ffe6e6;
+  --panel-bg: rgba(61, 12, 12, 0.97);
+  --btn-bg-start: #781d1d;
+  --btn-bg-end: #360a0a;
+}
+
+body {
+  margin: 0;
+  background: #0f0f0f url('bg-frame.png') center/cover no-repeat fixed;
+  font-family: 'Lato', sans-serif;
+  display: flex;
+  justify-content: center;
+  padding: 18px;
+}
+
+.wrapper {
+  width: 100%;
+  max-width: 420px;
+}
+
+.card {
+  background: var(--panel-bg);
+  padding: 35px 25px;
+  border-radius: 8px;
+  box-shadow: 0 25px 60px rgba(0,0,0,0.9);
+  border: 1px solid rgba(255,215,0,0.2);
+  text-align: center;
+  position: relative;
+}
+
+/* Title */
+h1 {
+  font-family: 'Cinzel', serif;
+  color: var(--text-dark);
+  font-size: 26px;
+  margin-bottom: 8px;
+}
+
+.subtitle {
+  color: var(--text-muted);
+  font-size: 14px;
+  margin-bottom: 25px;
+}
+
+/* Buttons */
+.option-btn {
+  display: block;
+  width: 100%;
+  background: linear-gradient(to bottom, var(--btn-bg-start), var(--btn-bg-end));
+  padding: 18px;
+  margin: 14px 0;
+  color: var(--text-dark);
+  font-weight: 700;
+  border-radius: 6px;
+  text-decoration: none;
+  border: 2px solid var(--gold-dim);
+  letter-spacing: 1px;
+  font-size: 15px;
+  cursor: pointer;
+  transition: .2s;
+}
+
+.option-btn:hover {
+  transform: scale(1.02);
+}
+
+/* Password box */
+.pass-box {
+  margin-top: 35px;
+  padding: 18px;
+  border: 1px solid var(--gold-dim);
+  border-radius: 6px;
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  background: rgba(0,0,0,0.2);
+  color: var(--text-dark);
+}
+
+/* Blur effect */
+.blur {
+  filter: blur(6px);
+  opacity: 0.5;
+  transition: 0.5s ease;
+}
+</style>
+</head>
+
+<body>
+
+<div class="wrapper">
+  <div class="card">
+
+    <h1>মতামত নিশ্চিতকরণ</h1>
+
+    <div class="subtitle">
+      দয়া করে নিচের থেকে একটি নির্বাচন করুন
+    </div>
+
+    <!-- Option 1 -->
+    <div class="option-btn" onclick="noFeedback()">
+      না, আমি মতামত দিতে চাই না… হয়তো লজটি আমার খুব একটা ভালো লাগেনি।
+    </div>
+
+    <!-- Option 2 -->
+    <div class="option-btn" onclick="goGiveFeedback()">
+      দিতে ভুলে গেছি… এখনই লিখে দিচ্ছি, ভালো অভিজ্ঞতা শেয়ার করা উচিত।
+    </div>
+
+    <!-- Option 3 -->
+    <div class="option-btn" onclick="checkKey()">
+      হ্যাঁ, আমি আমার মতামত লিখে দিয়েছি — আপনাদের জন্য শুভকামনা রইলো।
+    </div>
+
+    <!-- WiFi Password (Blurred until unlock) -->
+    <div id="wifiPass" class="pass-box blur">
+      guestaccess
+    </div>
+
+  </div>
+</div>
+
+<script>
+function noFeedback() {
+  alert("ঠিক আছে, তবে আমাদের পরিষেবাকে আরও ভালো করতে মতামত খুব গুরুত্বপূর্ণ ছিল।");
+}
+
+function goGiveFeedback() {
+  window.location.href = "https://g.page/r/CXIP9_KZOQYBEBI/review";
+}
+
+function checkKey() {
+  let key = prompt("Secret Access Key দিন:");
+
+  if (key && key.trim().toUpperCase() === "SAMPARK") {
+    document.getElementById("wifiPass").classList.remove("blur");
+    alert("ধন্যবাদ! Wi-Fi Password আনলক হয়েছে।");
+  } else {
+    alert("Secret Key ভুল হয়েছে। আবার চেষ্টা করুন।");
+  }
+}
+</script>
+
+</body>
+</html>
