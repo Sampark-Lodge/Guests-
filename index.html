@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SAMPARK LODGE</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -10,19 +10,19 @@
 
     <style>
         :root {
-            /* Midnight Royal Palette */
+            /* Natural White & Gold Palette */
             --gold: #d4af37;        /* Classic metallic gold */
-            --gold-bright: #f9d765; /* Bright gold for highlights */
-            --gold-dark: #8c7020;   /* Deep bronze gold */
+            --gold-bright: #ffd700; /* Bright gold for highlights */
+            --gold-dark: #8c7020;   /* Deep bronze gold for text */
             
-            --text-main: #ffffff;   /* Pure white for reading */
-            --text-gold: #d4af37;   /* Gold text */
+            --text-main: #1a1a1a;   /* Charcoal Black for contrast on white */
+            --text-muted: #444444;  /* Dark grey for subtitles */
             
-            /* Dark Glass Effect */
-            --glass-bg: rgba(10, 12, 16, 0.88); 
-            --glass-border: rgba(212, 175, 55, 0.3);
+            /* Light Glass Effect for White BG */
+            --glass-bg: rgba(255, 255, 255, 0.4); /* Subtle white tint for readability */
+            --glass-border: rgba(212, 175, 55, 0.6);
             
-            --body-bg: #050505;
+            --body-bg: #ffffff;
         }
 
         * {
@@ -40,6 +40,7 @@
             align-items: center;
             justify-content: center;
             padding: 20px;
+            -webkit-font-smoothing: antialiased;
         }
 
         .phone-frame {
@@ -52,29 +53,28 @@
         .card {
             background-image: url('Page-bg.jpg');
             background-position: center center;
-            background-size: 100% 100%;
+            background-size: cover; 
             background-repeat: no-repeat;
             
             border-radius: 12px;
             padding: 15px; 
             text-align: center;
-            /* Outer glow for dark mode */
             box-shadow: 
-                0 20px 50px rgba(0,0,0,0.8),
-                0 0 0 1px rgba(212, 175, 55, 0.15);
+                0 20px 50px rgba(0,0,0,0.1),
+                0 0 0 1px rgba(212, 175, 55, 0.3);
             position: relative;
             overflow: hidden;
         }
 
-        /* The Inner "Dark Glass" overlay */
+        /* The Inner Overlay - Subtle light wash */
         .inner-glass {
             background: var(--glass-bg);
-            backdrop-filter: blur(4px); 
             border: 1px solid var(--glass-border);
             border-radius: 8px;
             padding: 40px 25px;
             position: relative;
-            box-shadow: inset 0 0 40px rgba(0,0,0,0.8);
+            backdrop-filter: blur(2px); /* Slight blur to help text readability */
+            -webkit-backdrop-filter: blur(2px);
         }
 
         /* Decorative Gold Frame inside */
@@ -88,12 +88,10 @@
             border: 1px solid var(--gold);
             border-radius: 5px;
             pointer-events: none;
-            opacity: 0.2;
-            mask-image: linear-gradient(to bottom, black 40%, transparent 50%, black 60%);
-            -webkit-mask-image: linear-gradient(to bottom, black 40%, transparent 50%, black 60%);
+            opacity: 0.4;
         }
 
-        /* Floating Top Icon - Dark Mode Style */
+        /* Floating Top Icon - Light Mode Style */
         .top-icon {
             position: absolute;
             top: -22px;
@@ -101,16 +99,16 @@
             transform: translateX(-50%);
             width: 44px;
             height: 44px;
-            background: #0a0c10;
+            background: #ffffff;
             border: 2px solid var(--gold);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: var(--gold);
+            color: var(--gold-dark);
             font-size: 22px;
             z-index: 10;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
 
         .header-section {
@@ -123,17 +121,19 @@
             font-family: 'Cinzel', serif;
             font-weight: 900;
             font-size: 36px;
+            /* Contrast color for white bg */
             color: var(--text-main);
+            
             text-transform: uppercase;
             letter-spacing: 2px;
             line-height: 1.1;
             margin-bottom: 10px;
             margin-top: 15px;
-            /* Gold Gradient Text */
-            background: -webkit-linear-gradient(to bottom, #fff, var(--gold));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+            
+            /* Golden Shadow behind the title */
+            text-shadow: 3px 3px 6px rgba(212, 175, 55, 0.6);
+            /* ADDED: Golden border around the letters */
+            -webkit-text-stroke: 1px var(--gold);
         }
 
         /* Artistic Divider */
@@ -156,20 +156,21 @@
         .ornament span {
             font-size: 18px;
             line-height: 1;
-            color: var(--gold-bright);
+            color: var(--gold-dark);
         }
 
         .subtitle {
             font-family: 'Cinzel', serif;
             font-size: 11px;
-            color: #aaaaaa; /* Light grey for subtext */
+            color: var(--text-muted);
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 2px;
-            border: 1px solid rgba(212, 175, 55, 0.3);
+            border: 1px solid var(--gold);
             padding: 5px 10px;
             display: inline-block;
             border-radius: 4px;
+            background-color: rgba(255, 255, 255, 0.7);
         }
 
         .button-group {
@@ -180,7 +181,7 @@
             z-index: 2;
         }
 
-        /* Dark Mode Artistic Button */
+        /* Light Mode Artistic Button */
         .btn {
             display: flex;
             align-items: center;
@@ -192,27 +193,28 @@
             font-size: 15px;
             letter-spacing: 1px;
             text-transform: uppercase;
-            color: var(--gold-bright);
+            /* Dark gold text for visibility */
+            color: var(--gold-dark);
             
-            /* Dark transparent background */
-            background: linear-gradient(to right, rgba(20,20,20,0.9), rgba(40,40,40,0.8));
-            border: 1px solid var(--gold-dark);
+            /* Light semi-transparent background */
+            background: linear-gradient(to right, rgba(255,255,255,0.9), rgba(250,250,250,0.8));
+            border: 1px solid var(--gold);
             
             /* Double border illusion */
-            box-shadow: 0 0 0 3px rgba(10,12,16,1), 0 0 0 4px var(--gold-dark);
+            box-shadow: 0 0 0 3px rgba(255,255,255,0.5), 0 0 0 4px var(--gold);
             
             border-radius: 2px;
             position: relative;
             transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-            margin: 4px; /* Space for the outline offset */
+            margin: 4px;
         }
 
         /* Button Hover State */
         .btn:hover {
             background: var(--gold);
-            color: #000; /* Text turns black on gold bg */
-            border-color: var(--gold);
-            box-shadow: 0 0 0 3px rgba(10,12,16,1), 0 0 0 4px var(--gold-bright), 0 0 20px rgba(212, 175, 55, 0.4);
+            color: #ffffff;
+            border-color: var(--gold-dark);
+            box-shadow: 0 0 0 3px rgba(255,255,255,0.8), 0 0 0 4px var(--gold-bright), 0 5px 15px rgba(212, 175, 55, 0.3);
             transform: translateY(-2px);
         }
         
@@ -220,7 +222,7 @@
             margin-right: 10px;
             font-style: normal;
             font-size: 1.1em;
-            filter: drop-shadow(0 1px 2px rgba(0,0,0,0.5));
+            /* Removed drop shadow from emoji to keep it clean on white */
         }
 
         .footer {
@@ -232,6 +234,10 @@
             font-weight: 700;
             position: relative;
             z-index: 2;
+            padding: 5px 10px;
+            border-radius: 4px;
+            display: inline-block;
+            text-shadow: 0 1px 0 rgba(255,255,255,0.5);
         }
         
         .footer::before {
@@ -239,7 +245,7 @@
             display: block;
             font-size: 20px;
             margin-bottom: 5px;
-            color: var(--gold-dark);
+            color: var(--gold);
             opacity: 0.8;
         }
     </style>
@@ -250,7 +256,7 @@
     <div class="phone-frame">
         <div class="card">
             
-            <!-- This container holds the content and provides the DARK overlay -->
+            <!-- This container holds the content and provides the LIGHT overlay -->
             <div class="inner-glass">
                 
                 <div class="top-icon">❖</div>
@@ -263,11 +269,11 @@
 
                 <div class="button-group">
 
-                    <a href="https://www.google.com/maps/dir/?api=1&destination=Sampark+Lodge+Chinsurah+Hooghly" class="btn" target="_blank">
+                    <a href="https://www.google.com/maps/dir/?api=1&destination=Sampark+Lodge+Chinsurah+Hooghly" class="btn" target="_blank" rel="noopener noreferrer">
                         <i>🗺️</i> Get Directions
                     </a>
 
-                    <a href="https://g.page/r/CXIP9_KZOQYBEBI/review" class="btn" target="_blank">
+                    <a href="https://g.page/r/CXIP9_KZOQYBEBI/review" class="btn" target="_blank" rel="noopener noreferrer">
                         <i>⭐</i> Leave a Review
                     </a>
 
@@ -295,3 +301,6 @@
 
 </body>
 </html>
+
+
+
