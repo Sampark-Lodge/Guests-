@@ -6,20 +6,23 @@
     <title>SAMPARK LODGE</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;900&family=Lato:wght@400;700&display=swap" rel="stylesheet">
 
     <style>
         :root {
-            /* Updated Palette for White & Gold Theme */
-            --gold: #c59d00;      /* Darker, metallic gold for better visibility on white */
-            --gold-bright: #ffd700; /* Brighter gold for accents */
-            --gold-dim: #b8860b;
-            --text-dark: #222222; /* Deep charcoal for high contrast */
-            --text-muted: #555555;
-            --panel-bg: rgba(255, 255, 255, 0.95); /* Slight transparency if needed */
-            --btn-bg-start: #ffffff;
-            --btn-bg-end: #fffbf0;
-            --shadow-color: rgba(184, 134, 11, 0.15);
+            /* Midnight Royal Palette */
+            --gold: #d4af37;        /* Classic metallic gold */
+            --gold-bright: #f9d765; /* Bright gold for highlights */
+            --gold-dark: #8c7020;   /* Deep bronze gold */
+            
+            --text-main: #ffffff;   /* Pure white for reading */
+            --text-gold: #d4af37;   /* Gold text */
+            
+            /* Dark Glass Effect */
+            --glass-bg: rgba(10, 12, 16, 0.88); 
+            --glass-border: rgba(212, 175, 55, 0.3);
+            
+            --body-bg: #050505;
         }
 
         * {
@@ -31,13 +34,12 @@
 
         body {
             font-family: 'Lato', sans-serif;
-            /* Plain white background behind the main window */
-            background-color: #ffffff; 
+            background-color: var(--body-bg); 
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 15px;
+            padding: 20px;
         }
 
         .phone-frame {
@@ -46,45 +48,73 @@
             position: relative;
         }
 
+        /* The Main Card containing the Background Image */
         .card {
-            background-color: #ffffff;
-            /* Background Image moved to the main window (Card) */
             background-image: url('Page-bg.jpg');
             background-position: center center;
-            /* CHANGED: Forces the image to fit 100% height and width of the card */
             background-size: 100% 100%;
             background-repeat: no-repeat;
             
-            border-radius: 8px;
-            padding: 50px 40px 40px 40px;
+            border-radius: 12px;
+            padding: 15px; 
             text-align: center;
-            /* Softer, golden shadow */
-            box-shadow:
-                0 20px 50px rgba(0, 0, 0, 0.1),
-                0 0 0 1px rgba(184, 134, 11, 0.2) inset;
-            border: 1px solid rgba(184, 134, 11, 0.3);
+            /* Outer glow for dark mode */
+            box-shadow: 
+                0 20px 50px rgba(0,0,0,0.8),
+                0 0 0 1px rgba(212, 175, 55, 0.15);
             position: relative;
+            overflow: hidden;
         }
 
-        .card::before {
-            content: '❖';
+        /* The Inner "Dark Glass" overlay */
+        .inner-glass {
+            background: var(--glass-bg);
+            backdrop-filter: blur(4px); 
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+            padding: 40px 25px;
+            position: relative;
+            box-shadow: inset 0 0 40px rgba(0,0,0,0.8);
+        }
+
+        /* Decorative Gold Frame inside */
+        .inner-glass::after {
+            content: '';
             position: absolute;
-            top: -16px;
+            top: 5px;
+            left: 5px;
+            right: 5px;
+            bottom: 5px;
+            border: 1px solid var(--gold);
+            border-radius: 5px;
+            pointer-events: none;
+            opacity: 0.2;
+            mask-image: linear-gradient(to bottom, black 40%, transparent 50%, black 60%);
+            -webkit-mask-image: linear-gradient(to bottom, black 40%, transparent 50%, black 60%);
+        }
+
+        /* Floating Top Icon - Dark Mode Style */
+        .top-icon {
+            position: absolute;
+            top: -22px;
             left: 50%;
             transform: translateX(-50%);
-            font-size: 26px;
-            color: var(--gold);
-            background: #fff;
-            padding: 0 12px;
+            width: 44px;
+            height: 44px;
+            background: #0a0c10;
+            border: 2px solid var(--gold);
             border-radius: 50%;
-            border: 1px solid var(--gold);
-            box-shadow: 0 4px 10px rgba(184, 134, 11, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--gold);
+            font-size: 22px;
             z-index: 10;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
         }
 
         .header-section {
-            margin-bottom: 30px;
-            /* Optional: text shadow to ensure readability over image */
+            margin-bottom: 35px;
             position: relative;
             z-index: 2;
         }
@@ -92,98 +122,125 @@
         h1 {
             font-family: 'Cinzel', serif;
             font-weight: 900;
-            font-size: clamp(30px, 8.5vw, 42px);
-            color: var(--text-dark);
+            font-size: 36px;
+            color: var(--text-main);
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 2px;
             line-height: 1.1;
-            padding-bottom: 15px;
-            text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.8);
+            margin-bottom: 10px;
+            margin-top: 15px;
+            /* Gold Gradient Text */
+            background: -webkit-linear-gradient(to bottom, #fff, var(--gold));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.5);
         }
 
-        .art-divider {
+        /* Artistic Divider */
+        .ornament {
             display: flex;
+            align-items: center;
             justify-content: center;
-            gap: 10px;
-            margin: 5px auto 15px auto;
-            width: 80%;
+            gap: 15px;
+            margin: 0 auto 15px auto;
+            color: var(--gold);
+            font-family: 'Cinzel', serif;
         }
-
-        .art-divider::before,
-        .art-divider::after {
+        .ornament::before, .ornament::after {
             content: '';
+            display: block;
+            width: 40px;
             height: 1px;
-            flex-grow: 1;
             background: linear-gradient(90deg, transparent, var(--gold), transparent);
         }
-
-        .art-divider span {
-            color: var(--gold);
-            font-size: 14px;
+        .ornament span {
+            font-size: 18px;
+            line-height: 1;
+            color: var(--gold-bright);
         }
 
         .subtitle {
             font-family: 'Cinzel', serif;
-            font-size: 12px;
-            color: var(--text-muted);
+            font-size: 11px;
+            color: #aaaaaa; /* Light grey for subtext */
             font-weight: 700;
-            padding: 8px 16px;
-            border: 1px solid var(--gold-dim);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            padding: 5px 10px;
             display: inline-block;
-            background: rgba(255, 255, 255, 0.9); /* Solid background for readability */
-            margin-bottom: 10px;
             border-radius: 4px;
         }
 
         .button-group {
-            margin-top: 25px;
             display: flex;
             flex-direction: column;
-            gap: 20px;
+            gap: 18px;
             position: relative;
             z-index: 2;
         }
 
+        /* Dark Mode Artistic Button */
         .btn {
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 18px 25px;
-            border-radius: 6px;
+            padding: 16px 20px;
             text-decoration: none;
+            font-family: 'Cinzel', serif;
             font-weight: 700;
-            font-size: 16px;
-            letter-spacing: 1.5px;
+            font-size: 15px;
+            letter-spacing: 1px;
             text-transform: uppercase;
-            background: linear-gradient(to bottom, var(--btn-bg-start), var(--btn-bg-end));
-            color: var(--text-dark);
+            color: var(--gold-bright);
+            
+            /* Dark transparent background */
+            background: linear-gradient(to right, rgba(20,20,20,0.9), rgba(40,40,40,0.8));
+            border: 1px solid var(--gold-dark);
+            
+            /* Double border illusion */
+            box-shadow: 0 0 0 3px rgba(10,12,16,1), 0 0 0 4px var(--gold-dark);
+            
+            border-radius: 2px;
             position: relative;
-            border: 1px solid var(--gold);
-            cursor: pointer;
-            transition: all 0.3s ease;
-            overflow: hidden;
-            box-shadow: 0 4px 6px rgba(184, 134, 11, 0.1);
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            margin: 4px; /* Space for the outline offset */
         }
 
+        /* Button Hover State */
         .btn:hover {
+            background: var(--gold);
+            color: #000; /* Text turns black on gold bg */
+            border-color: var(--gold);
+            box-shadow: 0 0 0 3px rgba(10,12,16,1), 0 0 0 4px var(--gold-bright), 0 0 20px rgba(212, 175, 55, 0.4);
             transform: translateY(-2px);
-            border-color: var(--gold-dim);
-            background: linear-gradient(to bottom, #fff, #f0e6c0);
-            box-shadow: 0 8px 15px rgba(184, 134, 11, 0.2);
+        }
+        
+        .btn i {
+            margin-right: 10px;
+            font-style: normal;
+            font-size: 1.1em;
+            filter: drop-shadow(0 1px 2px rgba(0,0,0,0.5));
         }
 
         .footer {
             margin-top: 45px;
             font-family: 'Cinzel', serif;
-            font-size: 11px;
+            font-size: 10px;
             letter-spacing: 3px;
-            color: var(--gold-dim);
-            opacity: 1;
+            color: var(--gold-dark);
             font-weight: 700;
-            padding-top: 20px;
             position: relative;
             z-index: 2;
-            text-shadow: 0 1px 2px rgba(255,255,255,0.8);
+        }
+        
+        .footer::before {
+            content: '❧';
+            display: block;
+            font-size: 20px;
+            margin-bottom: 5px;
+            color: var(--gold-dark);
+            opacity: 0.8;
         }
     </style>
 </head>
@@ -192,45 +249,47 @@
 
     <div class="phone-frame">
         <div class="card">
+            
+            <!-- This container holds the content and provides the DARK overlay -->
+            <div class="inner-glass">
+                
+                <div class="top-icon">❖</div>
 
-            <div class="header-section">
-                <h1>Sampark Lodge</h1>
-                <div class="art-divider"><span>♦</span></div>
-                <div class="subtitle">Comfortable Stay • Easy Access • Extra Parking</div>
+                <div class="header-section">
+                    <h1>Sampark Lodge</h1>
+                    <div class="ornament"><span>♦</span></div>
+                    <div class="subtitle">Comfort • Access • Parking</div>
+                </div>
+
+                <div class="button-group">
+
+                    <a href="https://www.google.com/maps/dir/?api=1&destination=Sampark+Lodge+Chinsurah+Hooghly" class="btn" target="_blank">
+                        <i>🗺️</i> Get Directions
+                    </a>
+
+                    <a href="https://g.page/r/CXIP9_KZOQYBEBI/review" class="btn" target="_blank">
+                        <i>⭐</i> Leave a Review
+                    </a>
+
+                    <a href="tel:9830779721" class="btn">
+                        <i>📞</i> Call 9830779721
+                    </a>
+
+                    <a href="tel:7003642977" class="btn">
+                        <i>📞</i> Call 7003642977
+                    </a>
+
+                    <a href="review.html" class="btn">
+                        <i>📶</i> Connect to Wi-Fi
+                    </a>
+
+                </div>
+
+                <div class="footer">
+                    THANK YOU FOR STAYING WITH US
+                </div>
+
             </div>
-
-            <div class="button-group">
-
-                <a href="https://www.google.com/maps/dir/?api=1&destination=Sampark+Lodge+Chinsurah+Hooghly" class="btn" target="_blank">
-                    Get Directions
-                </a>
-
-                <a href="https://g.page/r/CXIP9_KZOQYBEBI/review" class="btn" target="_blank">
-                    Leave a Review
-                </a>
-
-                <a href="tel:9830779721" class="btn">
-                    Call 9830779721
-                </a>
-
-                <a href="tel:7003642977" class="btn">
-                    Call 7003642977
-                </a>
-
-                <!-- 
-                   Note: This link points to review.html. 
-                   Ensure this file exists in your hosting environment.
-                -->
-                <a href="review.html" class="btn">
-                    Connect to Wi-Fi
-                </a>
-
-            </div>
-
-            <div class="footer">
-                THANK YOU FOR STAYING WITH US
-            </div>
-
         </div>
     </div>
 
