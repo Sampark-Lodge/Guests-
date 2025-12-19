@@ -16,7 +16,7 @@
             --gold-dim: #b8860b;
             --text-dark: #222222; /* Deep charcoal for high contrast */
             --text-muted: #555555;
-            --panel-bg: rgba(255, 255, 255, 0.98);
+            --panel-bg: rgba(255, 255, 255, 0.95); /* Slight transparency if needed */
             --btn-bg-start: #ffffff;
             --btn-bg-end: #fffbf0;
             --shadow-color: rgba(184, 134, 11, 0.15);
@@ -31,13 +31,8 @@
 
         body {
             font-family: 'Lato', sans-serif;
-            background-color: #f7f7f7;
-            /* Background Image linked - ensuring cover size */
-            background-image: url('Page-bg.jpg');
-            background-position: center center;
-            background-repeat: no-repeat;
-            background-size: cover;
-            background-attachment: fixed;
+            /* Plain white background behind the main window */
+            background-color: #ffffff; 
             min-height: 100vh;
             display: flex;
             align-items: center;
@@ -52,35 +47,19 @@
         }
 
         .card {
-            background-color: var(--panel-bg);
-            /* Subtle Gold Patterns on White */
-            background-image:
-                linear-gradient(45deg, rgba(197, 157, 0, 0.05) 25%, transparent 25%, transparent 75%, rgba(197, 157, 0, 0.05) 75%, rgba(197, 157, 0, 0.05)),
-                linear-gradient(45deg, rgba(197, 157, 0, 0.05) 25%, transparent 25%, transparent 75%, rgba(197, 157, 0, 0.05) 75%, rgba(197, 157, 0, 0.05)),
-                radial-gradient(circle, var(--gold) 1px, transparent 1.2px),
-                radial-gradient(circle, var(--gold) 1px, transparent 1.2px),
-                linear-gradient(to bottom, var(--gold), var(--gold)),
-                linear-gradient(to bottom, var(--gold), var(--gold)),
-                linear-gradient(to bottom, var(--gold), var(--gold)),
-                linear-gradient(to bottom, var(--gold), var(--gold));
-            background-position:
-                0 0, 10px 10px,
-                9px 0, calc(100% - 9px) 0,
-                4px 0, 14px 0, calc(100% - 14px) 0, calc(100% - 4px) 0;
-            background-size:
-                20px 20px, 20px 20px,
-                20px 12px, 20px 12px,
-                2px 100%, 1px 100%, 1px 100%, 2px 100%;
-            background-repeat:
-                repeat, repeat,
-                repeat-y, repeat-y,
-                no-repeat, no-repeat, no-repeat, no-repeat;
+            background-color: #ffffff;
+            /* Background Image moved to the main window (Card) */
+            background-image: url('Page-bg.jpg');
+            background-position: center center;
+            background-size: cover;
+            background-repeat: no-repeat;
+            
             border-radius: 8px;
             padding: 50px 40px 40px 40px;
             text-align: center;
             /* Softer, golden shadow */
             box-shadow:
-                0 20px 50px rgba(184, 134, 11, 0.15),
+                0 20px 50px rgba(0, 0, 0, 0.1),
                 0 0 0 1px rgba(184, 134, 11, 0.2) inset;
             border: 1px solid rgba(184, 134, 11, 0.3);
             position: relative;
@@ -104,6 +83,9 @@
 
         .header-section {
             margin-bottom: 30px;
+            /* Optional: text shadow to ensure readability over image */
+            position: relative;
+            z-index: 2;
         }
 
         h1 {
@@ -115,8 +97,7 @@
             letter-spacing: 1px;
             line-height: 1.1;
             padding-bottom: 15px;
-            /* Updated text shadow for light background */
-            text-shadow: 1px 1px 0 rgba(184, 134, 11, 0.3);
+            text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.8);
         }
 
         .art-divider {
@@ -148,7 +129,7 @@
             padding: 8px 16px;
             border: 1px solid var(--gold-dim);
             display: inline-block;
-            background: rgba(255, 248, 220, 0.5); /* Light cream bg */
+            background: rgba(255, 255, 255, 0.9); /* Solid background for readability */
             margin-bottom: 10px;
             border-radius: 4px;
         }
@@ -158,6 +139,8 @@
             display: flex;
             flex-direction: column;
             gap: 20px;
+            position: relative;
+            z-index: 2;
         }
 
         .btn {
@@ -197,6 +180,9 @@
             opacity: 1;
             font-weight: 700;
             padding-top: 20px;
+            position: relative;
+            z-index: 2;
+            text-shadow: 0 1px 2px rgba(255,255,255,0.8);
         }
     </style>
 </head>
