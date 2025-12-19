@@ -7,6 +7,9 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;900&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+    
+    <!-- ADDED: Font Awesome for consistent icon design -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
         :root {
@@ -132,7 +135,7 @@
             
             /* Golden Shadow behind the title */
             text-shadow: 3px 3px 6px rgba(212, 175, 55, 0.6);
-            /* ADDED: Golden border around the letters */
+            /* Golden border around the letters */
             -webkit-text-stroke: 1px var(--gold);
         }
 
@@ -219,10 +222,9 @@
         }
         
         .btn i {
-            margin-right: 10px;
-            font-style: normal;
+            margin-right: 12px; /* Increased space slightly for icons */
             font-size: 1.1em;
-            /* Removed drop shadow from emoji to keep it clean on white */
+            /* Icons will now inherit the text color automatically */
         }
 
         .footer {
@@ -270,23 +272,23 @@
                 <div class="button-group">
 
                     <a href="https://www.google.com/maps/dir/?api=1&destination=Sampark+Lodge+Chinsurah+Hooghly" class="btn" target="_blank" rel="noopener noreferrer">
-                        <i>🗺️</i> Get Directions
+                        <i class="fa-solid fa-location-dot"></i> Get Directions
                     </a>
 
                     <a href="https://g.page/r/CXIP9_KZOQYBEBI/review" class="btn" target="_blank" rel="noopener noreferrer">
-                        <i>⭐</i> Leave a Review
+                        <i class="fa-solid fa-star"></i> Leave a Review
                     </a>
 
                     <a href="tel:9830779721" class="btn">
-                        <i>📞</i> Call 9830779721
+                        <i class="fa-solid fa-phone"></i> Call 9830779721
                     </a>
 
                     <a href="tel:7003642977" class="btn">
-                        <i>📞</i> Call 7003642977
+                        <i class="fa-solid fa-phone"></i> Call 7003642977
                     </a>
 
                     <a href="review.html" class="btn">
-                        <i>📶</i> Connect to Wi-Fi
+                        <i class="fa-solid fa-wifi"></i> Connect to Wi-Fi
                     </a>
 
                 </div>
@@ -301,6 +303,3 @@
 
 </body>
 </html>
-
-
-
