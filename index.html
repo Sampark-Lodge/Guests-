@@ -10,14 +10,16 @@
 
     <style>
         :root {
-            --gold: #ffd700;
-            --gold-dim: #cfb53b;
-            --gold-light: #fff5cc;
-            --text-dark: #ffffff;
-            --text-muted: #ffe6e6;
-            --panel-bg: rgba(61, 12, 12, 0.97);
-            --btn-bg-start: #781d1d;
-            --btn-bg-end: #360a0a;
+            /* Updated Palette for White & Gold Theme */
+            --gold: #c59d00;      /* Darker, metallic gold for better visibility on white */
+            --gold-bright: #ffd700; /* Brighter gold for accents */
+            --gold-dim: #b8860b;
+            --text-dark: #222222; /* Deep charcoal for high contrast */
+            --text-muted: #555555;
+            --panel-bg: rgba(255, 255, 255, 0.98);
+            --btn-bg-start: #ffffff;
+            --btn-bg-end: #fffbf0;
+            --shadow-color: rgba(184, 134, 11, 0.15);
         }
 
         * {
@@ -29,8 +31,9 @@
 
         body {
             font-family: 'Lato', sans-serif;
-            background-color: #0f0f0f;
-            background-image: url('bg-frame.png');
+            background-color: #f7f7f7;
+            /* Background Image linked - ensuring cover size */
+            background-image: url('Page-bg.jpg');
             background-position: center center;
             background-repeat: no-repeat;
             background-size: cover;
@@ -50,11 +53,12 @@
 
         .card {
             background-color: var(--panel-bg);
+            /* Subtle Gold Patterns on White */
             background-image:
-                linear-gradient(45deg, rgba(255,215,0,0.03) 25%, transparent 25%, transparent 75%, rgba(255,215,0,0.03) 75%, rgba(255,215,0,0.03)),
-                linear-gradient(45deg, rgba(255,215,0,0.03) 25%, transparent 25%, transparent 75%, rgba(255,215,0,0.03) 75%, rgba(255,215,0,0.03)),
-                radial-gradient(circle, var(--gold) 1.5px, transparent 1.8px),
-                radial-gradient(circle, var(--gold) 1.5px, transparent 1.8px),
+                linear-gradient(45deg, rgba(197, 157, 0, 0.05) 25%, transparent 25%, transparent 75%, rgba(197, 157, 0, 0.05) 75%, rgba(197, 157, 0, 0.05)),
+                linear-gradient(45deg, rgba(197, 157, 0, 0.05) 25%, transparent 25%, transparent 75%, rgba(197, 157, 0, 0.05) 75%, rgba(197, 157, 0, 0.05)),
+                radial-gradient(circle, var(--gold) 1px, transparent 1.2px),
+                radial-gradient(circle, var(--gold) 1px, transparent 1.2px),
                 linear-gradient(to bottom, var(--gold), var(--gold)),
                 linear-gradient(to bottom, var(--gold), var(--gold)),
                 linear-gradient(to bottom, var(--gold), var(--gold)),
@@ -71,30 +75,30 @@
                 repeat, repeat,
                 repeat-y, repeat-y,
                 no-repeat, no-repeat, no-repeat, no-repeat;
-            border-radius: 6px;
+            border-radius: 8px;
             padding: 50px 40px 40px 40px;
             text-align: center;
+            /* Softer, golden shadow */
             box-shadow:
-                0 25px 60px rgba(0,0,0,0.9),
-                0 0 0 1px rgba(255,215,0,0.3) inset,
-                0 0 25px rgba(255,215,0,0.1);
-            border: 1px solid rgba(255,215,0,0.2);
+                0 20px 50px rgba(184, 134, 11, 0.15),
+                0 0 0 1px rgba(184, 134, 11, 0.2) inset;
+            border: 1px solid rgba(184, 134, 11, 0.3);
             position: relative;
         }
 
         .card::before {
             content: '❖';
             position: absolute;
-            top: -14px;
+            top: -16px;
             left: 50%;
             transform: translateX(-50%);
-            font-size: 24px;
+            font-size: 26px;
             color: var(--gold);
-            background: var(--panel-bg);
-            padding: 0 10px;
+            background: #fff;
+            padding: 0 12px;
             border-radius: 50%;
             border: 1px solid var(--gold);
-            box-shadow: 0 2px 5px rgba(0,0,0,0.4);
+            box-shadow: 0 4px 10px rgba(184, 134, 11, 0.2);
             z-index: 10;
         }
 
@@ -111,7 +115,8 @@
             letter-spacing: 1px;
             line-height: 1.1;
             padding-bottom: 15px;
-            text-shadow: 2px 2px 0 rgba(0,0,0,0.5), 0 0 10px rgba(255,215,0,0.2);
+            /* Updated text shadow for light background */
+            text-shadow: 1px 1px 0 rgba(184, 134, 11, 0.3);
         }
 
         .art-divider {
@@ -143,8 +148,9 @@
             padding: 8px 16px;
             border: 1px solid var(--gold-dim);
             display: inline-block;
-            background: rgba(0,0,0,0.2);
+            background: rgba(255, 248, 220, 0.5); /* Light cream bg */
             margin-bottom: 10px;
+            border-radius: 4px;
         }
 
         .button-group {
@@ -168,14 +174,18 @@
             background: linear-gradient(to bottom, var(--btn-bg-start), var(--btn-bg-end));
             color: var(--text-dark);
             position: relative;
-            border: 2px solid var(--gold-dim);
+            border: 1px solid var(--gold);
             cursor: pointer;
-            transition: 0.2s;
+            transition: all 0.3s ease;
             overflow: hidden;
+            box-shadow: 0 4px 6px rgba(184, 134, 11, 0.1);
         }
 
         .btn:hover {
-            transform: scale(1.03);
+            transform: translateY(-2px);
+            border-color: var(--gold-dim);
+            background: linear-gradient(to bottom, #fff, #f0e6c0);
+            box-shadow: 0 8px 15px rgba(184, 134, 11, 0.2);
         }
 
         .footer {
@@ -183,8 +193,8 @@
             font-family: 'Cinzel', serif;
             font-size: 11px;
             letter-spacing: 3px;
-            color: var(--text-dark);
-            opacity: 0.7;
+            color: var(--gold-dim);
+            opacity: 1;
             font-weight: 700;
             padding-top: 20px;
         }
@@ -220,7 +230,10 @@
                     Call 7003642977
                 </a>
 
-                <!-- UPDATED: Go to Review Page -->
+                <!-- 
+                   Note: This link points to review.html. 
+                   Ensure this file exists in your hosting environment.
+                -->
                 <a href="review.html" class="btn">
                     Connect to Wi-Fi
                 </a>
