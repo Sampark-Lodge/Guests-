@@ -1,199 +1,170 @@
 <!DOCTYPE html>
-<html lang="bn">
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>আপনার অভিজ্ঞতা</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+    <title>Review Confirmation</title>
 
-<style>
-:root {
-    --gold: #ffd700;
-    --gold-dim: #cfb53b;
-    --text-dark: #ffffff;
-    --text-muted: #ffe6e6;
-    --panel-bg: rgba(61,12,12,0.97);
-    --btn-start: #781d1d;
-    --btn-end: #360a0a;
-}
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&display=swap" rel="stylesheet">
 
-body {
-    margin: 0;
-    font-family: 'Lato', sans-serif;
-    background: #0f0f0f url('bg-frame.png') center/cover no-repeat fixed;
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    padding: 18px;
-}
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
-.wrapper {
-    width: 100%;
-    max-width: 420px;
-}
+    <style>
 
-.card {
-    background: var(--panel-bg);
-    padding: 50px 40px 40px;
-    border-radius: 6px;
-    border: 1px solid rgba(255,215,0,0.2);
-    text-align: center;
-    box-shadow:
-        0 25px 60px rgba(0,0,0,0.9),
-        0 0 0 1px rgba(255,215,0,0.3) inset,
-        0 0 25px rgba(255,215,0,0.1);
+        body {
+            margin: 0;
+            padding: 0;
+            background: white;
+            font-family: 'Cinzel', serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
 
-    background-image:
-        linear-gradient(45deg, rgba(255,215,0,0.03) 25%, transparent 25%, transparent 75%, rgba(255,215,0,0.03) 75%),
-        linear-gradient(45deg, rgba(255,215,0,0.03) 25%, transparent 25%, transparent 75%, rgba(255,215,0,0.03) 75%),
-        radial-gradient(circle, var(--gold) 1.5px, transparent 1.8px),
-        radial-gradient(circle, var(--gold) 1.5px, transparent 1.8px),
-        linear-gradient(to bottom, var(--gold), var(--gold)),
-        linear-gradient(to bottom, var(--gold), var(--gold)),
-        linear-gradient(to bottom, var(--gold), var(--gold)),
-        linear-gradient(to bottom, var(--gold), var(--gold));
+        .frame {
+            width: 92%;
+            max-width: 430px;
 
-    background-position:
-        0 0, 10px 10px,
-        9px 0, calc(100% - 9px) 0,
-        4px 0, 14px 0, calc(100% - 14px), calc(100% - 4px);
+            background:
+                url('./assets/frame.png') center/100% 100% no-repeat,
+                url('./assets/Page-bg.jpg') center/cover no-repeat;
 
-    background-size:
-        20px 20px, 20px 20px,
-        20px 12px, 20px 12px,
-        2px 100%, 1px 100%, 1px 100%, 2px 100%;
-    
-    background-repeat:
-        repeat, repeat, repeat-y, repeat-y,
-        no-repeat, no-repeat, no-repeat, no-repeat;
-}
+            padding: 60px 30px 70px;
+            text-align: center;
+        }
 
-.card::before {
-    content: '❖';
-    position: absolute;
-    top: -14px;
-    left: 50%;
-    transform: translateX(-50%);
-    color: var(--gold);
-    background: var(--panel-bg);
-    padding: 0 10px;
-    border-radius: 50%;
-    border: 1px solid var(--gold);
-    font-size: 24px;
-}
+        h1 {
+            font-weight: 900;
+            font-size: 34px;
+            letter-spacing: 2px;
+            color: #3b2c11;
+            line-height: 1.1;
+            margin-top: 0;
 
-h1 {
-    font-family: 'Cinzel', serif;
-    font-size: 32px;
-    font-weight: 900;
-    color: var(--text-dark);
-    text-shadow: 0 0 8px rgba(255,215,0,0.3);
-    margin-bottom: 8px;
-}
+            /* Rounded modern look */
+            padding: 8px 14px;
+            border-radius: 12px;
+            background: rgba(255,255,255,0.55);
 
-.subtitle {
-    font-size: 14px;
-    color: var(--text-muted);
-    margin-bottom: 28px;
-}
+            /* Gold outline */
+            -webkit-text-stroke: 1px #d4af37;
+            text-shadow: 0 2px 8px rgba(212,175,55,0.45);
+            display: inline-block;
+        }
 
-.option-btn {
-    background: linear-gradient(to bottom, var(--btn-start), var(--btn-end));
-    color: var(--text-dark);
-    padding: 16px;
-    margin: 12px 0;
-    border-radius: 6px;
-    font-weight: 700;
-    border: 2px solid var(--gold-dim);
-    cursor: pointer;
-    transition: .2s;
-}
+        .subtitle {
+            margin-top: 15px;
+            font-size: 12px;
+            color: #5a4725;
+            margin-bottom: 35px;
+        }
 
-.option-btn:hover {
-    transform: scale(1.03);
-}
+        .button-group {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            width: 100%;
+            margin: 0 auto;
+        }
 
-.pass-box {
-    margin-top: 35px;
-    padding: 18px;
-    background: rgba(0,0,0,0.25);
-    border: 1px solid var(--gold-dim);
-    border-radius: 6px;
-    font-size: 20px;
-    font-weight: 700;
-    color: var(--gold);
-}
+        .btn {
+            background: url('./assets/button.png') center/100% 100% no-repeat;
+            padding: 18px;
+            font-size: 17px;
+            font-weight: 700;
+            color: #3b2c11;
+            text-decoration: none;
 
-/* Actual Password – highlighted gold */
-.wifi-pass-text {
-    font-weight: 900;
-    color: #ffdf5e;
-    text-shadow: 0 0 8px rgba(255,215,0,0.7), 0 0 14px rgba(255,215,0,0.4);
-}
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
 
-/* Blur */
-.blur {
-    filter: blur(6px);
-    opacity: 0.45;
-}
-</style>
+            border-radius: 6px;
+        }
+
+        .btn i {
+            font-size: 22px;
+            color: #3b2c11;
+        }
+
+        /* WiFi password blur */
+        #wifi-pass {
+            margin-top: 30px;
+            font-size: 20px;
+            color: #3b2c11;
+            font-weight: 800;
+            letter-spacing: 3px;
+
+            filter: blur(8px);
+            transition: 0.3s ease;
+            user-select: none;
+            opacity: 0;
+        }
+
+        #wifi-pass.visible {
+            filter: blur(0);
+            opacity: 1;
+        }
+
+    </style>
 </head>
 
 <body>
 
-<div class="wrapper">
-    <div class="card">
+<div class="frame">
 
-        <h1>আপনার অভিজ্ঞতা</h1>
-        <div class="subtitle">দয়া করে নিচের একটি নির্বাচন করুন</div>
+    <h1>Feedback Check</h1>
+    <div class="subtitle">Please confirm your feedback status</div>
+
+    <div class="button-group">
 
         <!-- Option 1 -->
-        <div class="option-btn" onclick="noOpinion()">
-            না, আমি মতামত দিতে চাই না… হয়তো লজটি আমার খুব একটা ভালো লাগেনি।
+        <div class="btn" onclick="alert('We respect your opinion. Thank you.')">
+            <i class="fa-solid fa-xmark"></i>
+            আমি মতামত দিতে চাই না
         </div>
 
         <!-- Option 2 -->
-        <div class="option-btn" onclick="giveOpinion()">
-            দিতে ভুলে গেছি… এখনই লিখে দিচ্ছি, ভালো অভিজ্ঞতা শেয়ার করা উচিত।
-        </div>
+        <a href="https://g.page/r/CXIP9_KZOQYBEBI/review" target="_blank" class="btn">
+            <i class="fa-solid fa-pen"></i>
+            দিতে ভুলে গেছি — এখনই দেব
+        </a>
 
         <!-- Option 3 -->
-        <div class="option-btn" onclick="unlockWifi()">
-            হ্যাঁ, আমি আমার মতামত লিখে দিয়েছি — আপনাদের জন্য শুভকামনা রইলো।
-        </div>
-
-        <!-- Wi-Fi Password (blurred) -->
-        <div id="wifiBox" class="pass-box blur">
-            Wi-Fi Password :
-            <span class="wifi-pass-text">guestaccess</span>
+        <div class="btn" onclick="unlockWifi()">
+            <i class="fa-solid fa-check"></i>
+            হ্যাঁ — মতামত দিয়েছি
         </div>
 
     </div>
+
+    <!-- WiFi Password (Initially Hidden) -->
+    <div id="wifi-pass">Wi-Fi Password: guestaccess</div>
+
 </div>
 
 
 <script>
-function noOpinion() {
-    alert("ঠিক আছে, তবে আমাদের পরিষেবাকে আরও উন্নত করতে আপনার মতামত খুব মূল্যবান ছিল।");
-}
-
-function giveOpinion() {
-    window.location.href = "https://g.page/r/CXIP9_KZOQYBEBI/review";
-}
 
 function unlockWifi() {
-    let key = prompt("Secret Key দিন:");
+    const key = prompt("Enter verification key:");
 
-    if (key && key.trim().toUpperCase() === "SAMPARK") {
-        document.getElementById("wifiBox").classList.remove("blur");
-        alert("ধন্যবাদ! Wi-Fi Password আনলক হয়েছে।");
+    if (!key) return;
+
+    if (key.trim().toUpperCase() === "SAMPARK") {
+        document.getElementById('wifi-pass').classList.add('visible');
     } else {
-        alert("Secret Key ভুল হয়েছে। আবার চেষ্টা করুন।");
+        alert("Incorrect key. Please try again.");
     }
 }
+
 </script>
 
 </body>
