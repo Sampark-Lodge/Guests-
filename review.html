@@ -6,12 +6,12 @@
 
     <title>Review Confirmation</title>
 
-    <!-- Fonts -->
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&display=swap" rel="stylesheet">
 
-    <!-- FontAwesome -->
+    <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
     <style>
@@ -44,15 +44,12 @@
             font-size: 34px;
             letter-spacing: 2px;
             color: #3b2c11;
-            line-height: 1.1;
             margin-top: 0;
 
-            /* Rounded modern look */
             padding: 8px 14px;
             border-radius: 12px;
             background: rgba(255,255,255,0.55);
 
-            /* Gold outline */
             -webkit-text-stroke: 1px #d4af37;
             text-shadow: 0 2px 8px rgba(212,175,55,0.45);
             display: inline-block;
@@ -94,7 +91,7 @@
             color: #3b2c11;
         }
 
-        /* WiFi password blur */
+        /* Hidden WiFi Password (Blurred) */
         #wifi-pass {
             margin-top: 30px;
             font-size: 20px;
@@ -103,9 +100,9 @@
             letter-spacing: 3px;
 
             filter: blur(8px);
+            opacity: 0;
             transition: 0.3s ease;
             user-select: none;
-            opacity: 0;
         }
 
         #wifi-pass.visible {
@@ -125,46 +122,31 @@
 
     <div class="button-group">
 
-        <!-- Option 1 -->
-        <div class="btn" onclick="alert('We respect your opinion. Thank you.')">
+        <div class="btn" onclick="alert('Your opinion is appreciated. Thank you.')">
             <i class="fa-solid fa-xmark"></i>
             আমি মতামত দিতে চাই না
         </div>
 
-        <!-- Option 2 -->
         <a href="https://g.page/r/CXIP9_KZOQYBEBI/review" target="_blank" class="btn">
             <i class="fa-solid fa-pen"></i>
             দিতে ভুলে গেছি — এখনই দেব
         </a>
 
-        <!-- Option 3 -->
-        <div class="btn" onclick="unlockWifi()">
+        <div class="btn" onclick="showWifi()">
             <i class="fa-solid fa-check"></i>
             হ্যাঁ — মতামত দিয়েছি
         </div>
 
     </div>
 
-    <!-- WiFi Password (Initially Hidden) -->
     <div id="wifi-pass">Wi-Fi Password: guestaccess</div>
 
 </div>
 
-
 <script>
-
-function unlockWifi() {
-    const key = prompt("Enter verification key:");
-
-    if (!key) return;
-
-    if (key.trim().toUpperCase() === "SAMPARK") {
-        document.getElementById('wifi-pass').classList.add('visible');
-    } else {
-        alert("Incorrect key. Please try again.");
-    }
+function showWifi() {
+    document.getElementById('wifi-pass').classList.add('visible');
 }
-
 </script>
 
 </body>
