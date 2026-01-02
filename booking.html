@@ -278,7 +278,8 @@
         // ==========================================
         window.addEventListener('DOMContentLoaded', () => {
             updateNavState(); // Set initial button state
-            fetchBookings();
+            renderCalendar(); // <--- FIX: Draw calendar immediately!
+            fetchBookings();  // Then fetch data in background
         });
 
         // ==========================================
@@ -286,7 +287,7 @@
         // ==========================================
         async function fetchBookings() {
             const loader = document.getElementById('loader');
-            loader.classList.remove('hidden');
+            // loader.classList.remove('hidden'); // We rely on CSS default
 
             try {
                 // Fetch GET request. 
@@ -304,12 +305,13 @@
                         }
                     });
                 }
-                renderCalendar();
+                renderCalendar(); // Re-draw with booking data
             } catch (err) {
                 console.error("API Error:", err);
-                alert("Failed to load booking data. Check internet connection.");
+                // We do NOT block the calendar anymore. Just alert.
+                // alert("Note: Could not load bookings (Offline or API Error).");
             } finally {
-                loader.classList.add('hidden');
+                loader.classList.add('hidden'); // Hide loader always
             }
         }
 
