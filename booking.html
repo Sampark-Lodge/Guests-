@@ -3,330 +3,320 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sampark Lodge – Booking Calendar</title>
+<title>Booking Calendar | Sampark Lodge</title>
 
 <style>
 :root{
-    --gold-bg:#fff176;
-    --gold-border:#b8860b;
-    --text-dark:#2c3e50;
-    --text-light:#7f8c8d;
-    --highlight:#3498db;
-    --font-main:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Ubuntu;
+  --gold:#f5d76e;
+  --gold-border:#b8962e;
+  --text:#2c2c2c;
+  --bg:#f6f6f6;
+  --blue:#1976d2;
 }
-*{margin:0;padding:0;box-sizing:border-box}
+
+*{box-sizing:border-box;margin:0;padding:0}
 
 body{
-    font-family:var(--font-main);
-    background:#f8f9fa;
-    color:var(--text-dark);
-    padding:20px;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  background:var(--bg);
+  padding:16px;
+  color:var(--text);
 }
 
-/* Loader */
-.loading-overlay{
-    position:fixed;
-    inset:0;
-    background:rgba(255,255,255,.95);
-    display:flex;
-    flex-direction:column;
-    justify-content:center;
-    align-items:center;
-    z-index:9999;
-    gap:6px;
-}
-.loading-overlay .main{
-    font-size:1.4rem;
-    font-weight:600;
-}
-.loading-overlay .sub{
-    font-size:.9rem;
-    color:#666;
+header{
+  text-align:center;
+  margin-bottom:16px;
 }
 
-/* Header */
-.header-controls{
-    background:#fff;
-    padding:20px;
-    border-radius:12px;
-    box-shadow:0 4px 10px rgba(0,0,0,.05);
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    gap:15px;
-    margin-bottom:30px;
+header h1{
+  font-size:1.6rem;
+  letter-spacing:1px;
 }
 
-.year-nav{
-    display:flex;
-    align-items:center;
-    gap:20px;
-}
-.year-nav button{
-    padding:8px 18px;
-    border-radius:6px;
-    border:1px solid #ddd;
-    background:#fff;
-    cursor:pointer;
-    font-size:1.2rem;
-}
-.year-nav button:disabled{opacity:.3;cursor:not-allowed}
-.year-display{
-    font-size:2rem;
-    font-weight:700;
+.controls{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:12px;
+  margin:12px 0;
 }
 
-.admin-panel{
-    display:flex;
-    gap:10px;
-    align-items:center;
-}
-#admin-btn{
-    padding:6px 14px;
-    border-radius:4px;
-    border:none;
-    background:#333;
-    color:#fff;
-    cursor:pointer;
-}
-#admin-btn.active{background:#27ae60}
-#admin-status{
-    font-size:.85rem;
-    color:var(--text-light);
+.controls button{
+  padding:6px 14px;
+  font-size:1rem;
+  cursor:pointer;
 }
 
-/* Calendar */
-.calendar-year{
-    max-width:1400px;
-    margin:auto;
-    display:grid;
-    grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
-    gap:30px;
+#year{
+  font-size:1.4rem;
+  font-weight:bold;
 }
 
-.month-card{
-    background:#fff;
-    border-radius:8px;
-    box-shadow:0 2px 10px rgba(0,0,0,.05);
-    overflow:hidden;
+.admin-bar{
+  text-align:center;
+  margin-bottom:10px;
 }
 
-.month-name{
-    background:#2c3e50;
-    color:#fff;
-    text-align:center;
-    padding:10px;
-    font-weight:600;
+#adminBtn{
+  padding:6px 14px;
+  background:#333;
+  color:#fff;
+  border:none;
+  cursor:pointer;
 }
 
-.weekdays{
-    display:grid;
-    grid-template-columns:repeat(7,1fr);
-    background:#ecf0f1;
-    font-size:.75rem;
-    text-align:center;
-    padding:6px 0;
-    color:#777;
-    font-weight:600;
+#adminBtn.active{
+  background:green;
 }
 
-.days-grid{
-    display:grid;
-    grid-template-columns:repeat(7,1fr);
+.calendar{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+  gap:14px;
 }
 
-/* Day Cell */
+.month{
+  background:#fff;
+  border-radius:8px;
+  overflow:hidden;
+  box-shadow:0 2px 8px rgba(0,0,0,.08);
+}
+
+.month h2{
+  background:#333;
+  color:#fff;
+  text-align:center;
+  padding:6px;
+  font-size:1rem;
+}
+
+.weekdays,.days{
+  display:grid;
+  grid-template-columns:repeat(7,1fr);
+}
+
+.weekdays div{
+  text-align:center;
+  font-size:.7rem;
+  padding:4px;
+  background:#eee;
+}
+
 .day{
-    min-height:70px;
-    border:1px solid #f0f0f0;
-    display:flex;
-    flex-direction:column;
-    justify-content:center;
-    align-items:center;
-    background:#fff;
-    position:relative;
-}
-.day.admin-enabled{cursor:pointer}
-
-.greg-date{
-    font-size:1.05rem;
-    font-weight:700;
-}
-.bangla-date{
-    font-size:.7rem;
-    color:#777;
-    text-align:center;
+  min-height:64px;
+  border:1px solid #eee;
+  text-align:center;
+  padding:4px;
+  cursor:default;
+  position:relative;
 }
 
-/* Booked */
+.day.admin{
+  cursor:pointer;
+}
+
+.day.admin:hover{
+  background:#e3f2fd;
+}
+
 .day.booked{
-    background:var(--gold-bg);
-    box-shadow:inset 0 0 0 3px var(--gold-border);
-}
-.day.booked .greg-date{color:#5d4037}
-.day.booked .bangla-date{color:#6d4c41;font-weight:600}
-
-/* Today */
-.day.today::after{
-    content:"";
-    position:absolute;
-    inset:3px;
-    border:2px solid var(--highlight);
-    border-radius:4px;
+  background:var(--gold);
+  box-shadow:inset 0 0 0 2px var(--gold-border);
 }
 
-/* Hover admin */
-.day.admin-enabled:hover{background:#e8f5e9}
-.day.booked.admin-enabled:hover{background:#fff59d}
+.eng{
+  font-weight:bold;
+  font-size:1rem;
+}
 
-/* Mobile */
-@media(max-width:600px){
-    .calendar-year{grid-template-columns:1fr}
-    .day{min-height:60px}
+.bn{
+  font-size:.7rem;
+  color:#555;
+}
+
+.today::after{
+  content:'';
+  position:absolute;
+  inset:2px;
+  border:2px solid var(--blue);
+  pointer-events:none;
+}
+
+.loader{
+  position:fixed;
+  inset:0;
+  background:#fff;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  z-index:999;
+  font-size:1.2rem;
 }
 </style>
 </head>
 
 <body>
 
-<!-- Loader -->
-<div id="loader" class="loading-overlay">
-    <div class="main">Checking Available Dates…</div>
-    <div class="sub">Please wait while we sync with Sampark Lodge</div>
+<div id="loader" class="loader">
+  <div>Loading calendar…</div>
+  <small>Syncing with booking database</small>
 </div>
 
-<div class="header-controls">
-    <div class="year-nav">
-        <button id="prevBtn" onclick="changeYear(-1)">‹</button>
-        <div id="currentYearDisplay" class="year-display"></div>
-        <button id="nextBtn" onclick="changeYear(1)">›</button>
-    </div>
-    <div class="admin-panel">
-        <span id="admin-status">Guest View</span>
-        <button id="admin-btn" onclick="toggleAdmin()">Admin Access</button>
-    </div>
+<header>
+  <h1>Sampark Lodge – Booking Calendar</h1>
+</header>
+
+<div class="controls">
+  <button onclick="changeYear(-1)">‹</button>
+  <div id="year"></div>
+  <button onclick="changeYear(1)">›</button>
 </div>
 
-<div id="calendar-root" class="calendar-year"></div>
+<div class="admin-bar">
+  <span id="status">Guest view</span><br>
+  <button id="adminBtn" onclick="toggleAdmin()">Admin Access</button>
+</div>
+
+<div id="calendar" class="calendar"></div>
 
 <script>
-const API_URL="https://script.google.com/macros/s/AKfycbzts3-BHw_-Vhm0S5j3P5s6ZtioILUQxp0kN_AFqe7yiAyPWFN69KTgESIMfOJYzPtU6w/exec";
-const MIN_YEAR=2025,MAX_YEAR=2040;
-let currentYear=new Date().getFullYear();
-currentYear=Math.min(Math.max(currentYear,MIN_YEAR),MAX_YEAR);
+/* ================= CONFIG ================= */
+const API =
+"https://script.google.com/macros/s/AKfycbzts3-BHw_-Vhm0S5j3P5s6ZtioILUQxp0kN_AFqe7yiAyPWFN69KTgESIMfOJYzPtU6w/exec";
 
-let bookedSet=new Set();
-let isAdmin=false;
+const MIN_YEAR=2025, MAX_YEAR=2040;
 
-const BN_MONTHS=["Boishakh","Joishtho","Asharh","Srabon","Bhadro","Ashwin","Kartik","Ograhayon","Poush","Magh","Falgun","Chaitra"];
+/* ================= STATE ================= */
+let year=new Date().getFullYear();
+if(year<MIN_YEAR)year=MIN_YEAR;
+if(year>MAX_YEAR)year=MAX_YEAR;
 
-window.onload=()=>fetchBookings();
+let booked=new Set();
+let admin=false;
 
-async function fetchBookings(){
-    document.getElementById("loader").style.display="flex";
-    try{
-        const res=await fetch(API_URL);
-        const data=await res.json();
-        bookedSet.clear();
-        data.forEach(d=>bookedSet.add(d.date.split("T")[0]));
-        renderCalendar();
-    }catch(e){alert("Unable to load calendar");}
-    document.getElementById("loader").style.display="none";
+/* ================= INIT ================= */
+document.getElementById("year").textContent=year;
+fetchData();
+
+/* ================= DATA ================= */
+async function fetchData(){
+  document.getElementById("loader").style.display="flex";
+  try{
+    const res=await fetch(API);
+    const data=await res.json();
+    booked.clear();
+    data.forEach(d=>booked.add(d.date));
+    render();
+  }catch(e){
+    alert("Failed to load booking data");
+  }
+  document.getElementById("loader").style.display="none";
 }
 
+async function toggleDate(date){
+  if(!admin)return;
+
+  if(booked.has(date)){
+    booked.delete(date);
+  }else{
+    booked.add(date);
+  }
+
+  render();
+
+  await fetch(API,{
+    method:"POST",
+    mode:"no-cors",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({date})
+  });
+}
+
+/* ================= ADMIN ================= */
 function toggleAdmin(){
-    if(isAdmin){
-        isAdmin=false;
-        document.getElementById("admin-status").textContent="Guest View";
-        document.getElementById("admin-btn").classList.remove("active");
-        renderCalendar();
-        return;
-    }
-    const p=prompt("Enter Admin Password");
-    if(p==="admin"){
-        isAdmin=true;
-        document.getElementById("admin-status").textContent="Admin Mode";
-        document.getElementById("admin-btn").classList.add("active");
-        renderCalendar();
-    }
+  if(admin){
+    admin=false;
+  }else{
+    const p=prompt("Enter admin password");
+    if(p==="admin") admin=true;
+    else return alert("Wrong password");
+  }
+  document.getElementById("adminBtn").classList.toggle("active",admin);
+  document.getElementById("status").textContent=admin?"Admin mode":"Guest view";
+  render();
 }
 
+/* ================= YEAR ================= */
 function changeYear(d){
-    const ny=currentYear+d;
-    if(ny<MIN_YEAR||ny>MAX_YEAR)return;
-    currentYear=ny;
-    renderCalendar();
+  const y=year+d;
+  if(y<MIN_YEAR||y>MAX_YEAR)return;
+  year=y;
+  document.getElementById("year").textContent=year;
+  render();
 }
 
-function renderCalendar(){
-    document.getElementById("currentYearDisplay").textContent=currentYear;
-    document.getElementById("prevBtn").disabled=currentYear<=MIN_YEAR;
-    document.getElementById("nextBtn").disabled=currentYear>=MAX_YEAR;
+/* ================= CALENDAR ================= */
+const months=["January","February","March","April","May","June","July","August","September","October","November","December"];
+const bnMonths=["Boishakh","Joishtho","Asharh","Srabon","Bhadro","Ashwin","Kartik","Ograhayon","Poush","Magh","Falgun","Chaitra"];
 
-    const root=document.getElementById("calendar-root");
-    root.innerHTML="";
-    const todayStr=new Date().toISOString().split("T")[0];
-    const months=["January","February","March","April","May","June","July","August","September","October","November","December"];
-
-    for(let m=0;m<12;m++){
-        const card=document.createElement("div");
-        card.className="month-card";
-
-        card.innerHTML=`<div class="month-name">${months[m]}</div>
-        <div class="weekdays">${["S","M","T","W","T","F","S"].map(d=>`<span>${d}</span>`).join("")}</div>`;
-
-        const grid=document.createElement("div");
-        grid.className="days-grid";
-
-        const first=new Date(currentYear,m,1).getDay();
-        const days=new Date(currentYear,m+1,0).getDate();
-
-        for(let i=0;i<first;i++)grid.appendChild(document.createElement("div"));
-
-        for(let d=1;d<=days;d++){
-            const date=new Date(currentYear,m,d);
-            const iso=date.toISOString().split("T")[0];
-            const bn=getBengaliDate(date);
-            const cell=document.createElement("div");
-            cell.className="day";
-            if(bookedSet.has(iso))cell.classList.add("booked");
-            if(iso===todayStr)cell.classList.add("today");
-            if(isAdmin){
-                cell.classList.add("admin-enabled");
-                cell.onclick=()=>toggleBooking(iso,cell);
-            }
-            cell.innerHTML=`<div class="greg-date">${d}</div>
-            <div class="bangla-date">${bn.day} ${bn.month}<br>${bn.year}</div>`;
-            grid.appendChild(cell);
-        }
-
-        card.appendChild(grid);
-        root.appendChild(card);
+function getBanglaDate(d){
+  const y=d.getFullYear(),m=d.getMonth(),day=d.getDate();
+  let by=y-593;
+  if(m<3||(m===3&&day<14))by--;
+  const starts=[
+    [0,15,9],[1,14,10],[2,15,11],[3,14,0],[4,15,1],[5,15,2],
+    [6,16,3],[7,16,4],[8,16,5],[9,16,6],[10,15,7],[11,16,8]
+  ];
+  let bm=8,bd=day;
+  for(let i=starts.length-1;i>=0;i--){
+    const s=starts[i];
+    const sd=new Date(y,s[0],s[1]);
+    if(d>=sd){
+      bm=s[2];
+      bd=Math.floor((d-sd)/(86400000))+1;
+      break;
     }
+  }
+  return `${bd} ${bnMonths[bm]} ${by}`;
 }
 
-async function toggleBooking(date,cell){
-    const was=bookedSet.has(date);
-    was?bookedSet.delete(date):bookedSet.add(date);
-    cell.classList.toggle("booked");
-    await fetch(API_URL,{method:"POST",mode:"no-cors",body:JSON.stringify({date})});
-}
+function render(){
+  const root=document.getElementById("calendar");
+  root.innerHTML="";
+  const today=new Date().toISOString().slice(0,10);
 
-/* Bengali Date (approx) */
-function getBengaliDate(d){
-    const y=d.getFullYear(),m=d.getMonth(),da=d.getDate();
-    let by=y-(m<3||m===3&&da<14?594:593);
-    const starts=[[3,14,0],[4,15,1],[5,15,2],[6,16,3],[7,16,4],[8,16,5],[9,16,6],[10,15,7],[11,16,8],[0,15,9],[1,14,10],[2,15,11]];
-    let bm=8,bd=1;
-    for(let i=starts.length-1;i>=0;i--){
-        const s=new Date(y,starts[i][0],starts[i][1]);
-        if(d>=s){
-            bd=Math.floor((d-s)/86400000)+1;
-            bm=starts[i][2];
-            break;
-        }
+  for(let m=0;m<12;m++){
+    const box=document.createElement("div");
+    box.className="month";
+    box.innerHTML=`<h2>${months[m]}</h2>
+      <div class="weekdays">${"SMTWTFS".split("").map(d=>`<div>${d}</div>`).join("")}</div>`;
+    const days=document.createElement("div");
+    days.className="days";
+
+    const first=new Date(year,m,1).getDay();
+    const total=new Date(year,m+1,0).getDate();
+
+    for(let i=0;i<first;i++)days.appendChild(document.createElement("div"));
+
+    for(let d=1;d<=total;d++){
+      const date=`${year}-${String(m+1).padStart(2,"0")}-${String(d).padStart(2,"0")}`;
+      const cell=document.createElement("div");
+      cell.className="day";
+      if(admin)cell.classList.add("admin");
+      if(booked.has(date))cell.classList.add("booked");
+      if(date===today)cell.classList.add("today");
+
+      cell.innerHTML=`
+        <div class="eng">${d}</div>
+        <div class="bn">${getBanglaDate(new Date(year,m,d))}</div>
+      `;
+      if(admin)cell.onclick=()=>toggleDate(date);
+      days.appendChild(cell);
     }
-    return{day:bd,month:BN_MONTHS[bm],year:by};
+    box.appendChild(days);
+    root.appendChild(box);
+  }
 }
 </script>
 </body>
