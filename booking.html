@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Booking Calendar</title>
+
+<style>
+body{
+  font-family: system-ui, sans-serif;
+  margin:0; padding:10px;
+  background:#fff;
+}
+header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:10px;
+}
+button{
+  padding:6px 10px;
+}
+#calendar{
+  display:grid;
+  grid-template-columns: repeat(7,1fr);
+  gap:4px;
+}
+.day, .date{
+  border:1px solid #ccc;
+  padding:6px;
+  text-align:center;
+  font-size:12px;
+}
+.day{font-weight:bold;background:#f5f5f5}
+.booked{
+  background:#ffd700;
+  border:2px solid #c9a200;
+}
+.admin{outline:2px dashed red}
+.small{font-size:10px;color:#444}
+</style>
+</head>
+
+<body>
+
+<header>
+  <button onclick="prevYear()">◀</button>
+  <h3 id="year"></h3>
+  <button onclick="nextYear()">▶</button>
+  <button onclick="adminLogin()">Admin Access</button>
+</header>
+
+<div id="calendar"></div>
+
+<script>
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzts3-BHw_-Vhm0S5j3P5s6ZtioILUQxp0kN_AFqe7yiAyPWFN69KTgESIMfOJYzPtU6w/exec";
+let currentYear = new Date().getFullYear();
+let admin = false;
+let bookings = [];
+
+const days = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+
+async function loadBookings(){
+  const res = await fetch(SCRIPT_URL);
+  bookings = await res.json();
+}
+
+function isBooked(date){
+  return bookings.some(b => b.date === date);
+}
+
+function toggleBooking(date){
+  if(!admin) return;
+  fetch(SCRIPT_URL,{
+    method:"POST",
+    body: JSON.stringify({date})
+  }).then(()=>loadBookings().then(render));
+}
+
+function render(){
+  document.getElementById("year").innerText = currentYear;
+  const cal = document.getElementById("calendar");
+  cal.innerHTML = "";
+
+  days.forEach(d=>{
+    const div=document.createElement("div");
+    div.className="day";
+    div.innerText=d;
+    cal.appendChild(div);
+  });
+
+  for(let m=0;m<12;m++){
+    const first = new Date(currentYear,m,1).getDay();
+    for(let i=0;i<first;i++){
+      cal.appendChild(document.createElement("div"));
+    }
+    const total = new Date(currentYear,m+1,0).getDate();
+    for(let d=1;d<=total;d++){
+      const dateStr = `${currentYear}-${String(m+1).padStart(2,"0")}-${String(d).padStart(2,"0")}`;
+      const cell = document.createElement("div");
+      cell.className="date";
+      if(isBooked(dateStr)) cell.classList.add("booked");
+      if(admin) cell.classList.add("admin");
+
+      const eng = new Date(currentYear,m,d)
+        .toLocaleDateString("en-US",{weekday:"short"});
+      const beng = bengaliDate(currentYear,m,d);
+
+      cell.innerHTML = `
+        <div>${d}</div>
+        <div class="small">${eng}</div>
+        <div class="small">${beng}</div>
+      `;
+      cell.onclick=()=>toggleBooking(dateStr);
+      cal.appendChild(cell);
+    }
+  }
+}
+
+function prevYear(){currentYear--; render();}
+function nextYear(){currentYear++; render();}
+
+function adminLogin(){
+  const p = prompt("Admin password");
+  if(p==="admin"){ admin=true; alert("Admin mode ON"); }
+}
+
+function bengaliDate(y,m,d){
+  const ref = new Date(2024,3,14); // 1 Boishakh 1431
+  const cur = new Date(y,m,d);
+  const diff = Math.floor((cur-ref)/86400000);
+  const months = ["Boishakh","Joishtho","Ashar","Srabon","Bhadro","Ashwin","Kartik","Agrahayan","Poush","Magh","Falgun","Chaitra"];
+  let bd = diff;
+  let by = 1431;
+  while(bd<0){bd+=365;by--}
+  let bm = Math.floor(bd/30);
+  return `${bd%30+1} ${months[bm%12]}, ${by} BS`;
+}
+
+loadBookings().then(render);
+</script>
+
+</body>
+</html>
