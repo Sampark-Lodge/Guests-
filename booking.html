@@ -1,570 +1,333 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lodge Booking Calendar (2025-2040)</title>
-    <style>
-        /* --- CSS VARIABLES & RESET --- */
-        :root {
-            --gold-bg: #fff176; /* Bright Gold */
-            --gold-border: #b8860b; /* Dark Goldenrod */
-            --text-dark: #2c3e50;
-            --text-light: #7f8c8d;
-            --font-main: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-            --highlight: #3498db;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sampark Lodge – Booking Calendar</title>
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+<style>
+:root{
+    --gold-bg:#fff176;
+    --gold-border:#b8860b;
+    --text-dark:#2c3e50;
+    --text-light:#7f8c8d;
+    --highlight:#3498db;
+    --font-main:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Ubuntu;
+}
+*{margin:0;padding:0;box-sizing:border-box}
 
-        body {
-            font-family: var(--font-main);
-            background-color: #f8f9fa;
-            color: var(--text-dark);
-            padding: 20px;
-            line-height: 1.4;
-        }
+body{
+    font-family:var(--font-main);
+    background:#f8f9fa;
+    color:var(--text-dark);
+    padding:20px;
+}
 
-        /* --- HEADER & CONTROLS --- */
-        .header-controls {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 15px;
-            margin-bottom: 30px;
-            background: white;
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-        }
+/* Loader */
+.loading-overlay{
+    position:fixed;
+    inset:0;
+    background:rgba(255,255,255,.95);
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    z-index:9999;
+    gap:6px;
+}
+.loading-overlay .main{
+    font-size:1.4rem;
+    font-weight:600;
+}
+.loading-overlay .sub{
+    font-size:.9rem;
+    color:#666;
+}
 
-        .year-nav {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
+/* Header */
+.header-controls{
+    background:#fff;
+    padding:20px;
+    border-radius:12px;
+    box-shadow:0 4px 10px rgba(0,0,0,.05);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:15px;
+    margin-bottom:30px;
+}
 
-        .year-nav button {
-            background: white;
-            border: 1px solid #ddd;
-            padding: 10px 20px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 1.2rem;
-            transition: all 0.2s;
-        }
+.year-nav{
+    display:flex;
+    align-items:center;
+    gap:20px;
+}
+.year-nav button{
+    padding:8px 18px;
+    border-radius:6px;
+    border:1px solid #ddd;
+    background:#fff;
+    cursor:pointer;
+    font-size:1.2rem;
+}
+.year-nav button:disabled{opacity:.3;cursor:not-allowed}
+.year-display{
+    font-size:2rem;
+    font-weight:700;
+}
 
-        .year-nav button:hover { background: #eee; }
-        
-        .year-nav button:disabled {
-            opacity: 0.3;
-            cursor: not-allowed;
-            background: #f9f9f9;
-        }
+.admin-panel{
+    display:flex;
+    gap:10px;
+    align-items:center;
+}
+#admin-btn{
+    padding:6px 14px;
+    border-radius:4px;
+    border:none;
+    background:#333;
+    color:#fff;
+    cursor:pointer;
+}
+#admin-btn.active{background:#27ae60}
+#admin-status{
+    font-size:.85rem;
+    color:var(--text-light);
+}
 
-        .year-display {
-            font-size: 2rem;
-            font-weight: 700;
-            color: var(--text-dark);
-            min-width: 100px;
-            text-align: center;
-        }
+/* Calendar */
+.calendar-year{
+    max-width:1400px;
+    margin:auto;
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
+    gap:30px;
+}
 
-        .admin-panel {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-        }
+.month-card{
+    background:#fff;
+    border-radius:8px;
+    box-shadow:0 2px 10px rgba(0,0,0,.05);
+    overflow:hidden;
+}
 
-        #admin-btn {
-            background: #333;
-            color: white;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 0.9rem;
-        }
+.month-name{
+    background:#2c3e50;
+    color:#fff;
+    text-align:center;
+    padding:10px;
+    font-weight:600;
+}
 
-        #admin-btn.active { background: #27ae60; }
-        
-        #admin-status {
-            font-size: 0.9rem;
-            color: var(--text-light);
-            font-style: italic;
-        }
+.weekdays{
+    display:grid;
+    grid-template-columns:repeat(7,1fr);
+    background:#ecf0f1;
+    font-size:.75rem;
+    text-align:center;
+    padding:6px 0;
+    color:#777;
+    font-weight:600;
+}
 
-        /* --- CALENDAR GRID --- */
-        .calendar-year {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 30px; /* Gap between months */
-            max-width: 1400px;
-            margin: 0 auto;
-        }
+.days-grid{
+    display:grid;
+    grid-template-columns:repeat(7,1fr);
+}
 
-        .month-card {
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-        }
+/* Day Cell */
+.day{
+    min-height:70px;
+    border:1px solid #f0f0f0;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    background:#fff;
+    position:relative;
+}
+.day.admin-enabled{cursor:pointer}
 
-        .month-name {
-            background: #2c3e50;
-            color: white;
-            text-align: center;
-            padding: 10px;
-            font-size: 1.2rem;
-            font-weight: 600;
-        }
+.greg-date{
+    font-size:1.05rem;
+    font-weight:700;
+}
+.bangla-date{
+    font-size:.7rem;
+    color:#777;
+    text-align:center;
+}
 
-        .weekdays {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            background: #ecf0f1;
-            padding: 5px 0;
-            text-align: center;
-            font-size: 0.8rem;
-            font-weight: bold;
-            color: #7f8c8d;
-        }
+/* Booked */
+.day.booked{
+    background:var(--gold-bg);
+    box-shadow:inset 0 0 0 3px var(--gold-border);
+}
+.day.booked .greg-date{color:#5d4037}
+.day.booked .bangla-date{color:#6d4c41;font-weight:600}
 
-        .days-grid {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            border-top: 1px solid #eee;
-        }
+/* Today */
+.day.today::after{
+    content:"";
+    position:absolute;
+    inset:3px;
+    border:2px solid var(--highlight);
+    border-radius:4px;
+}
 
-        /* --- DATE CELL STYLING --- */
-        .day {
-            min-height: 70px; /* Aspect ratio control */
-            border: 1px solid #f0f0f0;
-            margin: -1px 0 0 -1px; /* Collapse borders */
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            cursor: default;
-            position: relative;
-            background: white;
-            transition: background 0.2s;
-        }
+/* Hover admin */
+.day.admin-enabled:hover{background:#e8f5e9}
+.day.booked.admin-enabled:hover{background:#fff59d}
 
-        /* English Date */
-        .greg-date {
-            font-size: 1.1rem;
-            font-weight: 700;
-            color: var(--text-dark);
-        }
-
-        /* Bengali Date */
-        .bangla-date {
-            font-size: 0.75rem;
-            color: #888;
-            margin-top: 2px;
-            text-align: center;
-            line-height: 1.1;
-        }
-
-        /* --- BOOKED STATE (The "Gold" Requirement) --- */
-        .day.booked {
-            background-color: var(--gold-bg) !important;
-            /* Ornamental Border Style */
-            box-shadow: inset 0 0 0 3px var(--gold-border); 
-            border: 1px solid var(--gold-border);
-        }
-
-        .day.booked .greg-date { color: #5d4037; }
-        .day.booked .bangla-date { color: #795548; font-weight: bold; }
-
-        /* --- TODAY STATE --- */
-        .day.today {
-            z-index: 2;
-        }
-        .day.today::after {
-            content: '';
-            position: absolute;
-            top: 2px; left: 2px; right: 2px; bottom: 2px;
-            border: 2px solid var(--highlight);
-            border-radius: 4px;
-            pointer-events: none;
-        }
-
-        /* --- ADMIN INTERACTIVITY --- */
-        .day.admin-enabled {
-            cursor: pointer;
-        }
-        .day.admin-enabled:hover {
-            background-color: #e8f5e9;
-        }
-        .day.booked.admin-enabled:hover {
-            background-color: #fff59d !important;
-        }
-
-        /* --- UTILS --- */
-        .hidden { display: none; }
-        .loading-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(255,255,255,0.9);
-            display: flex; justify-content: center; align-items: center;
-            z-index: 1000; font-size: 1.5rem; color: #333;
-            flex-direction: column; gap: 10px;
-        }
-
-        /* Mobile Adjustments */
-        @media (max-width: 600px) {
-            .header-controls { padding: 10px; }
-            .year-nav button { padding: 5px 10px; font-size: 1rem; }
-            .year-display { font-size: 1.5rem; }
-            .calendar-year { grid-template-columns: 1fr; }
-            .day { min-height: 60px; }
-        }
-    </style>
+/* Mobile */
+@media(max-width:600px){
+    .calendar-year{grid-template-columns:1fr}
+    .day{min-height:60px}
+}
+</style>
 </head>
+
 <body>
 
-    <!-- Loading Spinner -->
-    <div id="loader" class="loading-overlay">
-        <div>Loading Calendar Data...</div>
-        <div style="font-size: 0.9rem; color: #666;">Syncing with Lodge Database</div>
+<!-- Loader -->
+<div id="loader" class="loading-overlay">
+    <div class="main">Checking Available Dates…</div>
+    <div class="sub">Please wait while we sync with Sampark Lodge</div>
+</div>
+
+<div class="header-controls">
+    <div class="year-nav">
+        <button id="prevBtn" onclick="changeYear(-1)">‹</button>
+        <div id="currentYearDisplay" class="year-display"></div>
+        <button id="nextBtn" onclick="changeYear(1)">›</button>
     </div>
-
-    <!-- Controls -->
-    <div class="header-controls">
-        <div class="year-nav">
-            <button id="prevBtn" onclick="changeYear(-1)">&#10094;</button>
-            <div id="currentYearDisplay" class="year-display">2026</div>
-            <button id="nextBtn" onclick="changeYear(1)">&#10095;</button>
-        </div>
-        <div class="admin-panel">
-            <span id="admin-status">Guest View</span>
-            <button id="admin-btn" onclick="toggleAdminMode()">Admin Access</button>
-        </div>
+    <div class="admin-panel">
+        <span id="admin-status">Guest View</span>
+        <button id="admin-btn" onclick="toggleAdmin()">Admin Access</button>
     </div>
+</div>
 
-    <!-- Calendar Grid -->
-    <div id="calendar-root" class="calendar-year">
-        <!-- JS will populate 12 months here -->
-    </div>
+<div id="calendar-root" class="calendar-year"></div>
 
-    <script>
-        // ==========================================
-        // 1. CONFIGURATION
-        // ==========================================
-        const API_URL = "https://script.google.com/macros/s/AKfycbzts3-BHw_-Vhm0S5j3P5s6ZtioILUQxp0kN_AFqe7yiAyPWFN69KTgESIMfOJYzPtU6w/exec";
-        const MIN_YEAR = 2025;
-        const MAX_YEAR = 2040;
-        
-        // State
-        let currentYear = new Date().getFullYear();
-        // Ensure initial year is within bounds
-        if (currentYear < MIN_YEAR) currentYear = MIN_YEAR;
-        if (currentYear > MAX_YEAR) currentYear = MAX_YEAR;
+<script>
+const API_URL="https://script.google.com/macros/s/AKfycbzts3-BHw_-Vhm0S5j3P5s6ZtioILUQxp0kN_AFqe7yiAyPWFN69KTgESIMfOJYzPtU6w/exec";
+const MIN_YEAR=2025,MAX_YEAR=2040;
+let currentYear=new Date().getFullYear();
+currentYear=Math.min(Math.max(currentYear,MIN_YEAR),MAX_YEAR);
 
-        let bookedSet = new Set(); // Stores "YYYY-MM-DD"
-        let isAdmin = false;
-        
-        // Bengali Month Names
-        const BN_MONTHS = [
-            "Boishakh", "Joishtho", "Asharh", "Srabon", "Bhadro", "Ashwin", 
-            "Kartik", "Ograhayon", "Poush", "Magh", "Falgun", "Chaitra"
-        ];
+let bookedSet=new Set();
+let isAdmin=false;
 
-        // ==========================================
-        // 2. INITIALIZATION
-        // ==========================================
-        window.addEventListener('DOMContentLoaded', () => {
-            updateNavState(); // Set initial button state
-            renderCalendar(); // <--- FIX: Draw calendar immediately!
-            fetchBookings();  // Then fetch data in background
-        });
+const BN_MONTHS=["Boishakh","Joishtho","Asharh","Srabon","Bhadro","Ashwin","Kartik","Ograhayon","Poush","Magh","Falgun","Chaitra"];
 
-        // ==========================================
-        // 3. API HANDLING
-        // ==========================================
-        async function fetchBookings() {
-            const loader = document.getElementById('loader');
-            // loader.classList.remove('hidden'); // We rely on CSS default
+window.onload=()=>fetchBookings();
 
-            try {
-                // Fetch GET request. 
-                const response = await fetch(API_URL);
-                const data = await response.json();
+async function fetchBookings(){
+    document.getElementById("loader").style.display="flex";
+    try{
+        const res=await fetch(API_URL);
+        const data=await res.json();
+        bookedSet.clear();
+        data.forEach(d=>bookedSet.add(d.date.split("T")[0]));
+        renderCalendar();
+    }catch(e){alert("Unable to load calendar");}
+    document.getElementById("loader").style.display="none";
+}
 
-                // Clear and populate set
-                bookedSet.clear();
-                if (Array.isArray(data)) {
-                    data.forEach(item => {
-                        // Ensure we just get the YYYY-MM-DD part
-                        if(item.date) {
-                            let cleanDate = item.date.split('T')[0]; 
-                            bookedSet.add(cleanDate);
-                        }
-                    });
-                }
-                renderCalendar(); // Re-draw with booking data
-            } catch (err) {
-                console.error("API Error:", err);
-                // We do NOT block the calendar anymore. Just alert.
-                // alert("Note: Could not load bookings (Offline or API Error).");
-            } finally {
-                loader.classList.add('hidden'); // Hide loader always
+function toggleAdmin(){
+    if(isAdmin){
+        isAdmin=false;
+        document.getElementById("admin-status").textContent="Guest View";
+        document.getElementById("admin-btn").classList.remove("active");
+        renderCalendar();
+        return;
+    }
+    const p=prompt("Enter Admin Password");
+    if(p==="admin"){
+        isAdmin=true;
+        document.getElementById("admin-status").textContent="Admin Mode";
+        document.getElementById("admin-btn").classList.add("active");
+        renderCalendar();
+    }
+}
+
+function changeYear(d){
+    const ny=currentYear+d;
+    if(ny<MIN_YEAR||ny>MAX_YEAR)return;
+    currentYear=ny;
+    renderCalendar();
+}
+
+function renderCalendar(){
+    document.getElementById("currentYearDisplay").textContent=currentYear;
+    document.getElementById("prevBtn").disabled=currentYear<=MIN_YEAR;
+    document.getElementById("nextBtn").disabled=currentYear>=MAX_YEAR;
+
+    const root=document.getElementById("calendar-root");
+    root.innerHTML="";
+    const todayStr=new Date().toISOString().split("T")[0];
+    const months=["January","February","March","April","May","June","July","August","September","October","November","December"];
+
+    for(let m=0;m<12;m++){
+        const card=document.createElement("div");
+        card.className="month-card";
+
+        card.innerHTML=`<div class="month-name">${months[m]}</div>
+        <div class="weekdays">${["S","M","T","W","T","F","S"].map(d=>`<span>${d}</span>`).join("")}</div>`;
+
+        const grid=document.createElement("div");
+        grid.className="days-grid";
+
+        const first=new Date(currentYear,m,1).getDay();
+        const days=new Date(currentYear,m+1,0).getDate();
+
+        for(let i=0;i<first;i++)grid.appendChild(document.createElement("div"));
+
+        for(let d=1;d<=days;d++){
+            const date=new Date(currentYear,m,d);
+            const iso=date.toISOString().split("T")[0];
+            const bn=getBengaliDate(date);
+            const cell=document.createElement("div");
+            cell.className="day";
+            if(bookedSet.has(iso))cell.classList.add("booked");
+            if(iso===todayStr)cell.classList.add("today");
+            if(isAdmin){
+                cell.classList.add("admin-enabled");
+                cell.onclick=()=>toggleBooking(iso,cell);
             }
+            cell.innerHTML=`<div class="greg-date">${d}</div>
+            <div class="bangla-date">${bn.day} ${bn.month}<br>${bn.year}</div>`;
+            grid.appendChild(cell);
         }
 
-        async function submitBookingToggle(dateStr) {
-            if (!isAdmin) return;
+        card.appendChild(grid);
+        root.appendChild(card);
+    }
+}
 
-            // 1. Optimistic UI Update (Immediate feedback)
-            const wasBooked = bookedSet.has(dateStr);
-            const cell = document.querySelector(`.day[data-date="${dateStr}"]`);
-            
-            if (wasBooked) {
-                bookedSet.delete(dateStr);
-                if(cell) cell.classList.remove('booked');
-            } else {
-                bookedSet.add(dateStr);
-                if(cell) cell.classList.add('booked');
-            }
+async function toggleBooking(date,cell){
+    const was=bookedSet.has(date);
+    was?bookedSet.delete(date):bookedSet.add(date);
+    cell.classList.toggle("booked");
+    await fetch(API_URL,{method:"POST",mode:"no-cors",body:JSON.stringify({date})});
+}
 
-            // 2. Send to Backend
-            try {
-                await fetch(API_URL, {
-                    method: "POST",
-                    mode: "no-cors", 
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({ date: dateStr })
-                });
-            } catch (err) {
-                console.error("Sync Error:", err);
-                alert("Error syncing with database. Reverting changes.");
-                
-                // Revert UI on failure
-                if (wasBooked) {
-                    bookedSet.add(dateStr);
-                    if(cell) cell.classList.add('booked');
-                } else {
-                    bookedSet.delete(dateStr);
-                    if(cell) cell.classList.remove('booked');
-                }
-            }
+/* Bengali Date (approx) */
+function getBengaliDate(d){
+    const y=d.getFullYear(),m=d.getMonth(),da=d.getDate();
+    let by=y-(m<3||m===3&&da<14?594:593);
+    const starts=[[3,14,0],[4,15,1],[5,15,2],[6,16,3],[7,16,4],[8,16,5],[9,16,6],[10,15,7],[11,16,8],[0,15,9],[1,14,10],[2,15,11]];
+    let bm=8,bd=1;
+    for(let i=starts.length-1;i>=0;i--){
+        const s=new Date(y,starts[i][0],starts[i][1]);
+        if(d>=s){
+            bd=Math.floor((d-s)/86400000)+1;
+            bm=starts[i][2];
+            break;
         }
-
-        // ==========================================
-        // 4. DATE LOGIC (Gregorian & Bengali)
-        // ==========================================
-        const isLeap = (yr) => (yr % 4 === 0 && yr % 100 !== 0) || (yr % 400 === 0);
-
-        function getBengaliDate(dateObj) {
-            const year = dateObj.getFullYear();
-            const month = dateObj.getMonth();
-            const day = dateObj.getDate();
-            
-            let bsYear = year - 593;
-            let bsMonthIndex = 0;
-            let bsDay = 1;
-
-            // Definition of Bengali Month Starts (Approximate)
-            const starts = [
-                { m: 3, d: 14, bm: 0 },  // Boishakh (Apr 14)
-                { m: 4, d: 15, bm: 1 },  // Joishtho (May 15)
-                { m: 5, d: 15, bm: 2 },  // Asharh (Jun 15)
-                { m: 6, d: 16, bm: 3 },  // Srabon (Jul 16)
-                { m: 7, d: 16, bm: 4 },  // Bhadro (Aug 16)
-                { m: 8, d: 16, bm: 5 },  // Ashwin (Sep 16)
-                { m: 9, d: 16, bm: 6 },  // Kartik (Oct 16)
-                { m: 10, d: 15, bm: 7 }, // Ograhayon (Nov 15)
-                { m: 11, d: 16, bm: 8 }, // Poush (Dec 16)
-                { m: 0, d: 15, bm: 9 },  // Magh (Jan 15)
-                { m: 1, d: 14, bm: 10 }, // Falgun (Feb 14)
-                { m: 2, d: 15, bm: 11 }  // Chaitra (Mar 15)
-            ];
-
-            if (month < 3 || (month === 3 && day < 14)) {
-                bsYear = year - 594;
-            }
-
-            // Sort relative to Gregorian year order (Jan to Dec)
-            const sortedStarts = [
-                 { m: 0, d: 15, bm: 9 },
-                 { m: 1, d: 14, bm: 10 },
-                 { m: 2, d: 15, bm: 11 },
-                 { m: 3, d: 14, bm: 0 },
-                 { m: 4, d: 15, bm: 1 },
-                 { m: 5, d: 15, bm: 2 },
-                 { m: 6, d: 16, bm: 3 },
-                 { m: 7, d: 16, bm: 4 },
-                 { m: 8, d: 16, bm: 5 },
-                 { m: 9, d: 16, bm: 6 },
-                 { m: 10, d: 15, bm: 7 },
-                 { m: 11, d: 16, bm: 8 }
-            ];
-
-            let found = false;
-            for (let i = sortedStarts.length - 1; i >= 0; i--) {
-                const s = sortedStarts[i];
-                const startObj = new Date(year, s.m, s.d);
-                
-                if (dateObj >= startObj) {
-                    const diffTime = Math.abs(dateObj - startObj);
-                    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
-                    bsDay = diffDays + 1;
-                    bsMonthIndex = s.bm;
-                    found = true;
-                    break;
-                }
-            }
-
-            if (!found) {
-                // Must be Jan 1 - Jan 14.
-                const startObj = new Date(year - 1, 11, 16);
-                const diffTime = Math.abs(dateObj - startObj);
-                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-                bsDay = diffDays + 1;
-                bsMonthIndex = 8; // Poush
-            }
-
-            return {
-                day: bsDay,
-                month: BN_MONTHS[bsMonthIndex],
-                year: bsYear
-            };
-        }
-
-        // ==========================================
-        // 5. RENDERING & UI LOGIC
-        // ==========================================
-        function toggleAdminMode() {
-            if (isAdmin) {
-                isAdmin = false;
-                document.getElementById('admin-btn').classList.remove('active');
-                document.getElementById('admin-status').textContent = "Guest View";
-                renderCalendar();
-            } else {
-                const password = prompt("Enter Admin Password:");
-                if (password === "admin") {
-                    isAdmin = true;
-                    document.getElementById('admin-btn').classList.add('active');
-                    document.getElementById('admin-status').textContent = "Admin Mode (Tap date to toggle)";
-                    renderCalendar();
-                } else if (password !== null) {
-                    alert("Incorrect Password");
-                }
-            }
-        }
-
-        function changeYear(delta) {
-            const nextYear = currentYear + delta;
-            
-            // Limit Check
-            if (nextYear < MIN_YEAR || nextYear > MAX_YEAR) return;
-
-            currentYear = nextYear;
-            updateNavState();
-            renderCalendar();
-        }
-
-        function updateNavState() {
-            document.getElementById('prevBtn').disabled = (currentYear <= MIN_YEAR);
-            document.getElementById('nextBtn').disabled = (currentYear >= MAX_YEAR);
-        }
-
-        function renderCalendar() {
-            const container = document.getElementById('calendar-root');
-            const yearDisplay = document.getElementById('currentYearDisplay');
-            
-            container.innerHTML = '';
-            yearDisplay.textContent = currentYear;
-
-            const engMonthNames = [
-                "January", "February", "March", "April", "May", "June", 
-                "July", "August", "September", "October", "November", "December"
-            ];
-            
-            const today = new Date();
-            const todayStr = today.toISOString().split('T')[0];
-
-            // Render 12 Months
-            for (let m = 0; m < 12; m++) {
-                const monthDiv = document.createElement('div');
-                monthDiv.className = 'month-card';
-
-                // Month Header
-                const header = document.createElement('div');
-                header.className = 'month-name';
-                header.textContent = engMonthNames[m];
-                monthDiv.appendChild(header);
-
-                // Weekday Header
-                const weekdayHeader = document.createElement('div');
-                weekdayHeader.className = 'weekdays';
-                ['S','M','T','W','T','F','S'].forEach(d => {
-                    const span = document.createElement('span');
-                    span.textContent = d;
-                    weekdayHeader.appendChild(span);
-                });
-                monthDiv.appendChild(weekdayHeader);
-
-                // Days Grid
-                const grid = document.createElement('div');
-                grid.className = 'days-grid';
-
-                const firstDayIndex = new Date(currentYear, m, 1).getDay(); // 0 = Sun
-                const daysInMonth = new Date(currentYear, m + 1, 0).getDate();
-
-                // Empty cells
-                for (let i = 0; i < firstDayIndex; i++) {
-                    const empty = document.createElement('div');
-                    empty.style.background = '#f9f9f9';
-                    grid.appendChild(empty);
-                }
-
-                // Days
-                for (let d = 1; d <= daysInMonth; d++) {
-                    const dateObj = new Date(currentYear, m, d);
-                    const yStr = currentYear;
-                    const mStr = String(m+1).padStart(2, '0');
-                    const dStr = String(d).padStart(2, '0');
-                    const isoDate = `${yStr}-${mStr}-${dStr}`;
-
-                    const cell = document.createElement('div');
-                    cell.className = 'day';
-                    cell.dataset.date = isoDate;
-
-                    if (bookedSet.has(isoDate)) {
-                        cell.classList.add('booked');
-                    }
-                    if (isoDate === todayStr) {
-                        cell.classList.add('today');
-                    }
-
-                    const bnData = getBengaliDate(dateObj);
-                    
-                    cell.innerHTML = `
-                        <div class="greg-date">${d}</div>
-                        <div class="bangla-date">
-                            ${bnData.day} ${bnData.month}<br>
-                            ${bnData.year}
-                        </div>
-                    `;
-
-                    if (isAdmin) {
-                        cell.classList.add('admin-enabled');
-                        cell.onclick = () => submitBookingToggle(isoDate);
-                    }
-
-                    grid.appendChild(cell);
-                }
-
-                monthDiv.appendChild(grid);
-                container.appendChild(monthDiv);
-            }
-        }
-    </script>
+    }
+    return{day:bd,month:BN_MONTHS[bm],year:by};
+}
+</script>
 </body>
 </html>
