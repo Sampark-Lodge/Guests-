@@ -7,46 +7,40 @@
 
 <style>
 :root{
-  --gold:#f5d76e;
-  --gold-border:#b8962e;
+  --gold:#f6e58d;
+  --gold-border:#b7950b;
   --text:#2c2c2c;
-  --bg:#f6f6f6;
+  --bg:#f4f4f4;
   --blue:#1976d2;
 }
 
-*{box-sizing:border-box;margin:0;padding:0}
+*{margin:0;padding:0;box-sizing:border-box}
 
 body{
   font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
   background:var(--bg);
-  padding:16px;
   color:var(--text);
+  padding:16px;
 }
 
-header{
+h1{
   text-align:center;
-  margin-bottom:16px;
-}
-
-header h1{
+  margin-bottom:10px;
   font-size:1.6rem;
-  letter-spacing:1px;
 }
 
+/* controls */
 .controls{
   display:flex;
   justify-content:center;
   align-items:center;
-  gap:12px;
-  margin:12px 0;
+  gap:14px;
+  margin-bottom:10px;
 }
-
 .controls button{
   padding:6px 14px;
-  font-size:1rem;
   cursor:pointer;
 }
-
 #year{
   font-size:1.4rem;
   font-weight:bold;
@@ -54,42 +48,36 @@ header h1{
 
 .admin-bar{
   text-align:center;
-  margin-bottom:10px;
+  margin-bottom:14px;
 }
-
 #adminBtn{
   padding:6px 14px;
+  border:none;
   background:#333;
   color:#fff;
-  border:none;
   cursor:pointer;
 }
-
 #adminBtn.active{
-  background:green;
+  background:#2e7d32;
 }
 
+/* calendar grid */
 .calendar{
   display:grid;
   grid-template-columns:repeat(2, 1fr);
   gap:16px;
 }
-
-/* Mobile এ ১টা মাস */
-@media (max-width:700px){
-  .calendar{
-    grid-template-columns:1fr;
-  }
+@media(max-width:700px){
+  .calendar{ grid-template-columns:1fr; }
 }
 
-
+/* month */
 .month{
   background:#fff;
   border-radius:8px;
-  overflow:hidden;
   box-shadow:0 2px 8px rgba(0,0,0,.08);
+  overflow:hidden;
 }
-
 .month h2{
   background:#333;
   color:#fff;
@@ -98,11 +86,11 @@ header h1{
   font-size:1rem;
 }
 
+/* weekdays & days */
 .weekdays,.days{
   display:grid;
   grid-template-columns:repeat(7,1fr);
 }
-
 .weekdays div{
   text-align:center;
   font-size:.7rem;
@@ -110,19 +98,18 @@ header h1{
   background:#eee;
 }
 
+/* day cell */
 .day{
   min-height:64px;
   border:1px solid #eee;
   text-align:center;
   padding:4px;
-  cursor:default;
   position:relative;
+  cursor:default;
 }
-
 .day.admin{
   cursor:pointer;
 }
-
 .day.admin:hover{
   background:#e3f2fd;
 }
@@ -133,10 +120,9 @@ header h1{
 }
 
 .eng{
-  font-weight:bold;
+  font-weight:700;
   font-size:1rem;
 }
-
 .bn{
   font-size:.7rem;
   color:#555;
@@ -150,16 +136,16 @@ header h1{
   pointer-events:none;
 }
 
+/* loader */
 .loader{
   position:fixed;
   inset:0;
   background:#fff;
   display:flex;
   flex-direction:column;
-  align-items:center;
   justify-content:center;
+  align-items:center;
   z-index:999;
-  font-size:1.2rem;
 }
 </style>
 </head>
@@ -167,13 +153,11 @@ header h1{
 <body>
 
 <div id="loader" class="loader">
-  <div>Loading calendar…</div>
-  <small>Syncing with booking database</small>
+  <div style="font-size:1.2rem;">Checking available dates…</div>
+  <small>Syncing with Sampark Lodge</small>
 </div>
 
-<header>
-  <h1>Sampark Lodge – Booking Calendar</h1>
-</header>
+<h1>Sampark Lodge – Booking Calendar</h1>
 
 <div class="controls">
   <button onclick="changeYear(-1)">‹</button>
@@ -190,31 +174,32 @@ header h1{
 
 <script>
 /* ================= CONFIG ================= */
-const API =
+const API_URL =
 "https://script.google.com/macros/s/AKfycbzts3-BHw_-Vhm0S5j3P5s6ZtioILUQxp0kN_AFqe7yiAyPWFN69KTgESIMfOJYzPtU6w/exec";
 
-const MIN_YEAR=2025, MAX_YEAR=2040;
+const MIN_YEAR = 2025;
+const MAX_YEAR = 2040;
 
 /* ================= STATE ================= */
-let year=new Date().getFullYear();
-if(year<MIN_YEAR)year=MIN_YEAR;
-if(year>MAX_YEAR)year=MAX_YEAR;
+let year = new Date().getFullYear();
+if(year < MIN_YEAR) year = MIN_YEAR;
+if(year > MAX_YEAR) year = MAX_YEAR;
 
-let booked=new Set();
-let admin=false;
+let booked = new Set();
+let admin = false;
 
 /* ================= INIT ================= */
-document.getElementById("year").textContent=year;
-fetchData();
+document.getElementById("year").textContent = year;
+loadData();
 
 /* ================= DATA ================= */
-async function fetchData(){
+async function loadData(){
   document.getElementById("loader").style.display="flex";
   try{
-    const res=await fetch(API);
-    const data=await res.json();
+    const res = await fetch(API_URL);
+    const data = await res.json();
     booked.clear();
-    data.forEach(d=>booked.add(d.date));
+    data.forEach(d => booked.add(d.date));
     render();
   }catch(e){
     alert("Failed to load booking data");
@@ -223,66 +208,70 @@ async function fetchData(){
 }
 
 async function toggleDate(date){
-  if(!admin)return;
+  if(!admin) return;
 
-  if(booked.has(date)){
-    booked.delete(date);
-  }else{
-    booked.add(date);
-  }
+  // optimistic UI
+  if(booked.has(date)) booked.delete(date);
+  else booked.add(date);
 
   render();
 
-  await fetch(API,{
+  // backend toggle
+  await fetch(API_URL,{
     method:"POST",
     mode:"no-cors",
-    headers:{"Content-Type":"application/json"},
-    body:JSON.stringify({date})
+    headers:{ "Content-Type":"application/json" },
+    body: JSON.stringify({ date })
   });
 }
 
 /* ================= ADMIN ================= */
 function toggleAdmin(){
   if(admin){
-    admin=false;
+    admin = false;
   }else{
-    const p=prompt("Enter admin password");
-    if(p==="admin") admin=true;
-    else return alert("Wrong password");
+    const p = prompt("Enter admin password");
+    if(p !== "admin") return alert("Wrong password");
+    admin = true;
   }
-  document.getElementById("adminBtn").classList.toggle("active",admin);
-  document.getElementById("status").textContent=admin?"Admin mode":"Guest view";
+  document.getElementById("adminBtn").classList.toggle("active", admin);
+  document.getElementById("status").textContent = admin ? "Admin mode" : "Guest view";
   render();
 }
 
 /* ================= YEAR ================= */
 function changeYear(d){
-  const y=year+d;
-  if(y<MIN_YEAR||y>MAX_YEAR)return;
-  year=y;
-  document.getElementById("year").textContent=year;
+  const y = year + d;
+  if(y < MIN_YEAR || y > MAX_YEAR) return;
+  year = y;
+  document.getElementById("year").textContent = year;
   render();
 }
 
 /* ================= CALENDAR ================= */
-const months=["January","February","March","April","May","June","July","August","September","October","November","December"];
-const bnMonths=["Boishakh","Joishtho","Asharh","Srabon","Bhadro","Ashwin","Kartik","Ograhayon","Poush","Magh","Falgun","Chaitra"];
+const months = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+const bnMonths = ["Boishakh","Joishtho","Asharh","Srabon","Bhadro","Ashwin","Kartik","Ograhayon","Poush","Magh","Falgun","Chaitra"];
 
-function getBanglaDate(d){
-  const y=d.getFullYear(),m=d.getMonth(),day=d.getDate();
-  let by=y-593;
-  if(m<3||(m===3&&day<14))by--;
-  const starts=[
+function getBanglaDate(dateObj){
+  const y = dateObj.getFullYear();
+  const m = dateObj.getMonth();
+  const d = dateObj.getDate();
+
+  let by = y - 593;
+  if(m < 3 || (m === 3 && d < 14)) by--;
+
+  const starts = [
     [0,15,9],[1,14,10],[2,15,11],[3,14,0],[4,15,1],[5,15,2],
     [6,16,3],[7,16,4],[8,16,5],[9,16,6],[10,15,7],[11,16,8]
   ];
-  let bm=8,bd=day;
-  for(let i=starts.length-1;i>=0;i--){
-    const s=starts[i];
-    const sd=new Date(y,s[0],s[1]);
-    if(d>=sd){
-      bm=s[2];
-      bd=Math.floor((d-sd)/(86400000))+1;
+
+  let bm = 8, bd = d;
+  for(let i = starts.length-1; i >= 0; i--){
+    const s = starts[i];
+    const sd = new Date(y, s[0], s[1]);
+    if(dateObj >= sd){
+      bm = s[2];
+      bd = Math.floor((dateObj - sd)/86400000) + 1;
       break;
     }
   }
@@ -290,38 +279,45 @@ function getBanglaDate(d){
 }
 
 function render(){
-  const root=document.getElementById("calendar");
-  root.innerHTML="";
-  const today=new Date().toISOString().slice(0,10);
+  const root = document.getElementById("calendar");
+  root.innerHTML = "";
 
-  for(let m=0;m<12;m++){
-    const box=document.createElement("div");
-    box.className="month";
-    box.innerHTML=`<h2>${months[m]}</h2>
-      <div class="weekdays">${"SMTWTFS".split("").map(d=>`<div>${d}</div>`).join("")}</div>`;
-    const days=document.createElement("div");
-    days.className="days";
+  const today = new Date().toISOString().slice(0,10);
 
-    const first=new Date(year,m,1).getDay();
-    const total=new Date(year,m+1,0).getDate();
+  for(let m=0; m<12; m++){
+    const box = document.createElement("div");
+    box.className = "month";
+    box.innerHTML = `
+      <h2>${months[m]}</h2>
+      <div class="weekdays">${"SMTWTFS".split("").map(d=>`<div>${d}</div>`).join("")}</div>
+    `;
 
-    for(let i=0;i<first;i++)days.appendChild(document.createElement("div"));
+    const days = document.createElement("div");
+    days.className = "days";
 
-    for(let d=1;d<=total;d++){
-      const date=`${year}-${String(m+1).padStart(2,"0")}-${String(d).padStart(2,"0")}`;
-      const cell=document.createElement("div");
-      cell.className="day";
-      if(admin)cell.classList.add("admin");
-      if(booked.has(date))cell.classList.add("booked");
-      if(date===today)cell.classList.add("today");
+    const first = new Date(year, m, 1).getDay();
+    const total = new Date(year, m+1, 0).getDate();
 
-      cell.innerHTML=`
+    for(let i=0;i<first;i++) days.appendChild(document.createElement("div"));
+
+    for(let d=1; d<=total; d++){
+      const dateStr = `${year}-${String(m+1).padStart(2,"0")}-${String(d).padStart(2,"0")}`;
+      const cell = document.createElement("div");
+      cell.className = "day";
+      if(admin) cell.classList.add("admin");
+      if(booked.has(dateStr)) cell.classList.add("booked");
+      if(dateStr === today) cell.classList.add("today");
+
+      cell.innerHTML = `
         <div class="eng">${d}</div>
         <div class="bn">${getBanglaDate(new Date(year,m,d))}</div>
       `;
-      if(admin)cell.onclick=()=>toggleDate(date);
+
+      if(admin) cell.onclick = () => toggleDate(dateStr);
+
       days.appendChild(cell);
     }
+
     box.appendChild(days);
     root.appendChild(box);
   }
