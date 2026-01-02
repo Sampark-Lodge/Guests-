@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lodge Booking Calendar</title>
+    <title>Lodge Booking Calendar (2025-2040)</title>
     <style>
         /* --- CSS VARIABLES & RESET --- */
         :root {
@@ -55,6 +55,12 @@
         }
 
         .year-nav button:hover { background: #eee; }
+        
+        .year-nav button:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+            background: #f9f9f9;
+        }
 
         .year-display {
             font-size: 2rem;
@@ -229,9 +235,9 @@
     <!-- Controls -->
     <div class="header-controls">
         <div class="year-nav">
-            <button onclick="changeYear(-1)">&#10094;</button>
+            <button id="prevBtn" onclick="changeYear(-1)">&#10094;</button>
             <div id="currentYearDisplay" class="year-display">2026</div>
-            <button onclick="changeYear(1)">&#10095;</button>
+            <button id="nextBtn" onclick="changeYear(1)">&#10095;</button>
         </div>
         <div class="admin-panel">
             <span id="admin-status">Guest View</span>
@@ -249,9 +255,15 @@
         // 1. CONFIGURATION
         // ==========================================
         const API_URL = "https://script.google.com/macros/s/AKfycbzts3-BHw_-Vhm0S5j3P5s6ZtioILUQxp0kN_AFqe7yiAyPWFN69KTgESIMfOJYzPtU6w/exec";
+        const MIN_YEAR = 2025;
+        const MAX_YEAR = 2040;
         
         // State
         let currentYear = new Date().getFullYear();
+        // Ensure initial year is within bounds
+        if (currentYear < MIN_YEAR) currentYear = MIN_YEAR;
+        if (currentYear > MAX_YEAR) currentYear = MAX_YEAR;
+
         let bookedSet = new Set(); // Stores "YYYY-MM-DD"
         let isAdmin = false;
         
@@ -265,6 +277,7 @@
         // 2. INITIALIZATION
         // ==========================================
         window.addEventListener('DOMContentLoaded', () => {
+            updateNavState(); // Set initial button state
             fetchBookings();
         });
 
@@ -277,7 +290,6 @@
 
             try {
                 // Fetch GET request. 
-                // Note: Standard fetch works fine for GET on GAS if script is public.
                 const response = await fetch(API_URL);
                 const data = await response.json();
 
@@ -318,11 +330,6 @@
 
             // 2. Send to Backend
             try {
-                // We use 'no-cors' for POST usually with GAS Web Apps unless specific headers are set.
-                // However, 'no-cors' means we can't see the response.
-                // We assume success if no network error occurs.
-                // Payload must be text/plain or JSON stringified to trigger correct `doPost` in GAS.
-                
                 await fetch(API_URL, {
                     method: "POST",
                     mode: "no-cors", 
@@ -331,8 +338,6 @@
                     },
                     body: JSON.stringify({ date: dateStr })
                 });
-                
-                // Silent success (optimistic)
             } catch (err) {
                 console.error("Sync Error:", err);
                 alert("Error syncing with database. Reverting changes.");
@@ -351,40 +356,18 @@
         // ==========================================
         // 4. DATE LOGIC (Gregorian & Bengali)
         // ==========================================
-        
-        // Helper: Is Leap Year?
         const isLeap = (yr) => (yr % 4 === 0 && yr % 100 !== 0) || (yr % 400 === 0);
 
-        // Helper: Get Bengali Date
-        // Logic adjusted to match prompt example: Jan 2, 2026 = 18 Poush 1432
         function getBengaliDate(dateObj) {
             const year = dateObj.getFullYear();
-            const month = dateObj.getMonth(); // 0-11
+            const month = dateObj.getMonth();
             const day = dateObj.getDate();
-            
-            // Panjika offsets (Start dates of Bengali months in Gregorian year)
-            // This is a simplified "Surya Siddhanta" approximation suitable for display
-            // Format: [GregMonth, GregDay, BengaliMonthIndex, BengaliYearOffset]
-            // We iterate to find which segment the date falls into.
-            
-            // Bengali Year:
-            // If date < April 14, BS Year = Greg - 594
-            // If date >= April 14, BS Year = Greg - 593
-            
-            const isLeapYear = isLeap(year);
-            const falgunDays = isLeapYear ? 31 : 30; // Revised Panjika often adds leap day to Falgun
-
-            // Definition of Bengali Month Starts (Approximate)
-            // Boishakh starts Apr 14
-            // Poush starts Dec 15/16. Let's use Dec 16 based on prompt (Jan 2 = 18th day means Month started Dec 16)
             
             let bsYear = year - 593;
             let bsMonthIndex = 0;
             let bsDay = 1;
 
-            // Simple Day-Count from Anchor Points
-            // We define the start day of each Bengali month in the Gregorian calendar
-            // [Month, Day] (0-indexed month)
+            // Definition of Bengali Month Starts (Approximate)
             const starts = [
                 { m: 3, d: 14, bm: 0 },  // Boishakh (Apr 14)
                 { m: 4, d: 15, bm: 1 },  // Joishtho (May 15)
@@ -394,33 +377,22 @@
                 { m: 8, d: 16, bm: 5 },  // Ashwin (Sep 16)
                 { m: 9, d: 16, bm: 6 },  // Kartik (Oct 16)
                 { m: 10, d: 15, bm: 7 }, // Ograhayon (Nov 15)
-                { m: 11, d: 16, bm: 8 }, // Poush (Dec 16) - Tuning for 18 Poush = Jan 2
+                { m: 11, d: 16, bm: 8 }, // Poush (Dec 16)
                 { m: 0, d: 15, bm: 9 },  // Magh (Jan 15)
                 { m: 1, d: 14, bm: 10 }, // Falgun (Feb 14)
                 { m: 2, d: 15, bm: 11 }  // Chaitra (Mar 15)
             ];
 
-            // Specific logic for Jan - Apr 13 (End of previous Bengali Year)
             if (month < 3 || (month === 3 && day < 14)) {
                 bsYear = year - 594;
             }
 
-            // Find current Bengali month
-            // We check segments. 
-            // 1. Construct Date objects for the starts in the current Gregorian year
-            // 2. If month is Jan/Feb/Mar, we need to handle the year boundary carefully
-            
-            let currentBnDate = null;
-
-            // Strategy: Calculate day difference from the start of the specific Bengali month
-            // We iterate backwards through the starts list to find the first one that is <= current date
-            
-            // Sort starts relative to Gregorian year order (Jan to Dec)
+            // Sort relative to Gregorian year order (Jan to Dec)
             const sortedStarts = [
-                 { m: 0, d: 15, bm: 9 },  // Magh
-                 { m: 1, d: 14, bm: 10 }, // Falgun
-                 { m: 2, d: 15, bm: 11 }, // Chaitra
-                 { m: 3, d: 14, bm: 0 },  // Boishakh
+                 { m: 0, d: 15, bm: 9 },
+                 { m: 1, d: 14, bm: 10 },
+                 { m: 2, d: 15, bm: 11 },
+                 { m: 3, d: 14, bm: 0 },
                  { m: 4, d: 15, bm: 1 },
                  { m: 5, d: 15, bm: 2 },
                  { m: 6, d: 16, bm: 3 },
@@ -428,7 +400,7 @@
                  { m: 8, d: 16, bm: 5 },
                  { m: 9, d: 16, bm: 6 },
                  { m: 10, d: 15, bm: 7 },
-                 { m: 11, d: 16, bm: 8 }  // Poush
+                 { m: 11, d: 16, bm: 8 }
             ];
 
             let found = false;
@@ -437,7 +409,6 @@
                 const startObj = new Date(year, s.m, s.d);
                 
                 if (dateObj >= startObj) {
-                    // We found the start date
                     const diffTime = Math.abs(dateObj - startObj);
                     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
                     bsDay = diffDays + 1;
@@ -447,10 +418,8 @@
                 }
             }
 
-            // Fallback for dates before Jan 15 (Start of Magh) -> belongs to Poush of previous Dec
             if (!found) {
-                // Must be Jan 1 - Jan 14. This is the tail end of Poush started in prev Dec.
-                // Poush start: Dec 16 (prev year)
+                // Must be Jan 1 - Jan 14.
                 const startObj = new Date(year - 1, 11, 16);
                 const diffTime = Math.abs(dateObj - startObj);
                 const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
@@ -466,7 +435,7 @@
         }
 
         // ==========================================
-        // 5. RENDERING
+        // 5. RENDERING & UI LOGIC
         // ==========================================
         function toggleAdminMode() {
             if (isAdmin) {
@@ -488,8 +457,19 @@
         }
 
         function changeYear(delta) {
-            currentYear += delta;
+            const nextYear = currentYear + delta;
+            
+            // Limit Check
+            if (nextYear < MIN_YEAR || nextYear > MAX_YEAR) return;
+
+            currentYear = nextYear;
+            updateNavState();
             renderCalendar();
+        }
+
+        function updateNavState() {
+            document.getElementById('prevBtn').disabled = (currentYear <= MIN_YEAR);
+            document.getElementById('nextBtn').disabled = (currentYear >= MAX_YEAR);
         }
 
         function renderCalendar() {
@@ -512,13 +492,13 @@
                 const monthDiv = document.createElement('div');
                 monthDiv.className = 'month-card';
 
-                // 1. Month Header
+                // Month Header
                 const header = document.createElement('div');
                 header.className = 'month-name';
                 header.textContent = engMonthNames[m];
                 monthDiv.appendChild(header);
 
-                // 2. Weekday Header
+                // Weekday Header
                 const weekdayHeader = document.createElement('div');
                 weekdayHeader.className = 'weekdays';
                 ['S','M','T','W','T','F','S'].forEach(d => {
@@ -528,25 +508,23 @@
                 });
                 monthDiv.appendChild(weekdayHeader);
 
-                // 3. Days Grid
+                // Days Grid
                 const grid = document.createElement('div');
                 grid.className = 'days-grid';
 
-                // Math for Calendar
                 const firstDayIndex = new Date(currentYear, m, 1).getDay(); // 0 = Sun
                 const daysInMonth = new Date(currentYear, m + 1, 0).getDate();
 
-                // Empty cells before 1st
+                // Empty cells
                 for (let i = 0; i < firstDayIndex; i++) {
                     const empty = document.createElement('div');
                     empty.style.background = '#f9f9f9';
                     grid.appendChild(empty);
                 }
 
-                // Days 1..31
+                // Days
                 for (let d = 1; d <= daysInMonth; d++) {
                     const dateObj = new Date(currentYear, m, d);
-                    // Format YYYY-MM-DD local time safe
                     const yStr = currentYear;
                     const mStr = String(m+1).padStart(2, '0');
                     const dStr = String(d).padStart(2, '0');
@@ -556,7 +534,6 @@
                     cell.className = 'day';
                     cell.dataset.date = isoDate;
 
-                    // Styles
                     if (bookedSet.has(isoDate)) {
                         cell.classList.add('booked');
                     }
@@ -564,7 +541,6 @@
                         cell.classList.add('today');
                     }
 
-                    // Content
                     const bnData = getBengaliDate(dateObj);
                     
                     cell.innerHTML = `
@@ -575,7 +551,6 @@
                         </div>
                     `;
 
-                    // Interaction
                     if (isAdmin) {
                         cell.classList.add('admin-enabled');
                         cell.onclick = () => submitBookingToggle(isoDate);
