@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Check Availability | Sampark Lodge</title>
+
+    <!-- Fonts (same family feel as index) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --gold: #d4af37;
+            --gold-dark: #8c7020;
+            --text-dark: #1a1a1a;
+            --bg-light: #ffffff;
+            --border-soft: rgba(212,175,55,0.4);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Lato', sans-serif;
+            background: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .page-frame {
+            width: 100%;
+            max-width: 420px;
+            border: 2px solid var(--border-soft);
+            border-radius: 14px;
+            padding: 28px 22px 32px;
+            text-align: center;
+        }
+
+        h1 {
+            font-family: 'Cinzel', serif;
+            font-weight: 900;
+            font-size: 32px;
+            color: var(--text-dark);
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            border-radius: 8px;
+        }
+
+        .ornament {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 14px;
+            margin-bottom: 18px;
+            color: var(--gold-dark);
+        }
+
+        .ornament::before,
+        .ornament::after {
+            content: "";
+            width: 40px;
+            height: 1px;
+            background: linear-gradient(to right, transparent, var(--gold), transparent);
+        }
+
+        .subtitle {
+            font-family: 'Cinzel', serif;
+            font-size: 12px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: #555;
+            margin-bottom: 30px;
+        }
+
+        .check-box {
+            border: 1px solid var(--border-soft);
+            border-radius: 10px;
+            padding: 22px;
+        }
+
+        label {
+            display: block;
+            font-size: 14px;
+            margin-bottom: 10px;
+            color: #444;
+        }
+
+        input[type="date"] {
+            width: 100%;
+            padding: 12px;
+            font-size: 15px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            margin-bottom: 18px;
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            font-family: 'Cinzel', serif;
+            font-size: 15px;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            background: var(--gold);
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            color: #fff;
+            transition: background 0.2s ease;
+        }
+
+        button:hover {
+            background: var(--gold-dark);
+        }
+
+        .result {
+            margin-top: 22px;
+            font-size: 16px;
+            font-weight: 700;
+            display: none;
+        }
+
+        .available {
+            color: #2e7d32;
+        }
+
+        .not-available {
+            color: #b71c1c;
+        }
+
+        .footer-note {
+            margin-top: 26px;
+            font-size: 12px;
+            color: #777;
+            line-height: 1.4;
+        }
+    </style>
+</head>
+<body>
+
+<div class="page-frame">
+
+    <h1>Sampark Lodge</h1>
+    <div class="ornament"><span>♦</span></div>
+    <div class="subtitle">Check Date Availability</div>
+
+    <div class="check-box">
+        <label for="dateInput">Select your preferred date</label>
+        <input type="date" id="dateInput">
+
+        <button onclick="checkAvailability()">Check Availability</button>
+
+        <div id="result" class="result"></div>
+    </div>
+
+    <div class="footer-note">
+        For booking confirmation, please call or WhatsApp us.<br>
+        Availability shown here is indicative.
+    </div>
+
+</div>
+
+<script>
+    const API_URL = "https://script.google.com/macros/s/AKfycbzts3-BHw_-Vhm0S5j3P5s6ZtioILUQxp0kN_AFqe7yiAyPWFN69KTgESIMfOJYzPtU6w/exec";
+
+    async function checkAvailability() {
+        const date = document.getElementById("dateInput").value;
+        const resultBox = document.getElementById("result");
+
+        if (!date) {
+            alert("Please select a date.");
+            return;
+        }
+
+        resultBox.style.display = "block";
+        resultBox.textContent = "Checking availability...";
+        resultBox.className = "result";
+
+        try {
+            const res = await fetch(`${API_URL}?checkDate=${date}`);
+            const data = await res.json();
+
+            if (data.available === true) {
+                resultBox.textContent = "✓ Date is currently available";
+                resultBox.classList.add("available");
+            } else {
+                resultBox.textContent = "✕ Date is already reserved";
+                resultBox.classList.add("not-available");
+            }
+        } catch (e) {
+            resultBox.textContent = "Unable to check availability. Please try again.";
+            resultBox.classList.add("not-available");
+        }
+    }
+</script>
+
+</body>
+</html>
