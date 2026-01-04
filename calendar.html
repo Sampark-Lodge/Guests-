@@ -146,20 +146,24 @@ function saveBooking() {
 
     fetch(API_URL, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        mode: "no-cors",          // 🔴 THIS IS REQUIRED
+        headers: {
+            "Content-Type": "application/json"
+        },
         body: JSON.stringify(payload)
-    })
-    .then(() => {
-        if (bookedDates.has(selectedDate)) {
-            bookedDates.delete(selectedDate);
-        } else {
-            bookedDates.add(selectedDate);
-        }
-        closePopup();
-        renderCalendar();
-    })
-    .catch(err => alert("Save failed"));
+    });
+
+    // optimistic UI update (assume success)
+    if (bookedDates.has(selectedDate)) {
+        bookedDates.delete(selectedDate);
+    } else {
+        bookedDates.add(selectedDate);
+    }
+
+    closePopup();
+    renderCalendar();
 }
+
 </script>
 
 </body>
