@@ -137,32 +137,30 @@ function closePopup() {
    SAVE BOOKING (FIXED)
 ===================== */
 function saveBooking() {
-    if (!selectedDate) return;
+  if (!selectedDate) return;
 
-    const payload = {
-        date: selectedDate,
-        note: document.getElementById("note").value
-    };
+  const note = document.getElementById("note").value;
 
-    fetch(API_URL, {
-        method: "POST",
-        mode: "no-cors",          // 🔴 THIS IS REQUIRED
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify(payload)
-    });
+  fetch(API_URL, {
+    method: "POST",
+    mode: "no-cors",
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded"
+    },
+    body: `date=${selectedDate}&note=${encodeURIComponent(note)}`
+  });
 
-    // optimistic UI update (assume success)
-    if (bookedDates.has(selectedDate)) {
-        bookedDates.delete(selectedDate);
-    } else {
-        bookedDates.add(selectedDate);
-    }
+  // optimistic UI
+  if (bookedDates.has(selectedDate)) {
+    bookedDates.delete(selectedDate);
+  } else {
+    bookedDates.add(selectedDate);
+  }
 
-    closePopup();
-    renderCalendar();
+  closePopup();
+  renderCalendar();
 }
+
 
 </script>
 
