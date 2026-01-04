@@ -168,7 +168,17 @@ header h1{
     max-width:380px;
 }
 
-.modal textarea{width:100%;margin:10px 0}
+.modal textarea{width:100%;margin:10px 0; min-height: 80px;}
+
+.modal-btns {
+    display: flex;
+    justify-content: space-between;
+}
+
+.modal-btns button {
+    padding: 8px 16px;
+    cursor: pointer;
+}
 
 /* LOADING */
 #loading-indicator{
@@ -204,8 +214,10 @@ header h1{
 <div class="modal">
 <h3 id="modal-title"></h3>
 <textarea id="note"></textarea>
-<button onclick="saveBooking()">Save</button>
-<button onclick="closeModal()">Cancel</button>
+<div class="modal-btns">
+    <button onclick="saveBooking()">Save</button>
+    <button onclick="closeModal()">Cancel</button>
+</div>
 </div>
 </div>
 
@@ -247,8 +259,8 @@ let data={},selectedDate=null;
 
 document.addEventListener("DOMContentLoaded",()=>{
     if(prompt("Admin Password")==="admin"){
-        auth-overlay.style.display="none";
-        app.style.display="block";
+        document.getElementById("auth-overlay").style.display="none";
+        document.getElementById("app").style.display="block";
         render();
         fetchBookings();
     }
@@ -256,8 +268,9 @@ document.addEventListener("DOMContentLoaded",()=>{
 
 function changeYear(d){year+=d;render()}
 function render(){
-    year-display.textContent=year;
-    calendar.innerHTML="";
+    document.getElementById("year-display").textContent=year;
+    const cal = document.getElementById("calendar");
+    cal.innerHTML="";
     const months=["January","February","March","April","May","June","July","August","September","October","November","December"];
     for(let m=0;m<12;m++){
         const first=new Date(year,m,1).getDay();
@@ -268,35 +281,63 @@ function render(){
         for(let d=1;d<=days;d++){
             const ds=`${year}-${String(m+1).padStart(2,"0")}-${String(d).padStart(2,"0")}`;
             const cls=data[ds]?"day-cell booked":"day-cell";
-            const pan=getBengaliPanjika(new Date(ds));
+            // Create local date object to avoid UTC shifts
+            const pan=getBengaliPanjika(new Date(year, m, d));
             html+=`<div class="${cls}" onclick="openModal('${ds}')">
             <div class="date-eng">${d}</div>
             <div class="date-ben">${pan}</div></div>`;
         }
         html+=`</div></div>`;
-        calendar.innerHTML+=html;
+        cal.innerHTML+=html;
     }
 }
 
 async function fetchBookings(){
-    loading-indicator.textContent="Syncing...";
-    const r=await fetch(API);
-    const j=await r.json();
-    data={};j.forEach(e=>data[e.date]=e.note||"");
-    render();loading-indicator.textContent="";
+    const ind = document.getElementById("loading-indicator");
+    ind.textContent="Syncing...";
+    try {
+        const r=await fetch(API);
+        const j=await r.json();
+        data={};j.forEach(e=>data[e.date]=e.note||"");
+        render();
+    } catch (e) {
+        console.error("Fetch failed", e);
+    }
+    ind.textContent="";
 }
 
 function openModal(d){
     selectedDate=d;
-    modal-title.innerHTML=new Date(d).toDateString()+"<br>"+getBengaliPanjika(new Date(d));
-    note.value=data[d]||"";
-    modal-overlay.style.display="flex";
+    // Parse the date string manually to ensure local time is used for display
+    const parts = d.split('-');
+    const localDate = new Date(parts[0], parts[1]-1, parts[2]);
+    
+    document.getElementById("modal-title").innerHTML=localDate.toDateString()+"<br>"+getBengaliPanjika(localDate);
+    document.getElementById("note").value=data[d]||"";
+    document.getElementById("modal-overlay").style.display="flex";
 }
-function closeModal(){modal-overlay.style.display="none"}
+
+function closeModal(){document.getElementById("modal-overlay").style.display="none"}
+
 async function saveBooking(){
-    const fd=new URLSearchParams({date:selectedDate,note:note.value});
+    const noteVal = document.getElementById("note").value;
+    const fd=new URLSearchParams({date:selectedDate,note:noteVal});
+    
+    // Optimistic update
+    if (data[selectedDate]) {
+         // If it exists, we might be updating or removing (logic depends on backend toggle)
+         // Assuming simple toggle logic: if it exists, remove it locally for now. 
+         // But since we have a note field, user might just be updating note.
+         // Let's assume simply adding/updating for now to reflect "Booking" action
+         data[selectedDate] = noteVal; 
+    } else {
+        data[selectedDate] = noteVal;
+    }
+    render(); // Update UI immediately
+    closeModal();
+
     await fetch(API,{method:"POST",mode:"no-cors",body:fd});
-    closeModal();fetchBookings();
+    fetchBookings(); // Sync with server to confirm state
 }
 </script>
 </body>
