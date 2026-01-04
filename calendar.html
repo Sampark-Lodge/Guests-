@@ -9,336 +9,521 @@
 
 <style>
 :root {
-    --c-gold:#D4AF37;
-    --c-gold-dim:#C5A028;
-    --c-white:rgba(255,255,255,.96);
-    --font-h:'Cinzel',serif;
-    --font-b:'Lato',sans-serif;
-    --shadow:0 4px 15px rgba(0,0,0,.1);
+    --c-gold: #D4AF37;
+    --c-gold-dim: #C5A028;
+    --c-white: #ffffff;
+    --c-text: #333;
+    --font-h: 'Cinzel', serif;
+    --font-b: 'Lato', sans-serif;
+    --shadow: 0 10px 30px rgba(0,0,0,0.1);
 }
 
-*{box-sizing:border-box;margin:0;padding:0}
+* { box-sizing: border-box; margin: 0; padding: 0; }
 
-body{
-    font-family:var(--font-b);
-    background:#f4f4f4 url("./assets/bg.png") center/cover fixed;
-    min-height:100vh;
+body {
+    font-family: var(--font-b);
+    /* Make sure bg.png is in the assets folder */
+    background: #f4f4f4 url("./assets/bg.png") center/cover fixed;
+    min-height: 100vh;
+    padding-bottom: 50px;
+    color: var(--c-text);
 }
 
-/* AUTH */
-#auth-overlay{
-    position:fixed;inset:0;
-    background:#000;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    color:var(--c-gold);
-    z-index:9999;
+/* --- LAYOUT --- */
+.container {
+    max-width: 1000px;
+    margin: 40px auto;
+    padding: 0 20px;
+    display: none; /* Hidden until login */
 }
 
-/* LAYOUT */
-.container{
-    max-width:1100px;
-    margin:0 auto;
-    padding:20px;
-    display:none;
+/* --- HEADER --- */
+header {
+    background: rgba(255, 255, 255, 0.95);
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+    border-top: 4px solid var(--c-gold);
+    text-align: center;
+    position: relative;
+    margin-bottom: 30px;
 }
 
-/* HEADER */
-header{
-    max-width:1100px;
-    margin:0 auto 25px;
-    background:var(--c-white);
-    padding:20px;
-    border-radius:8px;
-    box-shadow:var(--shadow);
-    border-bottom:3px solid var(--c-gold);
-    position:relative;
+header h1 {
+    font-family: var(--font-h);
+    font-size: 2.2rem;
+    color: #222;
+    margin-bottom: 5px;
+    letter-spacing: 1px;
 }
 
-header h1{
-    font-family:var(--font-h);
-    text-align:center;
+.subtitle {
+    font-size: 0.9rem;
+    color: #666;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 20px;
 }
 
-.header-controls{
-    display:flex;
-    justify-content:center;
-    margin-top:15px;
+.year-nav {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
 }
 
-.year-nav{
-    display:flex;
-    gap:14px;
-    font-family:var(--font-h);
-    font-size:1.4rem;
+.nav-btn {
+    background: transparent;
+    border: 1px solid var(--c-gold);
+    color: var(--c-gold-dim);
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s;
 }
 
-.nav-btn{
-    border:2px solid var(--c-gold);
-    background:none;
-    padding:2px 12px;
-    cursor:pointer;
+.nav-btn:hover {
+    background: var(--c-gold);
+    color: #fff;
 }
 
-.sync-btn{
-    position:absolute;
-    right:20px;
-    top:20px;
-    border:1px solid #ccc;
-    background:none;
-    padding:4px 8px;
-    font-size:.75rem;
-    cursor:pointer;
+#year-display {
+    font-family: var(--font-h);
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #222;
+    min-width: 80px;
+    text-align: center;
 }
 
-/* CALENDAR */
-.calendar-grid{
-    display:grid;
-    gap:20px;
-    grid-template-columns:1fr;
+.sync-btn {
+    position: absolute;
+    right: 20px;
+    top: 20px;
+    background: transparent;
+    border: 1px solid #ddd;
+    padding: 6px 12px;
+    font-size: 0.75rem;
+    border-radius: 20px;
+    cursor: pointer;
+    color: #666;
+    transition: 0.3s;
+    font-family: var(--font-b);
 }
-@media(min-width:768px){
-    .calendar-grid{grid-template-columns:1fr 1fr}
-}
+.sync-btn:hover { border-color: var(--c-gold); color: var(--c-gold); }
 
-.month-card{
-    background:var(--c-white);
-    padding:15px;
-    border-radius:8px;
-    box-shadow:var(--shadow);
-}
 
-.month-title{
-    text-align:center;
-    font-family:var(--font-h);
-    color:var(--c-gold-dim);
-    margin-bottom:10px;
+/* --- CALENDAR GRID --- */
+.calendar-wrapper {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 30px;
 }
-
-.days-grid{
-    display:grid;
-    grid-template-columns:repeat(7,1fr);
-    gap:4px;
+@media(min-width: 768px) {
+    .calendar-wrapper { grid-template-columns: 1fr 1fr; }
 }
 
-.weekday{
-    text-align:center;
-    font-size:.7rem;
-    font-weight:bold;
+.month-card {
+    background: rgba(255, 255, 255, 0.95);
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+    border: 1px solid rgba(212, 175, 55, 0.2);
 }
 
-.day-cell{
-    aspect-ratio:1;
-    border:1px solid #eee;
-    border-radius:4px;
-    display:flex;
-    flex-direction:column;
-    justify-content:center;
-    align-items:center;
-    cursor:pointer;
-    background:#fff;
+.month-name {
+    text-align: center;
+    font-family: var(--font-h);
+    color: var(--c-gold-dim);
+    font-size: 1.2rem;
+    margin-bottom: 15px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
 
-.day-cell.booked{
-    background:var(--c-gold);
-    color:#fff;
+.days-header {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    margin-bottom: 10px;
 }
 
-.day-cell.empty{border:none;background:none;cursor:default}
-
-.date-eng{font-weight:700}
-.date-ben{font-size:.65rem}
-
-/* MODAL */
-#modal-overlay{
-    position:fixed;
-    inset:0;
-    background:rgba(0,0,0,.6);
-    display:none;
-    justify-content:center;
-    align-items:center;
+.day-name {
+    text-align: center;
+    font-size: 0.75rem;
+    font-weight: bold;
+    color: #888;
 }
 
-.modal{
-    background:#fff;
-    padding:20px;
-    border-radius:8px;
-    width:90%;
-    max-width:380px;
+.days-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 6px;
 }
 
-.modal textarea{width:100%;margin:10px 0; min-height: 80px;}
+.date-cell {
+    aspect-ratio: 1;
+    border: 1px solid #eee;
+    border-radius: 6px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    background: #fff;
+    transition: transform 0.2s, border-color 0.2s;
+    position: relative;
+}
+
+.date-cell:hover {
+    border-color: var(--c-gold);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+
+.date-cell.empty { background: transparent; border: none; cursor: default; }
+
+/* BOOKED STATUS */
+.date-cell.booked {
+    background: var(--c-gold);
+    color: #fff;
+    border-color: var(--c-gold);
+}
+
+.eng-date {
+    font-size: 1.1rem;
+    font-weight: 700;
+    line-height: 1;
+    margin-bottom: 2px;
+    font-family: var(--font-h);
+}
+
+.ben-date {
+    font-size: 0.6rem;
+    line-height: 1.1;
+    text-align: center;
+    opacity: 0.8;
+}
+
+.date-cell.booked .ben-date { opacity: 0.9; color: #fff; }
+
+
+/* --- MODAL --- */
+#modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.6);
+    backdrop-filter: blur(3px);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+}
+
+.modal {
+    background: #fff;
+    width: 90%;
+    max-width: 400px;
+    padding: 30px;
+    border-radius: 12px;
+    border-top: 5px solid var(--c-gold);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+    animation: slideUp 0.3s ease-out;
+}
+@keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+.modal h3 {
+    font-family: var(--font-h);
+    text-align: center;
+    margin-bottom: 20px;
+    color: #222;
+    line-height: 1.4;
+}
+
+.modal textarea {
+    width: 100%;
+    height: 100px;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-family: var(--font-b);
+    resize: none;
+    margin-bottom: 20px;
+}
+.modal textarea:focus { outline: none; border-color: var(--c-gold); }
 
 .modal-btns {
     display: flex;
-    justify-content: space-between;
+    gap: 10px;
 }
 
-.modal-btns button {
-    padding: 8px 16px;
+.btn {
+    flex: 1;
+    padding: 12px;
+    border: none;
+    border-radius: 6px;
+    font-weight: bold;
     cursor: pointer;
+    font-size: 0.9rem;
+    transition: opacity 0.2s;
 }
 
-/* LOADING */
-#loading-indicator{
-    text-align:center;
-    font-size:.75rem;
-    color:#888;
+.btn-save { background: var(--c-gold); color: #fff; }
+.btn-del { background: #d32f2f; color: #fff; }
+.btn-cancel { background: #f0f0f0; color: #333; }
+.btn:hover { opacity: 0.9; }
+
+
+/* --- AUTH OVERLAY --- */
+#auth-overlay {
+    position: fixed; inset: 0;
+    background: #111;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: var(--c-gold);
+    z-index: 3000;
 }
+
+#loading-text {
+    text-align: center;
+    margin-top: 10px;
+    font-size: 0.8rem;
+    color: #888;
+    height: 20px;
+}
+
 </style>
 </head>
-
 <body>
 
-<div id="auth-overlay"><h2>🔒 Restricted Access</h2></div>
+    <div id="auth-overlay">
+        <h2 style="font-family: 'Cinzel'; font-size: 2rem;">🔒 Restricted Access</h2>
+        <p style="color: #666; margin-top: 10px;">Sampark Lodge Admin</p>
+    </div>
 
-<div class="container" id="app">
-<header>
-    <button class="sync-btn" onclick="fetchBookings()">↻ Sync</button>
-    <h1>Sampark Lodge</h1>
-    <div class="header-controls">
-        <div class="year-nav">
-            <button class="nav-btn" onclick="changeYear(-1)">‹</button>
-            <span id="year-display"></span>
-            <button class="nav-btn" onclick="changeYear(1)">›</button>
+    <div class="container" id="app">
+        <header>
+            <button class="sync-btn" onclick="fetchBookings()">↻ Sync Data</button>
+            <h1>SAMPARK LODGE</h1>
+            <div class="subtitle">Admin Booking Calendar</div>
+            
+            <div class="header-controls">
+                <div class="year-nav">
+                    <button class="nav-btn" onclick="changeYear(-1)">‹</button>
+                    <span id="year-display">2026</span>
+                    <button class="nav-btn" onclick="changeYear(1)">›</button>
+                </div>
+            </div>
+            <div id="loading-text"></div>
+        </header>
+
+        <div class="calendar-wrapper" id="calendar">
+            </div>
+    </div>
+
+    <div id="modal-overlay">
+        <div class="modal">
+            <h3 id="modal-title">Date Info</h3>
+            <textarea id="note-input" placeholder="Add Note (e.g., Wedding - Mr. Sharma)"></textarea>
+            <div class="modal-btns">
+                <button class="btn btn-cancel" onclick="closeModal()">Cancel</button>
+                <button id="save-btn" class="btn btn-save" onclick="saveBooking()">Save</button>
+            </div>
         </div>
     </div>
-    <div id="loading-indicator"></div>
-</header>
-
-<div class="calendar-grid" id="calendar"></div>
-</div>
-
-<div id="modal-overlay">
-<div class="modal">
-<h3 id="modal-title"></h3>
-<textarea id="note"></textarea>
-<div class="modal-btns">
-    <button onclick="saveBooking()">Save</button>
-    <button onclick="closeModal()">Cancel</button>
-</div>
-</div>
-</div>
 
 <script>
-/* ================= PANJIKA ================= */
-function getBengaliPanjika(dateObj){
-    const y=dateObj.getFullYear(),m=dateObj.getMonth(),d=dateObj.getDate();
-    const months=[
-        {n:"পৌষ",s:new Date(y-1,11,16)},
-        {n:"মাঘ",s:new Date(y,0,15)},
-        {n:"ফাল্গুন",s:new Date(y,1,14)},
-        {n:"চৈত্র",s:new Date(y,2,15)},
-        {n:"বৈশাখ",s:new Date(y,3,14)},
-        {n:"জ্যৈষ্ঠ",s:new Date(y,4,15)},
-        {n:"আষাঢ়",s:new Date(y,5,15)},
-        {n:"শ্রাবণ",s:new Date(y,6,16)},
-        {n:"ভাদ্র",s:new Date(y,7,16)},
-        {n:"আশ্বিন",s:new Date(y,8,16)},
-        {n:"কার্তিক",s:new Date(y,9,16)},
-        {n:"অগ্রহায়ণ",s:new Date(y,10,15)}
-    ];
-    let md="পৌষ",dd=d;
-    for(let i=months.length-1;i>=0;i--){
-        if(dateObj>=months[i].s){
-            dd=Math.floor((dateObj-months[i].s)/86400000)+1;
-            md=months[i].n;break;
-        }
-    }
-    let by=y-593;
-    if(m<3||(m===3&&d<14))by=y-594;
-    const suf=dd===1?"লা":dd<=3?"রা":"শে";
-    return `${dd}${suf} ${md} ${by}`;
-}
+/* ================= CONFIG ================= */
+// YOUR EXACT URL (From previous chat)
+const API_URL = "https://script.google.com/macros/s/AKfycbzts3-BHw_-Vhm0S5j3P5s6ZtioILUQxp0kN_AFqe7yiAyPWFN69KTgESIMfOJYzPtU6w/exec";
+let currentYear = new Date().getFullYear();
+let bookings = {}; // Stores "YYYY-MM-DD": "Note"
+let selectedDate = null;
 
-/* ================= APP ================= */
-const API="https://script.google.com/macros/s/AKfycbzts3-BHw_-Vhm0S5j3P5s6ZtioILUQxp0kN_AFqe7yiAyPWFN69KTgESIMfOJYzPtU6w/exec";
-let year=new Date().getFullYear();
-let data={},selectedDate=null;
-
-document.addEventListener("DOMContentLoaded",()=>{
-    if(prompt("Admin Password")==="admin"){
-        document.getElementById("auth-overlay").style.display="none";
-        document.getElementById("app").style.display="block";
-        render();
+/* ================= INIT ================= */
+document.addEventListener("DOMContentLoaded", () => {
+    if(prompt("Enter Admin Password:") === "admin") {
+        document.getElementById("auth-overlay").style.display = "none";
+        document.getElementById("app").style.display = "block";
+        renderCalendar();
         fetchBookings();
+    } else {
+        alert("Incorrect Password.");
     }
 });
 
-function changeYear(d){year+=d;render()}
-function render(){
-    document.getElementById("year-display").textContent=year;
-    const cal = document.getElementById("calendar");
-    cal.innerHTML="";
-    const months=["January","February","March","April","May","June","July","August","September","October","November","December"];
-    for(let m=0;m<12;m++){
-        const first=new Date(year,m,1).getDay();
-        const days=new Date(year,m+1,0).getDate();
-        let html=`<div class="month-card"><div class="month-title">${months[m]}</div><div class="days-grid">`;
-        ["S","M","T","W","T","F","S"].forEach(w=>html+=`<div class="weekday">${w}</div>`);
-        for(let i=0;i<first;i++)html+=`<div class="day-cell empty"></div>`;
-        for(let d=1;d<=days;d++){
-            const ds=`${year}-${String(m+1).padStart(2,"0")}-${String(d).padStart(2,"0")}`;
-            const cls=data[ds]?"day-cell booked":"day-cell";
-            // Create local date object to avoid UTC shifts
-            const pan=getBengaliPanjika(new Date(year, m, d));
-            html+=`<div class="${cls}" onclick="openModal('${ds}')">
-            <div class="date-eng">${d}</div>
-            <div class="date-ben">${pan}</div></div>`;
+/* ================= LOGIC ================= */
+
+function getBengaliDate(jsDate) {
+    const y = jsDate.getFullYear(), m = jsDate.getMonth(), d = jsDate.getDate();
+    const starts = [
+        new Date(y-1,11,16), new Date(y,0,15), new Date(y,1,14), new Date(y,2,15), 
+        new Date(y,3,14), new Date(y,4,15), new Date(y,5,15), new Date(y,6,16), 
+        new Date(y,7,16), new Date(y,8,16), new Date(y,9,16), new Date(y,10,15)
+    ];
+    const monthNames = ["পৌষ","মাঘ","ফাল্গুন","চৈত্র","বৈশাখ","জ্যৈষ্ঠ","আষাঢ়","শ্রাবণ","ভাদ্র","আশ্বিন","কার্তিক","অগ্রহায়ণ"];
+    
+    let bnMonthIndex = 0, bnDay = 1;
+    for(let i=11; i>=0; i--) {
+        if(jsDate >= starts[i]) {
+            bnMonthIndex = i;
+            const diffTime = Math.abs(jsDate - starts[i]);
+            bnDay = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
+            break;
         }
-        html+=`</div></div>`;
-        cal.innerHTML+=html;
+    }
+    if(jsDate < starts[0]) { bnMonthIndex = 0; bnDay = d + 16; }
+
+    const toBnNum = n => n.toString().replace(/\d/g, d => "০১২৩৪৫৬৭৮৯"[d]);
+    return `${toBnNum(bnDay)} ${monthNames[bnMonthIndex]}`;
+}
+
+function renderCalendar() {
+    document.getElementById("year-display").innerText = currentYear;
+    const grid = document.getElementById("calendar");
+    grid.innerHTML = "";
+    
+    const engMonths = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+    
+    for(let m=0; m<12; m++) {
+        const card = document.createElement("div");
+        card.className = "month-card";
+        
+        let html = `<div class="month-name">${engMonths[m]}</div>`;
+        html += `<div class="days-header">`;
+        ["S","M","T","W","T","F","S"].forEach(d => html += `<div class="day-name">${d}</div>`);
+        html += `</div><div class="days-grid">`;
+        
+        const firstDay = new Date(currentYear, m, 1).getDay();
+        const daysInMonth = new Date(currentYear, m+1, 0).getDate();
+        
+        for(let i=0; i<firstDay; i++) html += `<div class="date-cell empty"></div>`;
+        
+        for(let d=1; d<=daysInMonth; d++) {
+            const dateStr = `${currentYear}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+            
+            // --- FIX IS HERE ---
+            // We check hasOwnProperty to ensure empty notes still count as booked
+            const isBooked = bookings.hasOwnProperty(dateStr) ? "booked" : "";
+            
+            const jsDate = new Date(currentYear, m, d);
+            const benDate = getBengaliDate(jsDate);
+            
+            html += `
+            <div class="date-cell ${isBooked}" onclick="openModal('${dateStr}')">
+                <span class="eng-date">${d}</span>
+                <span class="ben-date">${benDate}</span>
+            </div>`;
+        }
+        
+        html += `</div>`;
+        card.innerHTML = html;
+        grid.appendChild(card);
     }
 }
 
-async function fetchBookings(){
-    const ind = document.getElementById("loading-indicator");
-    ind.textContent="Syncing...";
+async function fetchBookings() {
+    const loader = document.getElementById("loading-text");
+    loader.innerText = "Syncing...";
     try {
-        const r=await fetch(API);
-        const j=await r.json();
-        data={};j.forEach(e=>data[e.date]=e.note||"");
-        render();
-    } catch (e) {
-        console.error("Fetch failed", e);
+        const res = await fetch(API_URL);
+        const data = await res.json();
+        
+        // Populate bookings map
+        bookings = {};
+        data.forEach(item => {
+            // Store empty string if note is missing
+            bookings[item.date] = item.note || "";
+        });
+        
+        renderCalendar();
+        loader.innerText = "";
+    } catch(e) {
+        loader.innerText = "Sync Error!";
+        console.error(e);
     }
-    ind.textContent="";
 }
 
-function openModal(d){
-    selectedDate=d;
-    // Parse the date string manually to ensure local time is used for display
-    const parts = d.split('-');
-    const localDate = new Date(parts[0], parts[1]-1, parts[2]);
-    
-    document.getElementById("modal-title").innerHTML=localDate.toDateString()+"<br>"+getBengaliPanjika(localDate);
-    document.getElementById("note").value=data[d]||"";
-    document.getElementById("modal-overlay").style.display="flex";
+function changeYear(dir) {
+    currentYear += dir;
+    renderCalendar();
 }
 
-function closeModal(){document.getElementById("modal-overlay").style.display="none"}
-
-async function saveBooking(){
-    const noteVal = document.getElementById("note").value;
-    const fd=new URLSearchParams({date:selectedDate,note:noteVal});
+/* ================= INTERACTION ================= */
+function openModal(dateStr) {
+    selectedDate = dateStr;
+    const [y, m, d] = dateStr.split('-');
+    const jsDate = new Date(y, m-1, d);
     
-    // Optimistic update
-    if (data[selectedDate]) {
-         // If it exists, we might be updating or removing (logic depends on backend toggle)
-         // Assuming simple toggle logic: if it exists, remove it locally for now. 
-         // But since we have a note field, user might just be updating note.
-         // Let's assume simply adding/updating for now to reflect "Booking" action
-         data[selectedDate] = noteVal; 
+    const niceDate = jsDate.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+    const bnDate = getBengaliDate(jsDate);
+    
+    document.getElementById("modal-title").innerHTML = `${niceDate}<br><span style="font-size:0.8em; color:#d4af37">${bnDate}</span>`;
+    
+    // Check if property exists, NOT if it evaluates to true
+    const exists = bookings.hasOwnProperty(dateStr);
+    document.getElementById("note-input").value = exists ? bookings[dateStr] : "";
+    
+    const btn = document.getElementById("save-btn");
+    if(exists) {
+        btn.innerText = "Remove Booking";
+        btn.className = "btn btn-del";
     } else {
-        data[selectedDate] = noteVal;
+        btn.innerText = "Mark Booked";
+        btn.className = "btn btn-save";
     }
-    render(); // Update UI immediately
-    closeModal();
-
-    await fetch(API,{method:"POST",mode:"no-cors",body:fd});
-    fetchBookings(); // Sync with server to confirm state
+    
+    document.getElementById("modal-overlay").style.display = "flex";
 }
+
+function closeModal() {
+    document.getElementById("modal-overlay").style.display = "none";
+}
+
+async function saveBooking() {
+    const note = document.getElementById("note-input").value;
+    const exists = bookings.hasOwnProperty(selectedDate);
+    const oldNote = bookings[selectedDate];
+    
+    // --- OPTIMISTIC UI UPDATE ---
+    // If it exists, we REMOVE it (Toggle Off)
+    // If it doesn't exist, we ADD it (Toggle On)
+    if(exists) {
+        delete bookings[selectedDate];
+    } else {
+        bookings[selectedDate] = note;
+    }
+    
+    closeModal();
+    renderCalendar(); // Visual update happens immediately
+    
+    // Send to server
+    const formData = new URLSearchParams();
+    formData.append("date", selectedDate);
+    formData.append("note", note);
+    
+    try {
+        await fetch(API_URL, { method: "POST", mode: "no-cors", body: formData });
+    } catch(e) {
+        alert("Network Error: Could not save.");
+        // Revert change on error
+        if(exists) bookings[selectedDate] = oldNote;
+        else delete bookings[selectedDate];
+        renderCalendar();
+    }
+}
+
+document.getElementById("modal-overlay").addEventListener("click", e => {
+    if(e.target.id === "modal-overlay") closeModal();
+});
+
 </script>
 </body>
 </html>
