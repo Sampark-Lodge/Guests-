@@ -20,7 +20,6 @@
             --font-heading: 'Cinzel', serif;
             --font-body: 'Lato', sans-serif;
             --shadow-card: 0 4px 15px rgba(0, 0, 0, 0.1);
-            --shadow-hover: 0 6px 20px rgba(0, 0, 0, 0.15);
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -28,7 +27,7 @@
         body {
             font-family: var(--font-body);
             background-color: #f4f4f4;
-            /* Matches main website theme */
+            /* Ensure you have this image or remove this line */
             background-image: url("./assets/bg.png"); 
             background-size: cover;
             background-attachment: fixed;
@@ -47,6 +46,7 @@
             align-items: center;
             justify-content: center;
             color: var(--c-gold);
+            flex-direction: column;
         }
 
         /* --- Layout --- */
@@ -65,19 +65,27 @@
             border-radius: 8px;
             border-bottom: 3px solid var(--c-gold);
             box-shadow: var(--shadow-card);
+            position: relative;
         }
 
         h1 {
             font-family: var(--font-heading);
             color: var(--c-text-dark);
-            margin-bottom: 10px;
+            margin-bottom: 5px;
         }
 
-        .year-nav {
+        .header-controls {
             display: flex;
             justify-content: center;
             align-items: center;
             gap: 20px;
+            margin-top: 15px;
+        }
+
+        .year-nav {
+            display: flex;
+            align-items: center;
+            gap: 15px;
             font-size: 1.5rem;
             font-weight: bold;
             font-family: var(--font-heading);
@@ -87,10 +95,11 @@
             background: none;
             border: 2px solid var(--c-gold);
             color: var(--c-text-dark);
-            padding: 5px 15px;
+            padding: 2px 12px;
             cursor: pointer;
             border-radius: 4px;
             transition: all 0.3s ease;
+            font-size: 1.2rem;
         }
 
         .nav-btn:hover {
@@ -98,17 +107,30 @@
             color: #fff;
         }
 
+        /* Sync Button */
+        .sync-btn {
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            background: transparent;
+            border: 1px solid #ccc;
+            color: #666;
+            padding: 5px 10px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            border-radius: 4px;
+        }
+        .sync-btn:hover { border-color: var(--c-gold); color: var(--c-gold); }
+
         /* --- Calendar Grid --- */
         .calendar-grid {
             display: grid;
             gap: 20px;
-            /* Mobile: 1 month per row */
             grid-template-columns: 1fr; 
         }
 
         @media (min-width: 768px) {
             .calendar-grid {
-                /* Desktop: 2 months per row */
                 grid-template-columns: 1fr 1fr; 
             }
         }
@@ -189,14 +211,15 @@
         .date-eng {
             font-size: 1rem;
             font-weight: 700;
+            line-height: 1;
         }
 
         .date-ben {
-            font-size: 0.6rem;
+            font-size: 0.65rem;
             color: #888;
-            margin-top: 2px;
+            margin-top: 4px;
             text-align: center;
-            line-height: 1.1;
+            line-height: 1;
         }
 
         /* --- Admin Modal --- */
@@ -229,8 +252,10 @@
 
         .modal h3 {
             font-family: var(--font-heading);
-            margin-bottom: 15px;
+            margin-bottom: 10px;
             color: var(--c-text-dark);
+            text-align: center;
+            line-height: 1.4;
         }
 
         .modal-info {
@@ -240,6 +265,7 @@
             background: #f9f9f9;
             padding: 10px;
             border-radius: 4px;
+            text-align: center;
         }
 
         .modal textarea {
@@ -260,7 +286,7 @@
 
         .modal-actions {
             display: flex;
-            justify-content: flex-end;
+            justify-content: space-between;
             gap: 10px;
         }
 
@@ -271,6 +297,7 @@
             cursor: pointer;
             font-weight: bold;
             transition: background 0.2s;
+            flex: 1;
         }
 
         .btn-cancel {
@@ -294,9 +321,10 @@
         /* Spinner for loading */
         #loading-indicator {
             text-align: center;
-            padding: 20px;
+            font-size: 0.8rem;
             color: var(--c-gold-dim);
             font-style: italic;
+            height: 20px;
         }
 
     </style>
@@ -304,20 +332,23 @@
 <body>
 
     <div id="auth-overlay">
-        <h2>🔒 Restricted Access</h2>
+        <h2 style="font-family: 'Cinzel'">🔒 Restricted Access</h2>
     </div>
 
     <div class="container" id="app-container">
         <header>
+            <button class="sync-btn" onclick="fetchBookings()">↻ Sync Data</button>
             <h1>Sampark Lodge</h1>
             <p style="color: #666; font-size: 0.9rem; margin-bottom: 15px;">INTERNAL ADMIN BOOKING SYSTEM</p>
             
-            <div class="year-nav">
-                <button class="nav-btn" onclick="changeYear(-1)">&#8249;</button>
-                <span id="current-year-display">2026</span>
-                <button class="nav-btn" onclick="changeYear(1)">&#8250;</button>
+            <div class="header-controls">
+                <div class="year-nav">
+                    <button class="nav-btn" onclick="changeYear(-1)">&#8249;</button>
+                    <span id="current-year-display">2026</span>
+                    <button class="nav-btn" onclick="changeYear(1)">&#8250;</button>
+                </div>
             </div>
-            <div id="loading-indicator">Syncing with database...</div>
+            <div id="loading-indicator">Waiting for sync...</div>
         </header>
 
         <div class="calendar-grid" id="calendar-grid">
@@ -327,13 +358,13 @@
     <div id="modal-overlay">
         <div class="modal">
             <h3 id="modal-date-title">Date</h3>
-            <div class="modal-info">
-                <p id="modal-ben-date" style="font-weight: bold;"></p>
-                <p id="modal-status" style="margin-top:5px; font-size: 0.8rem;"></p>
+            
+            <div class="modal-info" id="modal-status">
+                Loading status...
             </div>
             
-            <label for="admin-note" style="font-size: 0.8rem; font-weight: bold; display: block; margin-bottom: 5px;">Admin Note (Private):</label>
-            <textarea id="admin-note" placeholder="e.g. Wedding, Mr. Sharma, Paid advance..."></textarea>
+            <label for="admin-note" style="font-size: 0.8rem; font-weight: bold; display: block; margin-bottom: 5px;">Admin Note:</label>
+            <textarea id="admin-note" placeholder="e.g. Wedding, Advance Paid, Mr. Roy..."></textarea>
             
             <div class="modal-actions">
                 <button class="btn btn-cancel" onclick="closeModal()">Cancel</button>
@@ -346,14 +377,14 @@
     // ==========================================
     // ⚙️ CONFIGURATION
     // ==========================================
-    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzts3-BHw_-Vhm0S5j3P5s6ZtioILUQxp0kN_AFqe7yiAyPWFN69KTgESIMfOJYzPtU6w/exec"; 
-    // Example format: https://script.google.com/macros/s/..../exec
+    // PASTE YOUR NEW DEPLOYMENT URL HERE
+    const APPS_SCRIPT_URL = "YOUR_DEPLOYMENT_URL_HERE"; 
     
     // ==========================================
     // 🔐 AUTH & STATE
     // ==========================================
     let currentYear = new Date().getFullYear();
-    let bookedData = {}; // Object to store { "YYYY-MM-DD": "Note content" }
+    let bookedData = {}; // Stores { "YYYY-MM-DD": "Note" }
     
     document.addEventListener("DOMContentLoaded", () => {
         // Simple Admin Gate
@@ -364,7 +395,7 @@
             initCalendar();
         } else {
             alert("Access Denied");
-            document.getElementById('auth-overlay').innerHTML = "<h2>🚫 Access Denied</h2>";
+            document.getElementById('auth-overlay').innerHTML = "<h2>🚫 Access Denied</h2><p>Refresh to try again</p>";
         }
     });
 
@@ -421,13 +452,14 @@
                 const isBooked = bookedData.hasOwnProperty(dateStr);
                 const isToday = (d === today.getDate() && m === today.getMonth() && currentYear === today.getFullYear());
                 
-                // Bengali Date Helper (Gregorian date in Bengali script + Localized Format)
+                // Bengali Date Logic for Cell
                 const dateObj = new Date(currentYear, m, d);
-                // Intl formatter for Bengali India
-                const benFormatter = new Intl.DateTimeFormat('bn-IN', { 
-                    day: 'numeric', month: 'long', year: 'numeric' 
+                // 'u-ca-beng' triggers Bengali Calendar (Panjika style)
+                const benFormatter = new Intl.DateTimeFormat('bn-IN-u-ca-beng', { 
+                    day: 'numeric', 
+                    month: 'long' 
                 });
-                const benDateText = benFormatter.format(dateObj); // e.g., ১৮ জানুয়ারী, ২০২৬
+                const benDateText = benFormatter.format(dateObj); // e.g. "২০ পৌষ"
 
                 const classes = `day-cell ${isBooked ? 'booked' : ''} ${isToday ? 'today' : ''}`;
                 
@@ -449,21 +481,22 @@
     // 🌐 API HANDLERS
     // ==========================================
 
-    // GET Bookings
     async function fetchBookings() {
         const indicator = document.getElementById('loading-indicator');
+        indicator.innerText = "Syncing with database...";
+        indicator.style.color = "var(--c-gold-dim)";
+        
         try {
             const res = await fetch(APPS_SCRIPT_URL);
             const data = await res.json();
             
-            // Convert Array to Map for O(1) lookup
             bookedData = {}; 
             data.forEach(item => {
                 bookedData[item.date] = item.note || "";
             });
 
-            renderCalendar(); // Re-render with new data
-            indicator.innerText = "Synced.";
+            renderCalendar(); 
+            indicator.innerText = "Synced successfully.";
             setTimeout(() => indicator.innerText = "", 2000);
         } catch (e) {
             console.error(e);
@@ -472,7 +505,6 @@
         }
     }
 
-    // POST Booking (Toggle)
     async function submitBooking() {
         const date = document.getElementById('modal-date-title').dataset.raw;
         const note = document.getElementById('admin-note').value;
@@ -488,10 +520,8 @@
         }
         
         closeModal();
-        renderCalendar(); // Immediate visual feedback
+        renderCalendar(); 
 
-        // Prepare Data for Google Apps Script
-        // Must use x-www-form-urlencoded for standard POST handling in GAS without CORS complex preflight
         const formData = new URLSearchParams();
         formData.append('date', date);
         formData.append('note', note);
@@ -499,14 +529,11 @@
         try {
             await fetch(APPS_SCRIPT_URL, {
                 method: "POST",
-                mode: "no-cors", // CRITICAL: Opaque response
-                headers: {
-                    "Content-Type": "application/x-www-form-urlencoded"
-                },
+                mode: "no-cors",
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
                 body: formData.toString()
             });
-            // Since mode is no-cors, we cannot read the response. 
-            // We assume success based on optimistic update.
+            // Implicit success with no-cors
         } catch (e) {
             alert("Network Error: Could not save booking.");
             // Revert state if error
@@ -523,7 +550,6 @@
     function openModal(dateStr) {
         const modal = document.getElementById('modal-overlay');
         const title = document.getElementById('modal-date-title');
-        const benDateDisplay = document.getElementById('modal-ben-date');
         const statusDisplay = document.getElementById('modal-status');
         const textarea = document.getElementById('admin-note');
         const btn = document.getElementById('modal-action-btn');
@@ -531,13 +557,22 @@
         const isBooked = bookedData.hasOwnProperty(dateStr);
         const savedNote = bookedData[dateStr] || "";
 
-        // Format Title
-        title.innerText = dateStr;
-        title.dataset.raw = dateStr; // Store raw YYYY-MM-DD for logic
-
-        // Format Bengali display for Modal
+        // Create Date Object
         const dObj = new Date(dateStr);
-        benDateDisplay.innerText = new Intl.DateTimeFormat('bn-IN', { dateStyle: 'full' }).format(dObj);
+
+        // 1. English Part
+        const engPart = new Intl.DateTimeFormat('en-US', { 
+            month: 'long', day: 'numeric', year: 'numeric' 
+        }).format(dObj);
+
+        // 2. Bengali Part (Year is auto-converted to 1432 etc)
+        const benPart = new Intl.DateTimeFormat('bn-IN-u-ca-beng', { 
+            day: 'numeric', month: 'long', year: 'numeric' 
+        }).format(dObj);
+        
+        // Combine in Title
+        title.innerHTML = `<span style="font-size:1.2em">${engPart}</span><br><span style="font-size:0.9em; color:#d4af37; font-family:'Lato'">${benPart}</span>`;
+        title.dataset.raw = dateStr; 
 
         textarea.value = savedNote;
 
@@ -558,7 +593,6 @@
         document.getElementById('modal-overlay').style.display = 'none';
     }
 
-    // Close modal on click outside
     document.getElementById('modal-overlay').addEventListener('click', (e) => {
         if (e.target.id === 'modal-overlay') closeModal();
     });
