@@ -27,6 +27,7 @@
         body {
             font-family: var(--font-body);
             background-color: #f4f4f4;
+            /* Ensure you have an image at ./assets/bg.png or remove this line */
             background-image: url("./assets/bg.png"); 
             background-size: cover;
             background-attachment: fixed;
@@ -53,7 +54,7 @@
             max-width: 1200px;
             margin: 0 auto;
             padding: 20px;
-            display: none;
+            display: none; /* Hidden until auth */
         }
 
         header {
@@ -101,8 +102,12 @@
             font-size: 1.2rem;
         }
 
-        .nav-btn:hover { background: var(--c-gold); color: #fff; }
+        .nav-btn:hover {
+            background: var(--c-gold);
+            color: #fff;
+        }
 
+        /* Sync Button */
         .sync-btn {
             position: absolute;
             right: 20px;
@@ -126,7 +131,9 @@
         }
 
         @media (min-width: 768px) {
-            .calendar-grid { grid-template-columns: 1fr 1fr; }
+            .calendar-grid {
+                grid-template-columns: 1fr 1fr; 
+            }
         }
 
         .month-card {
@@ -180,17 +187,28 @@
             transform: translateY(-1px);
         }
 
-        .day-cell.empty { background: transparent; border: none; cursor: default; }
+        .day-cell.empty {
+            background: transparent;
+            border: none;
+            cursor: default;
+        }
 
-        .day-cell.today { border: 2px solid var(--c-gold); }
+        .day-cell.today {
+            border: 2px solid var(--c-gold);
+        }
 
+        /* Booking Status Styles */
         .day-cell.booked {
             background-color: var(--c-gold);
             color: #fff;
             border-color: var(--c-gold-dim);
         }
-        .day-cell.booked .date-ben { color: rgba(255,255,255, 0.9); }
 
+        .day-cell.booked .date-ben {
+            color: rgba(255,255,255, 0.9);
+        }
+
+        /* Date Text */
         .date-eng {
             font-size: 1rem;
             font-weight: 700;
@@ -262,7 +280,10 @@
             margin-bottom: 15px;
         }
 
-        .modal textarea:focus { outline: none; border-color: var(--c-gold); }
+        .modal textarea:focus {
+            outline: none;
+            border-color: var(--c-gold);
+        }
 
         .modal-actions {
             display: flex;
@@ -280,12 +301,25 @@
             flex: 1;
         }
 
-        .btn-cancel { background: #e0e0e0; color: #333; }
-        .btn-save { background: var(--c-gold); color: #fff; }
-        .btn-delete { background: #d9534f; color: #fff; }
+        .btn-cancel {
+            background: #e0e0e0;
+            color: #333;
+        }
+
+        .btn-save {
+            background: var(--c-gold);
+            color: #fff;
+        }
+        
+        .btn-delete {
+            background: #d9534f;
+            color: #fff;
+        }
+
         .btn-save:hover { background: var(--c-gold-dim); }
         .btn-delete:hover { background: #c9302c; }
 
+        /* Spinner for loading */
         #loading-indicator {
             text-align: center;
             font-size: 0.8rem;
@@ -293,6 +327,7 @@
             font-style: italic;
             height: 20px;
         }
+
     </style>
 </head>
 <body>
@@ -349,9 +384,10 @@
     // 🔐 AUTH & STATE
     // ==========================================
     let currentYear = new Date().getFullYear();
-    let bookedData = {}; 
+    let bookedData = {}; // Stores { "YYYY-MM-DD": "Note" }
     
     document.addEventListener("DOMContentLoaded", () => {
+        // Simple Admin Gate
         const pass = prompt("Enter Admin Password:");
         if(pass === "admin") {
             document.getElementById('auth-overlay').style.display = 'none';
@@ -362,91 +398,6 @@
             document.getElementById('auth-overlay').innerHTML = "<h2>🚫 Access Denied</h2><p>Refresh to try again</p>";
         }
     });
-
-    // ==========================================
-    // 📆 CUSTOM BENGALI CONVERTER (MANUAL)
-    // ==========================================
-    // Since Intl API is inconsistent across browsers for 'u-ca-beng',
-    // we use a robust calculation to ensure correct Panjika dates.
-    
-    const BN_DIGITS = ['০','১','২','৩','৪','৫','৬','৭','৮','৯'];
-    const BN_MONTHS = [
-        "পৌষ", "মাঘ", "ফাল্গুন", "চৈত্র", "বৈশাখ", "জ্যৈষ্ঠ", 
-        "আষাঢ়", "শ্রাবণ", "ভাদ্র", "আশ্বিন", "কার্তিক", "অগ্রহায়ণ"
-    ];
-
-    function toBengaliNumber(n) {
-        return n.toString().split('').map(d => BN_DIGITS[d] || d).join('');
-    }
-
-    function getBengaliDate(jsDate) {
-        const day = jsDate.getDate();
-        const month = jsDate.getMonth(); // 0 = Jan
-        const year = jsDate.getFullYear();
-
-        let bnDay, bnMonthIndex, bnYear;
-
-        // Approximate Bengali Year (Before April 15 it's Year-594, After it's Year-593)
-        // Note: This logic is simplified for UI display purposes (Panjika approximation)
-        
-        // Month Logic (Standard West Bengal Panjika Start Dates)
-        // Poush starts ~Dec 16 | Magh starts ~Jan 15
-        
-        if (month === 0) { // January
-            if (day <= 14) { bnMonthIndex = 0; bnDay = day + 16; bnYear = year - 594; } // Poush
-            else { bnMonthIndex = 1; bnDay = day - 14; bnYear = year - 594; } // Magh
-        }
-        else if (month === 1) { // February
-            if (day <= 12) { bnMonthIndex = 1; bnDay = day + 17; bnYear = year - 594; } // Magh
-            else { bnMonthIndex = 2; bnDay = day - 12; bnYear = year - 594; } // Falgun
-        }
-        else if (month === 2) { // March
-            if (day <= 14) { bnMonthIndex = 2; bnDay = day + 16; bnYear = year - 594; } // Falgun
-            else { bnMonthIndex = 3; bnDay = day - 14; bnYear = year - 594; } // Chaitra
-        }
-        else if (month === 3) { // April
-            if (day <= 13) { bnMonthIndex = 3; bnDay = day + 16; bnYear = year - 594; } // Chaitra
-            else { bnMonthIndex = 4; bnDay = day - 13; bnYear = year - 593; } // Boishakh (New Year)
-        }
-        else if (month === 4) { // May
-            if (day <= 14) { bnMonthIndex = 4; bnDay = day + 17; bnYear = year - 593; } // Boishakh
-            else { bnMonthIndex = 5; bnDay = day - 14; bnYear = year - 593; } // Jaishtha
-        }
-        else if (month === 5) { // June
-            if (day <= 14) { bnMonthIndex = 5; bnDay = day + 17; bnYear = year - 593; } // Jaishtha
-            else { bnMonthIndex = 6; bnDay = day - 14; bnYear = year - 593; } // Ashar
-        }
-        else if (month === 6) { // July
-            if (day <= 15) { bnMonthIndex = 6; bnDay = day + 17; bnYear = year - 593; } // Ashar
-            else { bnMonthIndex = 7; bnDay = day - 15; bnYear = year - 593; } // Srabon
-        }
-        else if (month === 7) { // August
-            if (day <= 15) { bnMonthIndex = 7; bnDay = day + 16; bnYear = year - 593; } // Srabon
-            else { bnMonthIndex = 8; bnDay = day - 15; bnYear = year - 593; } // Bhadra
-        }
-        else if (month === 8) { // September
-            if (day <= 15) { bnMonthIndex = 8; bnDay = day + 16; bnYear = year - 593; } // Bhadra
-            else { bnMonthIndex = 9; bnDay = day - 15; bnYear = year - 593; } // Ashwin
-        }
-        else if (month === 9) { // October
-            if (day <= 15) { bnMonthIndex = 9; bnDay = day + 15; bnYear = year - 593; } // Ashwin
-            else { bnMonthIndex = 10; bnDay = day - 15; bnYear = year - 593; } // Kartik
-        }
-        else if (month === 10) { // November
-            if (day <= 14) { bnMonthIndex = 10; bnDay = day + 15; bnYear = year - 593; } // Kartik
-            else { bnMonthIndex = 11; bnDay = day - 14; bnYear = year - 593; } // Agrahayan
-        }
-        else if (month === 11) { // December
-            if (day <= 14) { bnMonthIndex = 11; bnDay = day + 16; bnYear = year - 593; } // Agrahayan
-            else { bnMonthIndex = 0; bnDay = day - 14; bnYear = year - 593; } // Poush
-        }
-
-        return {
-            day: toBengaliNumber(bnDay),
-            month: BN_MONTHS[bnMonthIndex],
-            year: toBengaliNumber(bnYear)
-        };
-    }
 
     // ==========================================
     // 📅 CORE LOGIC
@@ -463,6 +414,7 @@
         renderCalendar();
     }
 
+    // 1. Render the Grid
     function renderCalendar() {
         const grid = document.getElementById('calendar-grid');
         grid.innerHTML = "";
@@ -472,31 +424,42 @@
                           "July", "August", "September", "October", "November", "December"];
 
         for (let m = 0; m < 12; m++) {
-            const firstDay = new Date(currentYear, m, 1).getDay();
+            const firstDay = new Date(currentYear, m, 1).getDay(); // 0 = Sunday
             const daysInMonth = new Date(currentYear, m + 1, 0).getDate();
 
+            // Create Month Card
             const card = document.createElement('div');
             card.className = 'month-card';
+
             let html = `<div class="month-title">${monthNames[m]}</div>`;
             html += `<div class="days-grid">`;
             
+            // Weekday headers
             ['S','M','T','W','T','F','S'].forEach(d => {
                 html += `<div class="weekday">${d}</div>`;
             });
 
+            // Empty cells before 1st of month
             for (let i = 0; i < firstDay; i++) {
                 html += `<div class="day-cell empty"></div>`;
             }
 
+            // Days
             for (let d = 1; d <= daysInMonth; d++) {
                 const dateStr = `${currentYear}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+                
+                // Check if booked
                 const isBooked = bookedData.hasOwnProperty(dateStr);
                 const isToday = (d === today.getDate() && m === today.getMonth() && currentYear === today.getFullYear());
                 
-                // --- MANUAL BENGALI CALCULATION ---
+                // Bengali Date Logic for Cell
                 const dateObj = new Date(currentYear, m, d);
-                const benData = getBengaliDate(dateObj);
-                const benDateText = `${benData.day} ${benData.month}`; // e.g. ২০ পৌষ
+                // 'u-ca-beng' triggers Bengali Calendar (Panjika style)
+                const benFormatter = new Intl.DateTimeFormat('bn-IN-u-ca-beng', { 
+                    day: 'numeric', 
+                    month: 'long' 
+                });
+                const benDateText = benFormatter.format(dateObj); // e.g. "২০ পৌষ"
 
                 const classes = `day-cell ${isBooked ? 'booked' : ''} ${isToday ? 'today' : ''}`;
                 
@@ -508,7 +471,7 @@
                 `;
             }
 
-            html += `</div>`;
+            html += `</div>`; // Close grid
             card.innerHTML = html;
             grid.appendChild(card);
         }
@@ -545,11 +508,16 @@
     async function submitBooking() {
         const date = document.getElementById('modal-date-title').dataset.raw;
         const note = document.getElementById('admin-note').value;
+        const btn = document.getElementById('modal-action-btn');
 
+        // Optimistic UI Update
         const wasBooked = bookedData.hasOwnProperty(date);
         
-        if (wasBooked) { delete bookedData[date]; } 
-        else { bookedData[date] = note; }
+        if (wasBooked) {
+            delete bookedData[date]; // Unbook
+        } else {
+            bookedData[date] = note; // Book
+        }
         
         closeModal();
         renderCalendar(); 
@@ -565,8 +533,10 @@
                 headers: { "Content-Type": "application/x-www-form-urlencoded" },
                 body: formData.toString()
             });
+            // Implicit success with no-cors
         } catch (e) {
             alert("Network Error: Could not save booking.");
+            // Revert state if error
             if (wasBooked) bookedData[date] = note;
             else delete bookedData[date];
             renderCalendar();
@@ -576,3 +546,57 @@
     // ==========================================
     // 💬 INTERACTION
     // ==========================================
+
+    function openModal(dateStr) {
+        const modal = document.getElementById('modal-overlay');
+        const title = document.getElementById('modal-date-title');
+        const statusDisplay = document.getElementById('modal-status');
+        const textarea = document.getElementById('admin-note');
+        const btn = document.getElementById('modal-action-btn');
+
+        const isBooked = bookedData.hasOwnProperty(dateStr);
+        const savedNote = bookedData[dateStr] || "";
+
+        // Create Date Object
+        const dObj = new Date(dateStr);
+
+        // 1. English Part (e.g., January 4, 2026)
+        const engPart = new Intl.DateTimeFormat('en-US', { 
+            month: 'long', day: 'numeric', year: 'numeric' 
+        }).format(dObj);
+
+        // 2. Bengali Part (e.g., ২০শে পৌষ ১৪৩২)
+        const benPart = new Intl.DateTimeFormat('bn-IN-u-ca-beng', { 
+            day: 'numeric', month: 'long', year: 'numeric' 
+        }).format(dObj);
+        
+        // Combine in Title
+        title.innerHTML = `<span style="font-size:1.2em">${engPart}</span><br><span style="font-size:0.9em; color:#d4af37; font-family:'Lato'">${benPart}</span>`;
+        title.dataset.raw = dateStr; 
+
+        textarea.value = savedNote;
+
+        if (isBooked) {
+            statusDisplay.innerHTML = `<span style="color:var(--c-gold)">● Currently Booked</span>`;
+            btn.innerText = "Remove Booking";
+            btn.className = "btn btn-delete";
+        } else {
+            statusDisplay.innerHTML = `<span style="color:green">● Available</span>`;
+            btn.innerText = "Mark as Booked";
+            btn.className = "btn btn-save";
+        }
+
+        modal.style.display = 'flex';
+    }
+
+    function closeModal() {
+        document.getElementById('modal-overlay').style.display = 'none';
+    }
+
+    document.getElementById('modal-overlay').addEventListener('click', (e) => {
+        if (e.target.id === 'modal-overlay') closeModal();
+    });
+
+</script>
+</body>
+</html>
