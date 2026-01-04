@@ -3,120 +3,142 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sampark Lodge | Admin Calendar</title>
+<title>Sampark Lodge | Admin Luxury Calendar</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;800&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
 
 <style>
 :root {
+    /* Luxury Palette */
     --c-gold: #D4AF37;
-    --c-gold-dim: #C5A028;
-    --c-white: #ffffff;
-    --c-text: #333;
-    --font-h: 'Cinzel', serif;
-    --font-b: 'Lato', sans-serif;
-    --shadow: 0 10px 30px rgba(0,0,0,0.1);
+    --c-gold-light: #F3E5AB;
+    --c-gold-dark: #aa8c2c;
+    --c-text-main: #1a1a1a;
+    --c-text-muted: #666;
+    --bg-glass: rgba(255, 255, 255, 0.85);
+    --border-glass: 1px solid rgba(255, 255, 255, 0.6);
+    --shadow-soft: 0 8px 32px rgba(0, 0, 0, 0.05);
+    --shadow-hover: 0 12px 40px rgba(212, 175, 55, 0.2);
+    
+    --font-heading: 'Cinzel', serif;
+    --font-body: 'Lato', sans-serif;
 }
 
-* { box-sizing: border-box; margin: 0; padding: 0; }
+* { box-sizing: border-box; margin: 0; padding: 0; outline: none; }
 
 body {
-    font-family: var(--font-b);
-    /* Make sure bg.png is in the assets folder */
-    background: #f4f4f4 url("./assets/bg.png") center/cover fixed;
+    font-family: var(--font-body);
+    /* Background Image Required */
+    background: #fdfcf8 url("./assets/bg.png") center/cover fixed;
+    color: var(--c-text-main);
     min-height: 100vh;
-    padding-bottom: 50px;
-    color: var(--c-text);
+    padding-bottom: 60px;
+    -webkit-font-smoothing: antialiased;
 }
+
+/* --- ANIMATIONS --- */
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
 /* --- LAYOUT --- */
 .container {
-    max-width: 1000px;
+    max-width: 1100px;
     margin: 40px auto;
     padding: 0 20px;
-    display: none; /* Hidden until login */
+    display: none; /* Hidden until auth */
+    animation: fadeIn 0.8s ease-out;
 }
 
-/* --- HEADER --- */
+/* --- HEADER CARD --- */
 header {
-    background: rgba(255, 255, 255, 0.95);
-    padding: 30px;
-    border-radius: 12px;
-    box-shadow: var(--shadow);
-    border-top: 4px solid var(--c-gold);
+    background: var(--bg-glass);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: var(--border-glass);
+    padding: 35px;
+    border-radius: 20px;
+    box-shadow: var(--shadow-soft);
     text-align: center;
     position: relative;
-    margin-bottom: 30px;
+    margin-bottom: 40px;
+    border-bottom: 3px solid var(--c-gold);
 }
 
 header h1 {
-    font-family: var(--font-h);
-    font-size: 2.2rem;
-    color: #222;
+    font-family: var(--font-heading);
+    font-size: 2.5rem;
+    font-weight: 600;
+    color: var(--c-text-main);
+    letter-spacing: 2px;
     margin-bottom: 5px;
-    letter-spacing: 1px;
+    text-transform: uppercase;
 }
 
 .subtitle {
-    font-size: 0.9rem;
-    color: #666;
-    letter-spacing: 2px;
+    font-size: 0.85rem;
+    color: var(--c-gold-dark);
+    letter-spacing: 3px;
     text-transform: uppercase;
-    margin-bottom: 20px;
+    font-weight: 700;
+    margin-bottom: 25px;
 }
 
+/* --- CONTROLS --- */
 .year-nav {
-    display: flex;
-    justify-content: center;
+    display: inline-flex;
     align-items: center;
-    gap: 15px;
+    gap: 20px;
+    background: #fff;
+    padding: 8px 25px;
+    border-radius: 50px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    border: 1px solid rgba(212, 175, 55, 0.3);
 }
 
 .nav-btn {
     background: transparent;
-    border: 1px solid var(--c-gold);
-    color: var(--c-gold-dim);
-    width: 35px;
-    height: 35px;
-    border-radius: 50%;
+    border: none;
+    color: var(--c-gold-dark);
+    font-size: 1.5rem;
     cursor: pointer;
-    font-size: 1.2rem;
+    transition: transform 0.2s;
     display: flex;
     align-items: center;
-    justify-content: center;
-    transition: all 0.3s;
 }
 
-.nav-btn:hover {
-    background: var(--c-gold);
-    color: #fff;
-}
+.nav-btn:hover { transform: scale(1.2); color: var(--c-gold); }
 
 #year-display {
-    font-family: var(--font-h);
+    font-family: var(--font-heading);
     font-size: 1.8rem;
-    font-weight: bold;
-    color: #222;
+    font-weight: 700;
+    color: var(--c-text-main);
     min-width: 80px;
     text-align: center;
 }
 
 .sync-btn {
     position: absolute;
-    right: 20px;
-    top: 20px;
-    background: transparent;
-    border: 1px solid #ddd;
-    padding: 6px 12px;
-    font-size: 0.75rem;
-    border-radius: 20px;
+    right: 30px;
+    top: 30px;
+    background: #fff;
+    border: 1px solid var(--c-gold);
+    color: var(--c-gold-dark);
+    padding: 8px 16px;
+    font-size: 0.7rem;
+    border-radius: 30px;
     cursor: pointer;
-    color: #666;
-    transition: 0.3s;
-    font-family: var(--font-b);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all 0.3s;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
 }
-.sync-btn:hover { border-color: var(--c-gold); color: var(--c-gold); }
 
+.sync-btn:hover {
+    background: var(--c-gold);
+    color: #fff;
+    box-shadow: var(--shadow-hover);
+}
 
 /* --- CALENDAR GRID --- */
 .calendar-wrapper {
@@ -129,22 +151,29 @@ header h1 {
 }
 
 .month-card {
-    background: rgba(255, 255, 255, 0.95);
-    padding: 20px;
-    border-radius: 12px;
-    box-shadow: var(--shadow);
-    border: 1px solid rgba(212, 175, 55, 0.2);
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(8px);
+    padding: 25px;
+    border-radius: 16px;
+    box-shadow: var(--shadow-soft);
+    border: 1px solid rgba(255,255,255,0.8);
+    transition: transform 0.3s;
+}
+
+.month-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-hover);
 }
 
 .month-name {
     text-align: center;
-    font-family: var(--font-h);
-    color: var(--c-gold-dim);
-    font-size: 1.2rem;
-    margin-bottom: 15px;
+    font-family: var(--font-heading);
+    color: var(--c-text-main);
+    font-size: 1.3rem;
+    margin-bottom: 20px;
     font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 1px;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+    padding-bottom: 10px;
 }
 
 .days-header {
@@ -155,131 +184,150 @@ header h1 {
 
 .day-name {
     text-align: center;
-    font-size: 0.75rem;
-    font-weight: bold;
-    color: #888;
+    font-size: 0.7rem;
+    font-weight: 800;
+    color: var(--c-gold-dark);
+    text-transform: uppercase;
 }
 
 .days-grid {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
-    gap: 6px;
+    gap: 8px;
 }
 
+/* --- DATE CELLS --- */
 .date-cell {
     aspect-ratio: 1;
-    border: 1px solid #eee;
-    border-radius: 6px;
+    border-radius: 8px;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     cursor: pointer;
     background: #fff;
-    transition: transform 0.2s, border-color 0.2s;
+    border: 1px solid rgba(0,0,0,0.03);
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
+    overflow: hidden;
 }
 
 .date-cell:hover {
     border-color: var(--c-gold);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    transform: scale(1.05);
+    box-shadow: 0 5px 15px rgba(212, 175, 55, 0.15);
+    z-index: 2;
 }
 
 .date-cell.empty { background: transparent; border: none; cursor: default; }
 
-/* BOOKED STATUS */
+/* Booked State - Luxury Gold Gradient */
 .date-cell.booked {
-    background: var(--c-gold);
+    background: linear-gradient(135deg, #D4AF37 0%, #C5A028 100%);
     color: #fff;
-    border-color: var(--c-gold);
+    border: none;
+    box-shadow: inset 0 0 10px rgba(0,0,0,0.1);
 }
 
 .eng-date {
-    font-size: 1.1rem;
+    font-size: 1rem;
     font-weight: 700;
     line-height: 1;
-    margin-bottom: 2px;
-    font-family: var(--font-h);
+    margin-bottom: 3px;
+    font-family: var(--font-body);
 }
 
 .ben-date {
     font-size: 0.6rem;
-    line-height: 1.1;
+    line-height: 1;
     text-align: center;
-    opacity: 0.8;
+    opacity: 0.6;
+    font-weight: 400;
 }
 
-.date-cell.booked .ben-date { opacity: 0.9; color: #fff; }
+.date-cell.booked .ben-date { opacity: 0.9; color: rgba(255,255,255,0.9); }
+.date-cell:hover .ben-date { opacity: 1; }
 
 
-/* --- MODAL --- */
+/* --- MODAL (POPUP) --- */
 #modal-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.6);
-    backdrop-filter: blur(3px);
+    position: fixed; inset: 0;
+    background: rgba(26, 26, 26, 0.6);
+    backdrop-filter: blur(5px);
     display: none;
     justify-content: center;
     align-items: center;
-    z-index: 2000;
+    z-index: 5000;
 }
 
 .modal {
     background: #fff;
     width: 90%;
-    max-width: 400px;
-    padding: 30px;
-    border-radius: 12px;
-    border-top: 5px solid var(--c-gold);
-    box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-    animation: slideUp 0.3s ease-out;
+    max-width: 420px;
+    padding: 35px;
+    border-radius: 20px;
+    box-shadow: 0 25px 50px rgba(0,0,0,0.25);
+    text-align: center;
+    border: 1px solid rgba(212, 175, 55, 0.3);
+    animation: modalPop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
-@keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+@keyframes modalPop { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 
 .modal h3 {
-    font-family: var(--font-h);
-    text-align: center;
-    margin-bottom: 20px;
-    color: #222;
-    line-height: 1.4;
+    font-family: var(--font-heading);
+    font-size: 1.5rem;
+    color: var(--c-text-main);
+    margin-bottom: 5px;
+}
+
+.modal-date-sub {
+    font-size: 0.9rem;
+    color: var(--c-gold);
+    font-family: var(--font-heading);
+    margin-bottom: 25px;
+    display: block;
 }
 
 .modal textarea {
     width: 100%;
     height: 100px;
-    padding: 12px;
-    border: 1px solid #ddd;
-    border-radius: 6px;
-    font-family: var(--font-b);
+    padding: 15px;
+    border: 2px solid #f0f0f0;
+    border-radius: 12px;
+    font-family: var(--font-body);
+    font-size: 0.95rem;
     resize: none;
-    margin-bottom: 20px;
+    margin-bottom: 25px;
+    transition: border-color 0.3s;
+    background: #fafafa;
 }
-.modal textarea:focus { outline: none; border-color: var(--c-gold); }
+.modal textarea:focus { border-color: var(--c-gold); background: #fff; }
 
-.modal-btns {
-    display: flex;
-    gap: 10px;
-}
+.modal-btns { display: flex; gap: 12px; }
 
 .btn {
     flex: 1;
-    padding: 12px;
+    padding: 14px;
     border: none;
-    border-radius: 6px;
-    font-weight: bold;
+    border-radius: 12px;
+    font-weight: 700;
     cursor: pointer;
     font-size: 0.9rem;
-    transition: opacity 0.2s;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: all 0.2s;
 }
 
-.btn-save { background: var(--c-gold); color: #fff; }
-.btn-del { background: #d32f2f; color: #fff; }
-.btn-cancel { background: #f0f0f0; color: #333; }
-.btn:hover { opacity: 0.9; }
+.btn-save { background: var(--c-gold); color: #fff; box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3); }
+.btn-save:hover { background: var(--c-gold-dark); transform: translateY(-2px); }
 
+.btn-del { background: #d9534f; color: #fff; box-shadow: 0 4px 15px rgba(217, 83, 79, 0.3); }
+.btn-del:hover { background: #c9302c; transform: translateY(-2px); }
 
-/* --- AUTH OVERLAY --- */
+.btn-cancel { background: #f0f0f0; color: #666; }
+.btn-cancel:hover { background: #e0e0e0; }
+
+/* --- AUTH SCREEN --- */
 #auth-overlay {
     position: fixed; inset: 0;
     background: #111;
@@ -288,79 +336,75 @@ header h1 {
     justify-content: center;
     align-items: center;
     color: var(--c-gold);
-    z-index: 3000;
+    z-index: 6000;
 }
-
-#loading-text {
-    text-align: center;
-    margin-top: 10px;
-    font-size: 0.8rem;
-    color: #888;
-    height: 20px;
-}
+#loading-text { font-size: 0.8rem; color: #999; margin-top: 10px; font-style: italic; min-height: 20px; }
 
 </style>
 </head>
 <body>
 
     <div id="auth-overlay">
-        <h2 style="font-family: 'Cinzel'; font-size: 2rem;">🔒 Restricted Access</h2>
-        <p style="color: #666; margin-top: 10px;">Sampark Lodge Admin</p>
+        <h2 style="font-family: 'Cinzel'; font-size: 2.5rem; letter-spacing: 2px;">SAMPARK LODGE</h2>
+        <p style="color: #666; margin-top: 10px; letter-spacing: 1px;">SECURE ADMIN ACCESS</p>
     </div>
 
     <div class="container" id="app">
         <header>
-            <button class="sync-btn" onclick="fetchBookings()">↻ Sync Data</button>
-            <h1>SAMPARK LODGE</h1>
-            <div class="subtitle">Admin Booking Calendar</div>
+            <button class="sync-btn" onclick="fetchBookings()">↻ Sync</button>
+            <h1>Sampark Lodge</h1>
+            <div class="subtitle">Admin Booking Dashboard</div>
             
             <div class="header-controls">
                 <div class="year-nav">
-                    <button class="nav-btn" onclick="changeYear(-1)">‹</button>
+                    <button class="nav-btn" onclick="changeYear(-1)">&#8249;</button>
                     <span id="year-display">2026</span>
-                    <button class="nav-btn" onclick="changeYear(1)">›</button>
+                    <button class="nav-btn" onclick="changeYear(1)">&#8250;</button>
                 </div>
             </div>
             <div id="loading-text"></div>
         </header>
 
-        <div class="calendar-wrapper" id="calendar">
-            </div>
+        <div class="calendar-wrapper" id="calendar"></div>
     </div>
 
     <div id="modal-overlay">
         <div class="modal">
-            <h3 id="modal-title">Date Info</h3>
-            <textarea id="note-input" placeholder="Add Note (e.g., Wedding - Mr. Sharma)"></textarea>
+            <h3 id="modal-title-main">Date</h3>
+            <span id="modal-title-sub" class="modal-date-sub">Bengali Date</span>
+            
+            <textarea id="note-input" placeholder="Enter booking details (Name, Event Type, Amount)..."></textarea>
+            
             <div class="modal-btns">
                 <button class="btn btn-cancel" onclick="closeModal()">Cancel</button>
-                <button id="save-btn" class="btn btn-save" onclick="saveBooking()">Save</button>
+                <button id="save-btn" class="btn btn-save" onclick="saveBooking()">Save Booking</button>
             </div>
         </div>
     </div>
 
 <script>
-/* ================= CONFIG ================= */
-// YOUR EXACT URL (From previous chat)
+/* ================= CONFIGURATION ================= */
 const API_URL = "https://script.google.com/macros/s/AKfycbzts3-BHw_-Vhm0S5j3P5s6ZtioILUQxp0kN_AFqe7yiAyPWFN69KTgESIMfOJYzPtU6w/exec";
 let currentYear = new Date().getFullYear();
 let bookings = {}; // Stores "YYYY-MM-DD": "Note"
 let selectedDate = null;
 
-/* ================= INIT ================= */
+/* ================= AUTHENTICATION ================= */
 document.addEventListener("DOMContentLoaded", () => {
+    // Simple password gate
     if(prompt("Enter Admin Password:") === "admin") {
         document.getElementById("auth-overlay").style.display = "none";
         document.getElementById("app").style.display = "block";
         renderCalendar();
         fetchBookings();
     } else {
-        alert("Incorrect Password.");
+        alert("Incorrect Password. Refresh to try again.");
     }
 });
 
 /* ================= LOGIC ================= */
 
+// Bengali Panjika Calculation
 function getBengaliDate(jsDate) {
     const y = jsDate.getFullYear(), m = jsDate.getMonth(), d = jsDate.getDate();
     const starts = [
@@ -385,6 +429,7 @@ function getBengaliDate(jsDate) {
     return `${toBnNum(bnDay)} ${monthNames[bnMonthIndex]}`;
 }
 
+// Render the 12-month Grid
 function renderCalendar() {
     document.getElementById("year-display").innerText = currentYear;
     const grid = document.getElementById("calendar");
@@ -409,8 +454,7 @@ function renderCalendar() {
         for(let d=1; d<=daysInMonth; d++) {
             const dateStr = `${currentYear}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
             
-            // --- FIX IS HERE ---
-            // We check hasOwnProperty to ensure empty notes still count as booked
+            // Check property existence for booking status
             const isBooked = bookings.hasOwnProperty(dateStr) ? "booked" : "";
             
             const jsDate = new Date(currentYear, m, d);
@@ -422,31 +466,27 @@ function renderCalendar() {
                 <span class="ben-date">${benDate}</span>
             </div>`;
         }
-        
         html += `</div>`;
         card.innerHTML = html;
         grid.appendChild(card);
     }
 }
 
+// Data Fetching
 async function fetchBookings() {
     const loader = document.getElementById("loading-text");
-    loader.innerText = "Syncing...";
+    loader.innerText = "Syncing with database...";
     try {
         const res = await fetch(API_URL);
         const data = await res.json();
         
-        // Populate bookings map
         bookings = {};
-        data.forEach(item => {
-            // Store empty string if note is missing
-            bookings[item.date] = item.note || "";
-        });
+        data.forEach(item => bookings[item.date] = item.note || "");
         
         renderCalendar();
-        loader.innerText = "";
+        loader.innerText = "Last synced: Just now";
     } catch(e) {
-        loader.innerText = "Sync Error!";
+        loader.innerText = "Sync Failed. Check internet.";
         console.error(e);
     }
 }
@@ -465,9 +505,10 @@ function openModal(dateStr) {
     const niceDate = jsDate.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
     const bnDate = getBengaliDate(jsDate);
     
-    document.getElementById("modal-title").innerHTML = `${niceDate}<br><span style="font-size:0.8em; color:#d4af37">${bnDate}</span>`;
+    document.getElementById("modal-title-main").innerText = niceDate;
+    document.getElementById("modal-title-sub").innerText = bnDate;
     
-    // Check if property exists, NOT if it evaluates to true
+    // Check if booked
     const exists = bookings.hasOwnProperty(dateStr);
     document.getElementById("note-input").value = exists ? bookings[dateStr] : "";
     
@@ -476,7 +517,7 @@ function openModal(dateStr) {
         btn.innerText = "Remove Booking";
         btn.className = "btn btn-del";
     } else {
-        btn.innerText = "Mark Booked";
+        btn.innerText = "Confirm Booking";
         btn.className = "btn btn-save";
     }
     
@@ -487,14 +528,13 @@ function closeModal() {
     document.getElementById("modal-overlay").style.display = "none";
 }
 
+// Save Logic
 async function saveBooking() {
     const note = document.getElementById("note-input").value;
     const exists = bookings.hasOwnProperty(selectedDate);
     const oldNote = bookings[selectedDate];
     
-    // --- OPTIMISTIC UI UPDATE ---
-    // If it exists, we REMOVE it (Toggle Off)
-    // If it doesn't exist, we ADD it (Toggle On)
+    // Optimistic Update
     if(exists) {
         delete bookings[selectedDate];
     } else {
@@ -502,9 +542,9 @@ async function saveBooking() {
     }
     
     closeModal();
-    renderCalendar(); // Visual update happens immediately
+    renderCalendar();
     
-    // Send to server
+    // Send to Server
     const formData = new URLSearchParams();
     formData.append("date", selectedDate);
     formData.append("note", note);
@@ -513,13 +553,13 @@ async function saveBooking() {
         await fetch(API_URL, { method: "POST", mode: "no-cors", body: formData });
     } catch(e) {
         alert("Network Error: Could not save.");
-        // Revert change on error
         if(exists) bookings[selectedDate] = oldNote;
         else delete bookings[selectedDate];
         renderCalendar();
     }
 }
 
+// Close on outside click
 document.getElementById("modal-overlay").addEventListener("click", e => {
     if(e.target.id === "modal-overlay") closeModal();
 });
