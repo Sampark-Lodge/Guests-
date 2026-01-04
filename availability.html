@@ -4,30 +4,34 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Check Availability | Sampark Lodge</title>
-
-    <!-- Fonts (same family feel as index) -->
+    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
 
     <style>
         :root {
-            --gold: #d4af37;
-            --gold-dark: #8c7020;
-            --text-dark: #1a1a1a;
-            --bg-light: #ffffff;
-            --border-soft: rgba(212,175,55,0.4);
+            --c-gold: #D4AF37;
+            --c-gold-dim: #C5A028;
+            --c-bg-dark: #1a1a1a;
+            --c-text-dark: #2c2c2c;
+            --c-white-translucent: rgba(255, 255, 255, 0.96);
+            --font-heading: 'Cinzel', serif;
+            --font-body: 'Lato', sans-serif;
+            --shadow-soft: 0 10px 30px rgba(0, 0, 0, 0.15);
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
-            font-family: 'Lato', sans-serif;
-            background: #ffffff;
+            font-family: var(--font-body);
+            background-color: #f0f0f0;
+            /* Ensure bg.png exists in your assets folder */
+            background-image: url("./assets/bg.png");
+            background-size: cover;
+            background-attachment: fixed;
+            background-position: center;
+            color: var(--c-text-dark);
             min-height: 100vh;
             display: flex;
             align-items: center;
@@ -35,173 +39,221 @@
             padding: 20px;
         }
 
-        .page-frame {
+        /* --- Main Card --- */
+        .check-card {
+            background: var(--c-white-translucent);
             width: 100%;
-            max-width: 420px;
-            border: 2px solid var(--border-soft);
-            border-radius: 14px;
-            padding: 28px 22px 32px;
+            max-width: 480px;
+            padding: 40px 30px;
+            border-radius: 12px;
+            border-top: 5px solid var(--c-gold);
+            box-shadow: var(--shadow-soft);
             text-align: center;
+            position: relative;
         }
 
         h1 {
-            font-family: 'Cinzel', serif;
-            font-weight: 900;
-            font-size: 32px;
-            color: var(--text-dark);
-            letter-spacing: 2px;
-            margin-bottom: 10px;
-            text-transform: uppercase;
-            border-radius: 8px;
-        }
-
-        .ornament {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 14px;
-            margin-bottom: 18px;
-            color: var(--gold-dark);
-        }
-
-        .ornament::before,
-        .ornament::after {
-            content: "";
-            width: 40px;
-            height: 1px;
-            background: linear-gradient(to right, transparent, var(--gold), transparent);
+            font-family: var(--font-heading);
+            color: var(--c-text-dark);
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+            letter-spacing: 1px;
         }
 
         .subtitle {
-            font-family: 'Cinzel', serif;
-            font-size: 12px;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            color: #555;
+            color: #666;
+            font-size: 0.95rem;
             margin-bottom: 30px;
+            font-style: italic;
         }
 
-        .check-box {
-            border: 1px solid var(--border-soft);
-            border-radius: 10px;
-            padding: 22px;
+        /* --- Input Section --- */
+        .input-group {
+            margin-bottom: 25px;
+            text-align: left;
         }
 
         label {
             display: block;
-            font-size: 14px;
-            margin-bottom: 10px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            margin-bottom: 8px;
             color: #444;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         input[type="date"] {
             width: 100%;
-            padding: 12px;
-            font-size: 15px;
+            padding: 12px 15px;
+            font-size: 1rem;
+            border: 2px solid #e0e0e0;
             border-radius: 6px;
-            border: 1px solid #ccc;
-            margin-bottom: 18px;
+            font-family: var(--font-body);
+            transition: border-color 0.3s;
+            background: #fff;
+            color: #333;
         }
 
-        button {
+        input[type="date"]:focus {
+            outline: none;
+            border-color: var(--c-gold);
+        }
+
+        /* --- Action Button --- */
+        .btn-check {
             width: 100%;
-            padding: 14px;
-            font-family: 'Cinzel', serif;
-            font-size: 15px;
-            letter-spacing: 1.5px;
-            text-transform: uppercase;
-            background: var(--gold);
+            background: var(--c-gold);
+            color: #fff;
             border: none;
+            padding: 14px;
+            font-size: 1rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
             border-radius: 6px;
             cursor: pointer;
-            color: #fff;
-            transition: background 0.2s ease;
+            font-family: var(--font-heading);
+            transition: background 0.3s, transform 0.1s;
         }
 
-        button:hover {
-            background: var(--gold-dark);
+        .btn-check:hover {
+            background: var(--c-gold-dim);
         }
 
-        .result {
-            margin-top: 22px;
-            font-size: 16px;
+        .btn-check:active {
+            transform: scale(0.98);
+        }
+
+        .btn-check:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        /* --- Results Area --- */
+        #result-area {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+            display: none; /* Hidden by default */
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .status-icon {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .status-text {
+            font-family: var(--font-heading);
+            font-size: 1.4rem;
             font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .status-sub {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        .available { color: #2e7d32; }
+        .unavailable { color: #c62828; }
+
+        /* --- Contact CTAs --- */
+        .cta-box {
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            border: 1px solid #eee;
+        }
+
+        .cta-btn {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: bold;
+            text-align: center;
+            transition: opacity 0.2s;
+        }
+        
+        .cta-btn:hover { opacity: 0.9; }
+
+        .btn-phone {
+            background: #333;
+            color: #fff;
+        }
+
+        .btn-whatsapp {
+            background: #25D366;
+            color: #fff;
+        }
+
+        /* --- Loading Spinner --- */
+        .spinner {
+            display: inline-block;
+            width: 20px; height: 20px;
+            border: 3px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 10px;
+            vertical-align: middle;
             display: none;
         }
+        @keyframes spin { to { transform: rotate(360deg); } }
 
-        .available {
-            color: #2e7d32;
-        }
-
-        .not-available {
-            color: #b71c1c;
-        }
-
-        .footer-note {
-            margin-top: 26px;
-            font-size: 12px;
-            color: #777;
-            line-height: 1.4;
-        }
     </style>
 </head>
 <body>
 
-<div class="page-frame">
+    <div class="check-card">
+        <h1>Check Availability</h1>
+        <p class="subtitle">For weddings, receptions & family events</p>
 
-    <h1>Sampark Lodge</h1>
-    <div class="ornament"><span>♦</span></div>
-    <div class="subtitle">Check Date Availability</div>
+        <div class="input-group">
+            <label for="datePicker">Select Event Date</label>
+            <input type="date" id="datePicker">
+        </div>
 
-    <div class="check-box">
-        <label for="dateInput">Select your preferred date</label>
-        <input type="date" id="dateInput">
+        <button class="btn-check" id="checkBtn" onclick="checkAvailability()">
+            <span class="spinner" id="btnSpinner"></span>
+            Check Date
+        </button>
 
-        <button onclick="checkAvailability()">Check Availability</button>
-
-        <div id="result" class="result"></div>
+        <div id="result-area">
+            <div id="status-content">
+                </div>
+            
+            <div id="contact-options" style="display: none;">
+                <div class="cta-box">
+                    <p style="font-size: 0.9rem; margin-bottom: 10px;">To confirm this booking:</p>
+                    <a href="tel:+919830779721" class="cta-btn btn-phone">📞 Call 9830779721</a>
+                    <a href="https://wa.me/917003642977" class="cta-btn btn-whatsapp">💬 WhatsApp 7003642977</a>
+                </div>
+            </div>
+        </div>
     </div>
-
-    <div class="footer-note">
-        For booking confirmation, please call or WhatsApp us.<br>
-        Availability shown here is indicative.
-    </div>
-
-</div>
 
 <script>
-    const API_URL = "https://script.google.com/macros/s/AKfycbzts3-BHw_-Vhm0S5j3P5s6ZtioILUQxp0kN_AFqe7yiAyPWFN69KTgESIMfOJYzPtU6w/exec";
+    // ==========================================
+    // ⚙️ CONFIGURATION
+    // ==========================================
+    // YOUR LIVE APP SCRIPT URL
+    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzts3-BHw_-Vhm0S5j3P5s6ZtioILUQxp0kN_AFqe7yiAyPWFN69KTgESIMfOJYzPtU6w/exec";
 
-    async function checkAvailability() {
-        const date = document.getElementById("dateInput").value;
-        const resultBox = document.getElementById("result");
-
-        if (!date) {
-            alert("Please select a date.");
-            return;
-        }
-
-        resultBox.style.display = "block";
-        resultBox.textContent = "Checking availability...";
-        resultBox.className = "result";
-
-        try {
-            const res = await fetch(`${API_URL}?checkDate=${date}`);
-            const data = await res.json();
-
-            if (data.available === true) {
-                resultBox.textContent = "✓ Date is currently available";
-                resultBox.classList.add("available");
-            } else {
-                resultBox.textContent = "✕ Date is already reserved";
-                resultBox.classList.add("not-available");
-            }
-        } catch (e) {
-            resultBox.textContent = "Unable to check availability. Please try again.";
-            resultBox.classList.add("not-available");
-        }
-    }
-</script>
-
-</body>
-</html>
+    // ==========================================
+    // 🧠 STATE & INIT
+    // ==========================================
+    let bookedDates = new Set(); // Stores "YYYY-MM-DD" strings
+    let is
