@@ -28,7 +28,7 @@
 
 body {
     font-family: var(--font-body);
-    /* Background Image Required */
+    /* Background Image Required - Ensure ./assets/bg.png exists */
     background: #fdfcf8 url("./assets/bg.png") center/cover fixed;
     color: var(--c-text-main);
     min-height: 100vh;
@@ -196,13 +196,14 @@ header h1 {
     gap: 8px;
 }
 
-/* --- DATE CELLS --- */
+/* --- DATE CELLS (UPDATED FOR SPACE) --- */
 .date-cell {
-    aspect-ratio: 1;
+    /* CHANGED: Removed aspect-ratio:1 to allow taller shapes */
+    min-height: 90px; 
     border-radius: 8px;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: space-evenly; /* Evenly spaces the dates vertically */
     align-items: center;
     cursor: pointer;
     background: #fff;
@@ -210,6 +211,7 @@ header h1 {
     transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
     overflow: hidden;
+    padding: 5px 0; /* Add vertical padding */
 }
 
 .date-cell:hover {
@@ -219,7 +221,7 @@ header h1 {
     z-index: 2;
 }
 
-.date-cell.empty { background: transparent; border: none; cursor: default; }
+.date-cell.empty { background: transparent; border: none; cursor: default; min-height: 0; }
 
 /* Booked State - Luxury Gold Gradient */
 .date-cell.booked {
@@ -230,22 +232,22 @@ header h1 {
 }
 
 .eng-date {
-    font-size: 1rem;
+    font-size: 1.1rem; /* Slightly larger */
     font-weight: 700;
     line-height: 1;
-    margin-bottom: 3px;
     font-family: var(--font-body);
 }
 
 .ben-date {
-    font-size: 0.6rem;
-    line-height: 1;
+    font-size: 0.65rem;
+    line-height: 1.2;
     text-align: center;
-    opacity: 0.6;
+    opacity: 0.7;
     font-weight: 400;
+    margin-top: 4px; /* Separation */
 }
 
-.date-cell.booked .ben-date { opacity: 0.9; color: rgba(255,255,255,0.9); }
+.date-cell.booked .ben-date { opacity: 0.95; color: rgba(255,255,255,0.95); }
 .date-cell:hover .ben-date { opacity: 1; }
 
 
