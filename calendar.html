@@ -1,168 +1,568 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Admin Calendar – Sampark Lodge</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sampark Lodge | Admin Calendar</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
 
-<style>
-body {
-    font-family: Arial, sans-serif;
-    background:#f5f5f5;
-    padding:20px;
-}
+    <style>
+        :root {
+            --c-gold: #D4AF37;
+            --c-gold-dim: #C5A028;
+            --c-gold-light: #F3E5AB;
+            --c-bg-dark: #1a1a1a;
+            --c-text-dark: #2c2c2c;
+            --c-text-light: #f5f5f5;
+            --c-white-translucent: rgba(255, 255, 255, 0.95);
+            --font-heading: 'Cinzel', serif;
+            --font-body: 'Lato', sans-serif;
+            --shadow-card: 0 4px 15px rgba(0, 0, 0, 0.1);
+            --shadow-hover: 0 6px 20px rgba(0, 0, 0, 0.15);
+        }
 
-h2 {
-    text-align:center;
-}
+        * { box-sizing: border-box; margin: 0; padding: 0; }
 
-.calendar {
-    display:grid;
-    grid-template-columns:repeat(7,1fr);
-    gap:8px;
-    max-width:600px;
-    margin:20px auto;
-}
+        body {
+            font-family: var(--font-body);
+            background-color: #f4f4f4;
+            /* Matches main website theme */
+            background-image: url("./assets/bg.png"); 
+            background-size: cover;
+            background-attachment: fixed;
+            background-position: center;
+            color: var(--c-text-dark);
+            min-height: 100vh;
+        }
 
-.day {
-    background:#fff;
-    border:1px solid #ccc;
-    padding:10px;
-    text-align:center;
-    cursor:pointer;
-}
+        /* --- Login Overlay --- */
+        #auth-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: #000;
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--c-gold);
+        }
 
-.day.booked {
-    background:#fff59d;
-    border:2px solid #f1c40f;
-}
+        /* --- Layout --- */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            display: none; /* Hidden until auth */
+        }
 
-#popup {
-    display:none;
-    position:fixed;
-    inset:0;
-    background:rgba(0,0,0,.5);
-    align-items:center;
-    justify-content:center;
-}
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            background: var(--c-white-translucent);
+            padding: 20px;
+            border-radius: 8px;
+            border-bottom: 3px solid var(--c-gold);
+            box-shadow: var(--shadow-card);
+        }
 
-.popup-box {
-    background:#fff;
-    padding:20px;
-    width:300px;
-    border-radius:6px;
-}
+        h1 {
+            font-family: var(--font-heading);
+            color: var(--c-text-dark);
+            margin-bottom: 10px;
+        }
 
-.popup-box textarea {
-    width:100%;
-    height:60px;
-}
+        .year-nav {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            font-family: var(--font-heading);
+        }
 
-.popup-box button {
-    margin-top:10px;
-    padding:8px 12px;
-}
-</style>
+        .nav-btn {
+            background: none;
+            border: 2px solid var(--c-gold);
+            color: var(--c-text-dark);
+            padding: 5px 15px;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-btn:hover {
+            background: var(--c-gold);
+            color: #fff;
+        }
+
+        /* --- Calendar Grid --- */
+        .calendar-grid {
+            display: grid;
+            gap: 20px;
+            /* Mobile: 1 month per row */
+            grid-template-columns: 1fr; 
+        }
+
+        @media (min-width: 768px) {
+            .calendar-grid {
+                /* Desktop: 2 months per row */
+                grid-template-columns: 1fr 1fr; 
+            }
+        }
+
+        .month-card {
+            background: var(--c-white-translucent);
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: var(--shadow-card);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+        }
+
+        .month-title {
+            text-align: center;
+            font-family: var(--font-heading);
+            color: var(--c-gold-dim);
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .days-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 4px;
+        }
+
+        .weekday {
+            text-align: center;
+            font-size: 0.75rem;
+            font-weight: bold;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .day-cell {
+            aspect-ratio: 1;
+            border: 1px solid #eee;
+            border-radius: 4px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background 0.2s;
+            position: relative;
+            background: #fff;
+        }
+
+        .day-cell:hover {
+            border-color: var(--c-gold);
+            transform: translateY(-1px);
+        }
+
+        .day-cell.empty {
+            background: transparent;
+            border: none;
+            cursor: default;
+        }
+
+        .day-cell.today {
+            border: 2px solid var(--c-gold);
+        }
+
+        /* Booking Status Styles */
+        .day-cell.booked {
+            background-color: var(--c-gold);
+            color: #fff;
+            border-color: var(--c-gold-dim);
+        }
+
+        .day-cell.booked .date-ben {
+            color: rgba(255,255,255, 0.9);
+        }
+
+        /* Date Text */
+        .date-eng {
+            font-size: 1rem;
+            font-weight: 700;
+        }
+
+        .date-ben {
+            font-size: 0.6rem;
+            color: #888;
+            margin-top: 2px;
+            text-align: center;
+            line-height: 1.1;
+        }
+
+        /* --- Admin Modal --- */
+        #modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.6);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            backdrop-filter: blur(2px);
+        }
+
+        .modal {
+            background: #fff;
+            padding: 25px;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 400px;
+            border-top: 5px solid var(--c-gold);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .modal h3 {
+            font-family: var(--font-heading);
+            margin-bottom: 15px;
+            color: var(--c-text-dark);
+        }
+
+        .modal-info {
+            margin-bottom: 15px;
+            font-size: 0.9rem;
+            color: #555;
+            background: #f9f9f9;
+            padding: 10px;
+            border-radius: 4px;
+        }
+
+        .modal textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-family: var(--font-body);
+            resize: vertical;
+            min-height: 80px;
+            margin-bottom: 15px;
+        }
+
+        .modal textarea:focus {
+            outline: none;
+            border-color: var(--c-gold);
+        }
+
+        .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        button.btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.2s;
+        }
+
+        .btn-cancel {
+            background: #e0e0e0;
+            color: #333;
+        }
+
+        .btn-save {
+            background: var(--c-gold);
+            color: #fff;
+        }
+        
+        .btn-delete {
+            background: #d9534f;
+            color: #fff;
+        }
+
+        .btn-save:hover { background: var(--c-gold-dim); }
+        .btn-delete:hover { background: #c9302c; }
+
+        /* Spinner for loading */
+        #loading-indicator {
+            text-align: center;
+            padding: 20px;
+            color: var(--c-gold-dim);
+            font-style: italic;
+        }
+
+    </style>
 </head>
-
 <body>
 
-<h2>Admin Booking Calendar</h2>
+    <div id="auth-overlay">
+        <h2>🔒 Restricted Access</h2>
+    </div>
 
-<div class="calendar" id="calendar"></div>
+    <div class="container" id="app-container">
+        <header>
+            <h1>Sampark Lodge</h1>
+            <p style="color: #666; font-size: 0.9rem; margin-bottom: 15px;">INTERNAL ADMIN BOOKING SYSTEM</p>
+            
+            <div class="year-nav">
+                <button class="nav-btn" onclick="changeYear(-1)">&#8249;</button>
+                <span id="current-year-display">2026</span>
+                <button class="nav-btn" onclick="changeYear(1)">&#8250;</button>
+            </div>
+            <div id="loading-indicator">Syncing with database...</div>
+        </header>
 
-<div id="popup">
-  <div class="popup-box">
-    <h3 id="popup-date"></h3>
-    <textarea id="note" placeholder="Optional note"></textarea>
-    <button onclick="saveBooking()">Save Booking</button>
-    <button onclick="closePopup()">Cancel</button>
-  </div>
-</div>
+        <div class="calendar-grid" id="calendar-grid">
+            </div>
+    </div>
+
+    <div id="modal-overlay">
+        <div class="modal">
+            <h3 id="modal-date-title">Date</h3>
+            <div class="modal-info">
+                <p id="modal-ben-date" style="font-weight: bold;"></p>
+                <p id="modal-status" style="margin-top:5px; font-size: 0.8rem;"></p>
+            </div>
+            
+            <label for="admin-note" style="font-size: 0.8rem; font-weight: bold; display: block; margin-bottom: 5px;">Admin Note (Private):</label>
+            <textarea id="admin-note" placeholder="e.g. Wedding, Mr. Sharma, Paid advance..."></textarea>
+            
+            <div class="modal-actions">
+                <button class="btn btn-cancel" onclick="closeModal()">Cancel</button>
+                <button class="btn" id="modal-action-btn" onclick="submitBooking()">Save</button>
+            </div>
+        </div>
+    </div>
 
 <script>
-const API_URL = "https://script.google.com/macros/s/AKfycbzts3-BHw_-Vhm0S5j3P5s6ZtioILUQxp0kN_AFqe7yiAyPWFN69KTgESIMfOJYzPtU6w/exec";
+    // ==========================================
+    // ⚙️ CONFIGURATION
+    // ==========================================
+    const APPS_SCRIPT_URL = "YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE"; 
+    // Example format: https://script.google.com/macros/s/..../exec
+    
+    // ==========================================
+    // 🔐 AUTH & STATE
+    // ==========================================
+    let currentYear = new Date().getFullYear();
+    let bookedData = {}; // Object to store { "YYYY-MM-DD": "Note content" }
+    
+    document.addEventListener("DOMContentLoaded", () => {
+        // Simple Admin Gate
+        const pass = prompt("Enter Admin Password:");
+        if(pass === "admin") {
+            document.getElementById('auth-overlay').style.display = 'none';
+            document.getElementById('app-container').style.display = 'block';
+            initCalendar();
+        } else {
+            alert("Access Denied");
+            document.getElementById('auth-overlay').innerHTML = "<h2>🚫 Access Denied</h2>";
+        }
+    });
 
-let selectedDate = null;
-let bookedDates = new Set();
+    // ==========================================
+    // 📅 CORE LOGIC
+    // ==========================================
 
-/* =====================
-   Load existing bookings
-===================== */
-fetch(API_URL)
-  .then(res => res.json())
-  .then(data => {
-    data.forEach(d => bookedDates.add(d.date));
-    renderCalendar();
-  });
-
-/* =====================
-   Render simple calendar
-===================== */
-function renderCalendar() {
-    const cal = document.getElementById("calendar");
-    cal.innerHTML = "";
-
-    const year = 2026;
-    const month = 0; // January
-
-    const days = new Date(year, month + 1, 0).getDate();
-
-    for (let d = 1; d <= days; d++) {
-        const dateStr = `${year}-01-${String(d).padStart(2,"0")}`;
-        const div = document.createElement("div");
-        div.className = "day";
-        if (bookedDates.has(dateStr)) div.classList.add("booked");
-        div.innerText = d;
-        div.onclick = () => openPopup(dateStr, div);
-        cal.appendChild(div);
+    async function initCalendar() {
+        renderCalendar();
+        await fetchBookings();
     }
-}
 
-/* =====================
-   Popup logic
-===================== */
-function openPopup(dateStr) {
-    selectedDate = dateStr;
-    document.getElementById("popup-date").innerText = dateStr;
-    document.getElementById("note").value = "";
-    document.getElementById("popup").style.display = "flex";
-}
+    function changeYear(offset) {
+        currentYear += offset;
+        document.getElementById('current-year-display').innerText = currentYear;
+        renderCalendar();
+    }
 
-function closePopup() {
-    document.getElementById("popup").style.display = "none";
-}
+    // 1. Render the Grid
+    function renderCalendar() {
+        const grid = document.getElementById('calendar-grid');
+        grid.innerHTML = "";
+        const today = new Date();
 
-/* =====================
-   SAVE BOOKING (FIXED)
-===================== */
-function saveBooking() {
-  if (!selectedDate) return;
+        const monthNames = ["January", "February", "March", "April", "May", "June", 
+                          "July", "August", "September", "October", "November", "December"];
 
-  const note = document.getElementById("note").value;
+        for (let m = 0; m < 12; m++) {
+            const firstDay = new Date(currentYear, m, 1).getDay(); // 0 = Sunday
+            const daysInMonth = new Date(currentYear, m + 1, 0).getDate();
 
-  fetch(API_URL, {
-    method: "POST",
-    mode: "no-cors",
-    headers: {
-      "Content-Type": "application/x-www-form-urlencoded"
-    },
-    body: `date=${selectedDate}&note=${encodeURIComponent(note)}`
-  });
+            // Create Month Card
+            const card = document.createElement('div');
+            card.className = 'month-card';
 
-  // optimistic UI
-  if (bookedDates.has(selectedDate)) {
-    bookedDates.delete(selectedDate);
-  } else {
-    bookedDates.add(selectedDate);
-  }
+            let html = `<div class="month-title">${monthNames[m]}</div>`;
+            html += `<div class="days-grid">`;
+            
+            // Weekday headers
+            ['S','M','T','W','T','F','S'].forEach(d => {
+                html += `<div class="weekday">${d}</div>`;
+            });
 
-  closePopup();
-  renderCalendar();
-}
+            // Empty cells before 1st of month
+            for (let i = 0; i < firstDay; i++) {
+                html += `<div class="day-cell empty"></div>`;
+            }
 
+            // Days
+            for (let d = 1; d <= daysInMonth; d++) {
+                const dateStr = `${currentYear}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+                
+                // Check if booked
+                const isBooked = bookedData.hasOwnProperty(dateStr);
+                const isToday = (d === today.getDate() && m === today.getMonth() && currentYear === today.getFullYear());
+                
+                // Bengali Date Helper (Gregorian date in Bengali script + Localized Format)
+                const dateObj = new Date(currentYear, m, d);
+                // Intl formatter for Bengali India
+                const benFormatter = new Intl.DateTimeFormat('bn-IN', { 
+                    day: 'numeric', month: 'long', year: 'numeric' 
+                });
+                const benDateText = benFormatter.format(dateObj); // e.g., ১৮ জানুয়ারী, ২০২৬
+
+                const classes = `day-cell ${isBooked ? 'booked' : ''} ${isToday ? 'today' : ''}`;
+                
+                html += `
+                    <div class="${classes}" onclick="openModal('${dateStr}')">
+                        <span class="date-eng">${d}</span>
+                        <span class="date-ben">${benDateText}</span>
+                    </div>
+                `;
+            }
+
+            html += `</div>`; // Close grid
+            card.innerHTML = html;
+            grid.appendChild(card);
+        }
+    }
+
+    // ==========================================
+    // 🌐 API HANDLERS
+    // ==========================================
+
+    // GET Bookings
+    async function fetchBookings() {
+        const indicator = document.getElementById('loading-indicator');
+        try {
+            const res = await fetch(APPS_SCRIPT_URL);
+            const data = await res.json();
+            
+            // Convert Array to Map for O(1) lookup
+            bookedData = {}; 
+            data.forEach(item => {
+                bookedData[item.date] = item.note || "";
+            });
+
+            renderCalendar(); // Re-render with new data
+            indicator.innerText = "Synced.";
+            setTimeout(() => indicator.innerText = "", 2000);
+        } catch (e) {
+            console.error(e);
+            indicator.innerText = "Error syncing data.";
+            indicator.style.color = "red";
+        }
+    }
+
+    // POST Booking (Toggle)
+    async function submitBooking() {
+        const date = document.getElementById('modal-date-title').dataset.raw;
+        const note = document.getElementById('admin-note').value;
+        const btn = document.getElementById('modal-action-btn');
+
+        // Optimistic UI Update
+        const wasBooked = bookedData.hasOwnProperty(date);
+        
+        if (wasBooked) {
+            delete bookedData[date]; // Unbook
+        } else {
+            bookedData[date] = note; // Book
+        }
+        
+        closeModal();
+        renderCalendar(); // Immediate visual feedback
+
+        // Prepare Data for Google Apps Script
+        // Must use x-www-form-urlencoded for standard POST handling in GAS without CORS complex preflight
+        const formData = new URLSearchParams();
+        formData.append('date', date);
+        formData.append('note', note);
+
+        try {
+            await fetch(APPS_SCRIPT_URL, {
+                method: "POST",
+                mode: "no-cors", // CRITICAL: Opaque response
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded"
+                },
+                body: formData.toString()
+            });
+            // Since mode is no-cors, we cannot read the response. 
+            // We assume success based on optimistic update.
+        } catch (e) {
+            alert("Network Error: Could not save booking.");
+            // Revert state if error
+            if (wasBooked) bookedData[date] = note;
+            else delete bookedData[date];
+            renderCalendar();
+        }
+    }
+
+    // ==========================================
+    // 💬 INTERACTION
+    // ==========================================
+
+    function openModal(dateStr) {
+        const modal = document.getElementById('modal-overlay');
+        const title = document.getElementById('modal-date-title');
+        const benDateDisplay = document.getElementById('modal-ben-date');
+        const statusDisplay = document.getElementById('modal-status');
+        const textarea = document.getElementById('admin-note');
+        const btn = document.getElementById('modal-action-btn');
+
+        const isBooked = bookedData.hasOwnProperty(dateStr);
+        const savedNote = bookedData[dateStr] || "";
+
+        // Format Title
+        title.innerText = dateStr;
+        title.dataset.raw = dateStr; // Store raw YYYY-MM-DD for logic
+
+        // Format Bengali display for Modal
+        const dObj = new Date(dateStr);
+        benDateDisplay.innerText = new Intl.DateTimeFormat('bn-IN', { dateStyle: 'full' }).format(dObj);
+
+        textarea.value = savedNote;
+
+        if (isBooked) {
+            statusDisplay.innerHTML = `<span style="color:var(--c-gold)">● Currently Booked</span>`;
+            btn.innerText = "Remove Booking";
+            btn.className = "btn btn-delete";
+        } else {
+            statusDisplay.innerHTML = `<span style="color:green">● Available</span>`;
+            btn.innerText = "Mark as Booked";
+            btn.className = "btn btn-save";
+        }
+
+        modal.style.display = 'flex';
+    }
+
+    function closeModal() {
+        document.getElementById('modal-overlay').style.display = 'none';
+    }
+
+    // Close modal on click outside
+    document.getElementById('modal-overlay').addEventListener('click', (e) => {
+        if (e.target.id === 'modal-overlay') closeModal();
+    });
 
 </script>
-
 </body>
 </html>
