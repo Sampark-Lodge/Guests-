@@ -116,15 +116,23 @@ header h1 {
     text-align: center;
 }
 
+/* --- SYNC SECTION (UPDATED) --- */
+.sync-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 25px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(0,0,0,0.05);
+}
+
 .sync-btn {
-    position: absolute;
-    right: 30px;
-    top: 30px;
     background: #fff;
     border: 1px solid var(--c-gold);
     color: var(--c-gold-dark);
-    padding: 8px 16px;
-    font-size: 0.7rem;
+    padding: 8px 20px;
+    font-size: 0.75rem;
     border-radius: 30px;
     cursor: pointer;
     font-weight: 700;
@@ -139,6 +147,14 @@ header h1 {
     color: #fff;
     box-shadow: var(--shadow-hover);
 }
+
+#loading-text { 
+    font-size: 0.85rem; 
+    color: #888; 
+    font-style: italic; 
+    font-family: var(--font-body);
+}
+
 
 /* --- CALENDAR GRID --- */
 .calendar-wrapper {
@@ -196,14 +212,13 @@ header h1 {
     gap: 8px;
 }
 
-/* --- DATE CELLS (UPDATED FOR SPACE) --- */
+/* --- DATE CELLS (TALL) --- */
 .date-cell {
-    /* CHANGED: Removed aspect-ratio:1 to allow taller shapes */
-    min-height: 90px; 
+    min-height: 90px; /* Tall cells */
     border-radius: 8px;
     display: flex;
     flex-direction: column;
-    justify-content: space-evenly; /* Evenly spaces the dates vertically */
+    justify-content: space-evenly;
     align-items: center;
     cursor: pointer;
     background: #fff;
@@ -211,7 +226,7 @@ header h1 {
     transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
     overflow: hidden;
-    padding: 5px 0; /* Add vertical padding */
+    padding: 5px 0;
 }
 
 .date-cell:hover {
@@ -232,7 +247,7 @@ header h1 {
 }
 
 .eng-date {
-    font-size: 1.1rem; /* Slightly larger */
+    font-size: 1.1rem; 
     font-weight: 700;
     line-height: 1;
     font-family: var(--font-body);
@@ -244,7 +259,7 @@ header h1 {
     text-align: center;
     opacity: 0.7;
     font-weight: 400;
-    margin-top: 4px; /* Separation */
+    margin-top: 4px;
 }
 
 .date-cell.booked .ben-date { opacity: 0.95; color: rgba(255,255,255,0.95); }
@@ -340,7 +355,6 @@ header h1 {
     color: var(--c-gold);
     z-index: 6000;
 }
-#loading-text { font-size: 0.8rem; color: #999; margin-top: 10px; font-style: italic; min-height: 20px; }
 
 </style>
 </head>
@@ -353,7 +367,6 @@ header h1 {
 
     <div class="container" id="app">
         <header>
-            <button class="sync-btn" onclick="fetchBookings()">↻ Sync</button>
             <h1>Sampark Lodge</h1>
             <div class="subtitle">Admin Booking Dashboard</div>
             
@@ -364,7 +377,11 @@ header h1 {
                     <button class="nav-btn" onclick="changeYear(1)">&#8250;</button>
                 </div>
             </div>
-            <div id="loading-text"></div>
+
+            <div class="sync-wrapper">
+                <div id="loading-text">Last synced: Just now</div>
+                <button class="sync-btn" onclick="fetchBookings()">↻ Refresh</button>
+            </div>
         </header>
 
         <div class="calendar-wrapper" id="calendar"></div>
