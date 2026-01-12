@@ -28,27 +28,31 @@
             font-family: 'Cinzel', serif;
         }
 
-        /* ANIMATED BACKGROUND */
+        /* SOPHISTICATED GOLDEN WAVE BACKGROUND */
         body {
             display: flex;
             justify-content: center;
             align-items: center;
+            background-color: #fdfbf0; /* Soft cream base */
             
-            /* Background logic */
-            background-image: url('./assets/bg.png');
-            background-repeat: no-repeat;
-            background-position: center;
-            background-size: 115% 115%; /* Slightly larger for movement room */
+            /* Generating 3 layers of soft golden/white waves using gradients */
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(212, 175, 55, 0.15) 0px, transparent 50%),
+                radial-gradient(at 50% 0%, rgba(255, 255, 255, 0.8) 0px, transparent 50%),
+                radial-gradient(at 100% 0%, rgba(212, 175, 55, 0.15) 0px, transparent 50%),
+                radial-gradient(at 50% 50%, rgba(255, 255, 255, 0.5) 0px, transparent 50%),
+                radial-gradient(at 0% 100%, rgba(212, 175, 55, 0.15) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(212, 175, 55, 0.15) 0px, transparent 50%);
             
-            /* Subtle breathing animation */
-            animation: subtleDrift 45s ease-in-out infinite;
+            background-size: 200% 200%;
+            animation: waveFlow 20s ease-in-out infinite alternate;
         }
 
-        @keyframes subtleDrift {
-            0%   { background-position: 50% 50%; transform: scale(1); }
-            33%  { background-position: 53% 47%; transform: scale(1.02); }
-            66%  { background-position: 47% 53%; transform: scale(1.01); }
-            100% { background-position: 50% 50%; transform: scale(1); }
+        /* Random-feeling smooth wave movement */
+        @keyframes waveFlow {
+            0% { background-position: 0% 0%; }
+            50% { background-position: 100% 100%; }
+            100% { background-position: 0% 100%; }
         }
 
         /* MAIN FRAME CONTAINER */
@@ -57,24 +61,23 @@
             z-index: 10;
             width: 92%;
             max-width: 400px;
-            height: 94vh; /* Fits within any window */
-            max-height: 800px; /* Prevents stretching on very tall screens */
+            height: 94vh;
+            max-height: 800px;
             
-            /* Layered Backgrounds */
+            /* Layered Backgrounds for the card itself */
             background: 
                 url('./assets/frame.png') center/100% 100% no-repeat,
+                linear-gradient(rgba(255,255,255,0.9), rgba(255,255,255,0.8)), /* Softens the image bg */
                 url('./assets/Page-bg.jpg') center/cover no-repeat;
 
             padding: 60px 30px;
             text-align: center;
-
-            /* Flex layout to distribute buttons evenly without scrolling */
             display: flex;
             flex-direction: column;
             justify-content: space-around;
             align-items: center;
-            
-            box-shadow: 0 15px 35px rgba(0,0,0,0.4);
+            box-shadow: 0 20px 50px rgba(184, 134, 11, 0.2);
+            border-radius: 15px;
         }
 
         /* HEADER SECTION */
@@ -85,10 +88,10 @@
             letter-spacing: 2px;
             margin: 0;
             padding: 8px 15px;
-            background: rgba(255, 255, 255, 0.5);
+            background: rgba(255, 255, 255, 0.6);
             border-radius: 10px;
             -webkit-text-stroke: 0.5px #d4af37;
-            text-shadow: 0 2px 8px rgba(212, 175, 55, 0.4);
+            text-shadow: 0 2px 8px rgba(212, 175, 55, 0.3);
             line-height: 1.1;
         }
 
@@ -122,11 +125,13 @@
             align-items: center;
             justify-content: center;
             gap: 12px;
-            transition: transform 0.2s ease;
+            transition: all 0.3s ease;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
         }
 
         .btn:active {
-            transform: scale(0.96); /* Visual touch feedback */
+            transform: scale(0.96);
+            filter: brightness(1.1);
         }
 
         .btn i {
@@ -142,7 +147,7 @@
             letter-spacing: 3px;
             color: #3b2c11;
             font-weight: bold;
-            opacity: 0.9;
+            opacity: 0.8;
         }
 
         /* ADAPTIVE FIX FOR SHORT SCREENS */
