@@ -26,26 +26,22 @@
             height: 100%;
             overflow: hidden; 
             font-family: 'Cinzel', serif;
-            background-color: #000000; /* Pitch Black Base */
+            background-color: #000000; /* Pitch Black */
         }
 
-        /* SOPHISTICATED DARK GOLDEN WAVE BACKGROUND */
+        /* ANIMATED GOLDEN MIST BACKGROUND */
         body {
             display: flex;
             justify-content: center;
             align-items: center;
-            
-            /* Dark Gradients: Golden highlights and soft white mists on black */
             background-image: 
-                radial-gradient(at 0% 0%, rgba(212, 175, 55, 0.18) 0px, transparent 50%),
-                radial-gradient(at 50% 10%, rgba(255, 255, 255, 0.08) 0px, transparent 40%),
-                radial-gradient(at 100% 0%, rgba(212, 175, 55, 0.18) 0px, transparent 50%),
-                radial-gradient(at 50% 50%, rgba(212, 175, 55, 0.1) 0px, transparent 50%),
-                radial-gradient(at 0% 100%, rgba(212, 175, 55, 0.18) 0px, transparent 50%),
-                radial-gradient(at 100% 100%, rgba(255, 255, 255, 0.08) 0px, transparent 50%);
-            
+                radial-gradient(at 0% 0%, rgba(212, 175, 55, 0.12) 0px, transparent 50%),
+                radial-gradient(at 100% 0%, rgba(255, 255, 255, 0.05) 0px, transparent 50%),
+                radial-gradient(at 50% 50%, rgba(212, 175, 55, 0.08) 0px, transparent 50%),
+                radial-gradient(at 0% 100%, rgba(255, 255, 255, 0.05) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(212, 175, 55, 0.12) 0px, transparent 50%);
             background-size: 200% 200%;
-            animation: waveFlow 15s ease-in-out infinite alternate;
+            animation: waveFlow 18s ease-in-out infinite alternate;
         }
 
         @keyframes waveFlow {
@@ -53,55 +49,61 @@
             100% { background-position: 100% 100%; }
         }
 
-        /* MAIN FRAME CONTAINER */
+        /* MAIN FRAME WITH SOFT CORNERS */
         .frame {
             position: relative;
             z-index: 10;
             width: 92%;
             max-width: 400px;
-            height: 94vh;
+            height: 92vh; /* Slightly shorter to show off the soft corners */
             max-height: 800px;
+            
+            /* SOFT CORNERS LOGIC */
+            border-radius: 40px; /* Very soft rounded corners */
+            overflow: hidden; /* Ensures background images follow the curve */
             
             background: 
                 url('./assets/frame.png') center/100% 100% no-repeat,
-                linear-gradient(rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.75)), /* Darkened internal bg */
+                linear-gradient(rgba(0, 0, 0, 0.88), rgba(0, 0, 0, 0.8)), 
                 url('./assets/Page-bg.jpg') center/cover no-repeat;
 
-            padding: 60px 30px;
+            padding: 50px 30px;
             text-align: center;
             display: flex;
             flex-direction: column;
             justify-content: space-around;
             align-items: center;
             
-            /* Glow effect to separate from pitch black */
-            box-shadow: 0 0 40px rgba(212, 175, 55, 0.15);
-            border-radius: 15px;
+            /* Sophisticated Shadow/Glow */
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.9), 
+                        0 0 20px rgba(212, 175, 55, 0.15);
+            border: 1px solid rgba(212, 175, 55, 0.1); /* Subtle gold rim */
         }
 
         /* HEADER SECTION */
         .header-box h1 {
             font-weight: 900;
-            font-size: clamp(26px, 8vw, 36px);
-            color: #f3e5ab; /* Lighter gold for readability on black */
+            font-size: clamp(24px, 7vw, 34px);
+            color: #f3e5ab;
             letter-spacing: 2px;
             margin: 0;
-            padding: 8px 15px;
-            background: rgba(0, 0, 0, 0.6);
-            border-radius: 10px;
-            border: 1px solid rgba(212, 175, 55, 0.3);
+            padding: 10px 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            border: 1px solid rgba(212, 175, 55, 0.2);
             -webkit-text-stroke: 0.3px #d4af37;
-            text-shadow: 0 0 15px rgba(212, 175, 55, 0.5);
+            text-shadow: 0 0 12px rgba(212, 175, 55, 0.4);
             line-height: 1.1;
         }
 
         .subtitle {
-            font-size: 11px;
-            margin-top: 12px;
-            color: #d4af37; /* Gold text */
+            font-size: 10px;
+            margin-top: 10px;
+            color: #d4af37;
             letter-spacing: 1px;
             font-weight: 700;
             text-transform: uppercase;
+            opacity: 0.9;
         }
 
         /* BUTTON GROUP */
@@ -110,54 +112,50 @@
             flex-direction: column;
             gap: 12px;
             width: 100%;
-            padding: 10px 0;
         }
 
-        /* INDIVIDUAL BUTTON */
+        /* BUTTON STYLE */
         .btn {
             background: url('./assets/button.png') center/100% 100% no-repeat;
             padding: 15px;
-            font-size: 15px;
+            font-size: 14px;
             font-weight: 700;
             color: #3b2c11;
             text-decoration: none;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 12px;
+            gap: 10px;
             transition: all 0.3s ease;
-            /* Buttons stay bright to remain the focal point */
-            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.5));
+            border-radius: 12px;
         }
 
         .btn:active {
-            transform: scale(0.96);
-            filter: brightness(1.2) contrast(1.1);
+            transform: scale(0.97);
+            filter: brightness(1.2);
         }
 
         .btn i {
-            font-size: 18px;
+            font-size: 17px;
             color: #3b2c11;
             width: 20px;
-            text-align: center;
         }
 
         /* FOOTER */
         .footer {
-            font-size: 10px;
+            font-size: 9px;
             letter-spacing: 3px;
-            color: #d4af37; /* Gold footer */
+            color: #d4af37;
             font-weight: bold;
-            text-shadow: 0 0 5px rgba(0,0,0,1);
+            text-transform: uppercase;
         }
 
-        /* ADAPTIVE FIX FOR SHORT SCREENS */
-        @media (max-height: 660px) {
-            .frame { padding: 45px 25px; }
+        /* MOBILE FIX FOR VERY SHORT SCREENS */
+        @media (max-height: 680px) {
+            .frame { padding: 40px 25px; border-radius: 30px; }
             .button-group { gap: 8px; }
             .btn { padding: 12px; font-size: 13px; }
-            .header-box h1 { font-size: 24px; }
-            .subtitle { font-size: 9px; margin-top: 5px; }
+            .header-box h1 { font-size: 22px; }
         }
     </style>
 </head>
