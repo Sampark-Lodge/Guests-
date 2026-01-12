@@ -3,175 +3,66 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>SAMPARK LODGE</title>
-
+    <title>SAMPARK LODGE | Zero-G Experience</title>
+    
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
-    <style>
-        * {
-            box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        body, html {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100%;
-            overflow: hidden; 
-            font-family: 'Cinzel', serif;
-            background-color: #000000;
-        }
-
-        /* SOPHISTICATED BACKGROUND MIST */
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background-image: 
-                radial-gradient(at 0% 0%, rgba(212, 175, 55, 0.1) 0px, transparent 50%),
-                radial-gradient(at 100% 100%, rgba(212, 175, 55, 0.1) 0px, transparent 50%),
-                radial-gradient(at 50% 50%, rgba(255, 255, 255, 0.03) 0px, transparent 50%);
-            background-size: 200% 200%;
-            animation: waveFlow 20s ease-in-out infinite alternate;
-        }
-
-        @keyframes waveFlow {
-            0% { background-position: 0% 0%; }
-            100% { background-position: 100% 100%; }
-        }
-
-        /* MAIN FRAME WITH SOFT CORNERS & FIX FOR OVERLAP */
-        .frame {
-            position: relative;
-            z-index: 10;
-            width: 90%;
-            max-width: 380px;
-            height: 92vh;
-            max-height: 800px;
-            border-radius: 45px; /* Ultra-soft corners */
-            overflow: hidden; /* Clips the background and frame asset */
-            
-            /* Layered backgrounds: Black tint -> Texture -> Decorative Frame */
-            background: 
-                url('./assets/frame.png') center/98% 98% no-repeat, /* Frame scaled in slightly */
-                linear-gradient(rgba(0, 0, 0, 0.9), rgba(15, 12, 5, 0.85)), 
-                url('./assets/Page-bg.jpg') center/cover no-repeat;
-
-            padding: 55px 25px;
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-around;
-            align-items: center;
-            
-            /* Subtle external glow */
-            box-shadow: 0 0 30px rgba(212, 175, 55, 0.1);
-            border: 1px solid rgba(212, 175, 55, 0.15);
-        }
-
-        /* SOFTENED HEADER */
-        .header-box h1 {
-            font-weight: 900;
-            font-size: clamp(22px, 6vw, 32px);
-            color: #f3e5ab;
-            letter-spacing: 3px;
-            margin: 0;
-            padding: 15px;
-            /* Replaced hard box with soft gradient glow */
-            background: radial-gradient(circle, rgba(212, 175, 55, 0.1) 0%, transparent 80%);
-            -webkit-text-stroke: 0.5px #d4af37;
-            text-shadow: 0 0 15px rgba(212, 175, 55, 0.4);
-        }
-
-        .subtitle {
-            font-size: 9px;
-            color: #d4af37;
-            letter-spacing: 2px;
-            font-weight: 700;
-            text-transform: uppercase;
-            margin-top: -10px;
-        }
-
-        .button-group {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            width: 100%;
-        }
-
-        /* REFINED BUTTON TEXT */
-        .btn {
-            background: url('./assets/button.png') center/100% 100% no-repeat;
-            padding: 16px;
-            font-size: 13px;
-            font-weight: 900;
-            color: #2a1f0a; /* Darker for better contrast */
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            transition: all 0.3s ease;
-        }
-
-        .btn:active {
-            transform: scale(0.97);
-            filter: brightness(1.1);
-        }
-
-        /* FOOTER */
-        .footer {
-            font-size: 9px;
-            letter-spacing: 4px;
-            color: #d4af37;
-            font-weight: bold;
-            opacity: 0.7;
-        }
-
-        @media (max-height: 680px) {
-            .frame { padding: 40px 20px; }
-            .header-box h1 { font-size: 20px; }
-            .btn { padding: 12px; font-size: 11px; }
-        }
-    </style>
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
-<div class="frame">
-    <div class="header-box">
-        <h1>SAMPARK<br>LODGE</h1>
-        <div class="subtitle">Comfortable Stay • Easy Access • Extra Parking</div>
+    <!-- Canvas for Orbital Game & Particle Physics -->
+    <canvas id="antigravity-canvas"></canvas>
+    <!-- Main Container -->
+    <div class="zero-g-container">
+        
+        <!-- Floating Header -->
+        <header class="magnetic-header" data-strength="20">
+            <h1 class="brand-title">SAMPARK<span class="gold-accent">LODGE</span></h1>
+            <p class="brand-subtitle">Comfortable Stay &bullet; Easy Access &bullet; Extra Parking</p>
+        </header>
+        <!-- Action Hub: The "Constellation" of Buttons -->
+        <!-- Non-linear layout structure facilitated by CSS Grid/Flex with offsets -->
+        <nav class="action-hub">
+            
+            <a href="https://www.google.com/maps/dir/?api=1&destination=Sampark+Lodge+Chinsurah+Hooghly" class="orb-btn" target="_blank" data-magnetic="true">
+                <div class="orb-icon"><i class="fa-solid fa-location-dot"></i></div>
+                <span class="orb-label">Directions</span>
+            </a>
+            <a href="https://g.page/r/CXIP9_KZOQYBEBI/review" target="_blank" class="orb-btn" data-magnetic="true" style="--delay: 0.1s">
+                <div class="orb-icon"><i class="fa-solid fa-star"></i></div>
+                <span class="orb-label">Rate Us</span>
+            </a>
+            <a href="tel:9830779721" class="orb-btn primary-action" data-magnetic="true" style="--delay: 0.2s">
+                <div class="orb-icon"><i class="fa-solid fa-phone"></i></div>
+                <span class="orb-label">Call Now</span>
+            </a>
+            <a href="https://www.facebook.com/people/Sampark-Lodge/61585573116174/" target="_blank" class="orb-btn" data-magnetic="true" style="--delay: 0.3s">
+                <div class="orb-icon"><i class="fa-brands fa-facebook"></i></div>
+                <span class="orb-label">Social</span>
+            </a>
+            <a href="review.html#wifi" class="orb-btn" data-magnetic="true" style="--delay: 0.4s">
+                <div class="orb-icon"><i class="fa-solid fa-wifi"></i></div>
+                <span class="orb-label">Wi-Fi</span>
+            </a>
+            <a href="upi://pay?pa=7003642977@ybl&pn=Sampark%20Lodge&tn=Sampark%20Lodge%20Event%20Payment&cu=INR" class="orb-btn pay-btn" data-magnetic="true" style="--delay: 0.5s">
+                <div class="orb-icon"><i class="fa-solid fa-indian-rupee-sign"></i></div>
+                <span class="orb-label">Pay Now</span>
+            </a>
+        </nav>
+        <!-- Minimalist Footer -->
+        <footer class="glass-footer">
+            <p>THANK YOU FOR STAYING WITH US</p>
+            <div class="game-hint">Tap empty space to pulse</div>
+        </footer>
     </div>
-
-    <div class="button-group">
-        <a href="https://www.google.com/maps/dir/?api=1&destination=Sampark+Lodge+Chinsurah+Hooghly" class="btn" target="_blank">
-            <i class="fa-solid fa-location-dot"></i> Get Directions
-        </a>
-        <a href="https://g.page/r/CXIP9_KZOQYBEBI/review" target="_blank" class="btn">
-            <i class="fa-solid fa-star"></i> আপনার মতামত দিন
-        </a>
-        <a href="tel:9830779721" class="btn">
-            <i class="fa-solid fa-phone"></i> Call 9830779721
-        </a>
-        <a href="https://www.facebook.com/people/Sampark-Lodge/61585573116174/" target="_blank" class="btn">
-            <i class="fa-brands fa-facebook"></i> Facebook Page
-        </a>
-        <a href="review.html#wifi" class="btn">
-            <i class="fa-solid fa-wifi"></i> Connect to Wi-Fi
-        </a>
-        <a href="upi://pay?pa=7003642977@ybl&pn=Sampark%20Lodge&tn=Sampark%20Lodge%20Event%20Payment&cu=INR" class="btn">
-            <i class="fa-solid fa-indian-rupee-sign"></i> Pay Now
-        </a>
-    </div>
-
-    <div class="footer">THANK YOU FOR STAYING WITH US</div>
-</div>
-
+    <!-- Scripts -->
+    <script src="script.js"></script>
 </body>
 </html>
