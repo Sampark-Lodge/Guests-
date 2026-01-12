@@ -13,13 +13,16 @@
     --c-gold: #D4AF37;
     --c-gold-light: #F3E5AB;
     --c-gold-dark: #aa8c2c;
+    --c-blue: #4a90e2; /* For Update Action */
+    --c-red: #d9534f;  /* For Delete Action */
     --c-text-main: #1a1a1a;
     --c-text-muted: #666;
+    
     --bg-glass: rgba(255, 255, 255, 0.85);
     --border-glass: 1px solid rgba(255, 255, 255, 0.6);
     --shadow-soft: 0 8px 32px rgba(0, 0, 0, 0.05);
     --shadow-hover: 0 12px 40px rgba(212, 175, 55, 0.2);
-    
+
     --font-heading: 'Cinzel', serif;
     --font-body: 'Lato', sans-serif;
 }
@@ -28,8 +31,8 @@
 
 body {
     font-family: var(--font-body);
-    /* Background Image Required - Ensure ./assets/bg.png exists */
-    background: #fdfcf8 url("./assets/bg.png") center/cover fixed;
+    /* Background fallback if image is missing */
+    background: #fdfcf8 url("./assets/bg.png") center/cover fixed; 
     color: var(--c-text-main);
     min-height: 100vh;
     padding-bottom: 60px;
@@ -48,7 +51,7 @@ body {
     animation: fadeIn 0.8s ease-out;
 }
 
-/* --- HEADER CARD --- */
+/* --- HEADER --- */
 header {
     background: var(--bg-glass);
     backdrop-filter: blur(12px);
@@ -116,7 +119,6 @@ header h1 {
     text-align: center;
 }
 
-/* --- SYNC SECTION (UPDATED) --- */
 .sync-wrapper {
     display: flex;
     align-items: center;
@@ -152,7 +154,6 @@ header h1 {
     font-size: 0.85rem; 
     color: #888; 
     font-style: italic; 
-    font-family: var(--font-body);
 }
 
 
@@ -176,10 +177,7 @@ header h1 {
     transition: transform 0.3s;
 }
 
-.month-card:hover {
-    transform: translateY(-5px);
-    box-shadow: var(--shadow-hover);
-}
+.month-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-hover); }
 
 .month-name {
     text-align: center;
@@ -212,9 +210,9 @@ header h1 {
     gap: 8px;
 }
 
-/* --- DATE CELLS (TALL) --- */
+/* --- DATE CELLS --- */
 .date-cell {
-    min-height: 90px; /* Tall cells */
+    min-height: 90px;
     border-radius: 8px;
     display: flex;
     flex-direction: column;
@@ -250,7 +248,6 @@ header h1 {
     font-size: 1.1rem; 
     font-weight: 700;
     line-height: 1;
-    font-family: var(--font-body);
 }
 
 .ben-date {
@@ -259,11 +256,9 @@ header h1 {
     text-align: center;
     opacity: 0.7;
     font-weight: 400;
-    margin-top: 4px;
 }
 
 .date-cell.booked .ben-date { opacity: 0.95; color: rgba(255,255,255,0.95); }
-.date-cell:hover .ben-date { opacity: 1; }
 
 
 /* --- MODAL (POPUP) --- */
@@ -305,31 +300,71 @@ header h1 {
     display: block;
 }
 
+/* Form Styles */
+.form-group {
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.form-label {
+    font-size: 0.75rem;
+    color: var(--c-gold-dark);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+    display: block;
+}
+
+/* Custom Select Dropdown */
+.custom-select {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid rgba(212, 175, 55, 0.4);
+    border-radius: 8px;
+    background: #fafafa;
+    color: var(--c-text-main);
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.3s;
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23D4AF37%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
+    background-repeat: no-repeat;
+    background-position: right 15px top 50%;
+    background-size: 12px auto;
+}
+
 .modal textarea {
     width: 100%;
-    height: 100px;
-    padding: 15px;
-    border: 2px solid #f0f0f0;
-    border-radius: 12px;
+    height: 80px;
+    padding: 12px;
+    border: 1px solid rgba(212, 175, 55, 0.4);
+    border-radius: 8px;
     font-family: var(--font-body);
     font-size: 0.95rem;
     resize: none;
-    margin-bottom: 25px;
-    transition: border-color 0.3s;
     background: #fafafa;
+    transition: border-color 0.3s;
 }
-.modal textarea:focus { border-color: var(--c-gold); background: #fff; }
 
-.modal-btns { display: flex; gap: 12px; }
+.custom-select:focus, .modal textarea:focus {
+    border-color: var(--c-gold);
+    background: #fff;
+    box-shadow: 0 0 10px rgba(212, 175, 55, 0.1);
+}
+
+/* Modal Buttons */
+.modal-btns { display: flex; gap: 10px; margin-top: 10px; }
 
 .btn {
     flex: 1;
-    padding: 14px;
+    padding: 12px;
     border: none;
-    border-radius: 12px;
+    border-radius: 8px;
     font-weight: 700;
     cursor: pointer;
-    font-size: 0.9rem;
+    font-size: 0.8rem;
     text-transform: uppercase;
     letter-spacing: 0.5px;
     transition: all 0.2s;
@@ -338,8 +373,11 @@ header h1 {
 .btn-save { background: var(--c-gold); color: #fff; box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3); }
 .btn-save:hover { background: var(--c-gold-dark); transform: translateY(-2px); }
 
-.btn-del { background: #d9534f; color: #fff; box-shadow: 0 4px 15px rgba(217, 83, 79, 0.3); }
-.btn-del:hover { background: #c9302c; transform: translateY(-2px); }
+.btn-update { background: var(--c-blue); color: #fff; box-shadow: 0 4px 15px rgba(74, 144, 226, 0.3); }
+.btn-update:hover { filter: brightness(90%); transform: translateY(-2px); }
+
+.btn-del { background: #fff; border: 1px solid var(--c-red); color: var(--c-red); }
+.btn-del:hover { background: var(--c-red); color: #fff; }
 
 .btn-cancel { background: #f0f0f0; color: #666; }
 .btn-cancel:hover { background: #e0e0e0; }
@@ -369,7 +407,7 @@ header h1 {
         <header>
             <h1>Sampark Lodge</h1>
             <div class="subtitle">Admin Booking Dashboard</div>
-            
+
             <div class="header-controls">
                 <div class="year-nav">
                     <button class="nav-btn" onclick="changeYear(-1)">&#8249;</button>
@@ -391,21 +429,34 @@ header h1 {
         <div class="modal">
             <h3 id="modal-title-main">Date</h3>
             <span id="modal-title-sub" class="modal-date-sub">Bengali Date</span>
-            
-            <textarea id="note-input" placeholder="Enter booking details (Name, Event Type, Amount)..."></textarea>
-            
-            <div class="modal-btns">
-                <button class="btn btn-cancel" onclick="closeModal()">Cancel</button>
-                <button id="save-btn" class="btn btn-save" onclick="saveBooking()">Save Booking</button>
+
+            <div class="form-group">
+                <label class="form-label">Booking Time</label>
+                <select id="time-select" class="custom-select">
+                    <option value="Morning">Morning (সকাল)</option>
+                    <option value="Day">Day (দিন)</option>
+                    <option value="Night">Night (রাত্রি)</option>
+                    <option value="Full Day">Full Day (সম্পূর্ণ দিন)</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Booking Details</label>
+                <textarea id="note-input" placeholder="Client Name, Event Type, Amount..."></textarea>
+            </div>
+
+            <div id="action-buttons" class="modal-btns">
             </div>
         </div>
     </div>
 
 <script>
 /* ================= CONFIGURATION ================= */
+// Replace with your Google Script Deployment URL if different
 const API_URL = "https://script.google.com/macros/s/AKfycbzts3-BHw_-Vhm0S5j3P5s6ZtioILUQxp0kN_AFqe7yiAyPWFN69KTgESIMfOJYzPtU6w/exec";
+
 let currentYear = new Date().getFullYear();
-let bookings = {}; // Stores "YYYY-MM-DD": "Note"
+let bookings = {}; // Stores "YYYY-MM-DD": "Time - Details"
 let selectedDate = null;
 
 /* ================= AUTHENTICATION ================= */
@@ -421,7 +472,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 });
 
-/* ================= LOGIC ================= */
+/* ================= CALENDAR LOGIC ================= */
 
 // Bengali Panjika Calculation
 function getBengaliDate(jsDate) {
@@ -432,7 +483,7 @@ function getBengaliDate(jsDate) {
         new Date(y,7,16), new Date(y,8,16), new Date(y,9,16), new Date(y,10,15)
     ];
     const monthNames = ["পৌষ","মাঘ","ফাল্গুন","চৈত্র","বৈশাখ","জ্যৈষ্ঠ","আষাঢ়","শ্রাবণ","ভাদ্র","আশ্বিন","কার্তিক","অগ্রহায়ণ"];
-    
+
     let bnMonthIndex = 0, bnDay = 1;
     for(let i=11; i>=0; i--) {
         if(jsDate >= starts[i]) {
@@ -448,37 +499,34 @@ function getBengaliDate(jsDate) {
     return `${toBnNum(bnDay)} ${monthNames[bnMonthIndex]}`;
 }
 
-// Render the 12-month Grid
+// Render the Grid
 function renderCalendar() {
     document.getElementById("year-display").innerText = currentYear;
     const grid = document.getElementById("calendar");
     grid.innerHTML = "";
-    
+
     const engMonths = ["January","February","March","April","May","June","July","August","September","October","November","December"];
-    
+
     for(let m=0; m<12; m++) {
         const card = document.createElement("div");
         card.className = "month-card";
-        
+
         let html = `<div class="month-name">${engMonths[m]}</div>`;
         html += `<div class="days-header">`;
         ["S","M","T","W","T","F","S"].forEach(d => html += `<div class="day-name">${d}</div>`);
         html += `</div><div class="days-grid">`;
-        
+
         const firstDay = new Date(currentYear, m, 1).getDay();
         const daysInMonth = new Date(currentYear, m+1, 0).getDate();
-        
+
         for(let i=0; i<firstDay; i++) html += `<div class="date-cell empty"></div>`;
-        
+
         for(let d=1; d<=daysInMonth; d++) {
             const dateStr = `${currentYear}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
-            
-            // Check property existence for booking status
             const isBooked = bookings.hasOwnProperty(dateStr) ? "booked" : "";
-            
             const jsDate = new Date(currentYear, m, d);
             const benDate = getBengaliDate(jsDate);
-            
+
             html += `
             <div class="date-cell ${isBooked}" onclick="openModal('${dateStr}')">
                 <span class="eng-date">${d}</span>
@@ -498,10 +546,10 @@ async function fetchBookings() {
     try {
         const res = await fetch(API_URL);
         const data = await res.json();
-        
+
         bookings = {};
         data.forEach(item => bookings[item.date] = item.note || "");
-        
+
         renderCalendar();
         loader.innerText = "Last synced: Just now";
     } catch(e) {
@@ -515,31 +563,67 @@ function changeYear(dir) {
     renderCalendar();
 }
 
-/* ================= INTERACTION ================= */
+/* ================= MODAL & BOOKING LOGIC ================= */
+
 function openModal(dateStr) {
     selectedDate = dateStr;
     const [y, m, d] = dateStr.split('-');
     const jsDate = new Date(y, m-1, d);
-    
+
+    // Set Header
     const niceDate = jsDate.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
     const bnDate = getBengaliDate(jsDate);
-    
     document.getElementById("modal-title-main").innerText = niceDate;
     document.getElementById("modal-title-sub").innerText = bnDate;
-    
-    // Check if booked
-    const exists = bookings.hasOwnProperty(dateStr);
-    document.getElementById("note-input").value = exists ? bookings[dateStr] : "";
-    
-    const btn = document.getElementById("save-btn");
-    if(exists) {
-        btn.innerText = "Remove Booking";
-        btn.className = "btn btn-del";
+
+    // Elements
+    const timeSelect = document.getElementById("time-select");
+    const noteInput = document.getElementById("note-input");
+    const btnContainer = document.getElementById("action-buttons");
+
+    // Check Status
+    const rawNote = bookings[dateStr];
+    const isBooked = !!rawNote;
+
+    if (isBooked) {
+        // --- EDIT MODE (BOOKED) ---
+        // Attempt to parse "Time - Details"
+        let timePart = "Full Day"; 
+        let detailPart = rawNote;
+        const separator = " - ";
+        const knownTimes = ["Morning", "Day", "Night", "Full Day"];
+        
+        if (rawNote.includes(separator)) {
+            const splitIndex = rawNote.indexOf(separator);
+            const potentialTime = rawNote.substring(0, splitIndex);
+            if (knownTimes.includes(potentialTime)) {
+                timePart = potentialTime;
+                detailPart = rawNote.substring(splitIndex + separator.length);
+            }
+        }
+
+        timeSelect.value = timePart;
+        noteInput.value = detailPart;
+
+        // Buttons: Close | Cancel (Red) | Update (Blue)
+        btnContainer.innerHTML = `
+            <button class="btn btn-cancel" onclick="closeModal()">Close</button>
+            <button class="btn btn-del" onclick="deleteBooking()">Cancel Booking</button>
+            <button class="btn btn-update" onclick="handleSave()">Update</button>
+        `;
+
     } else {
-        btn.innerText = "Confirm Booking";
-        btn.className = "btn btn-save";
+        // --- NEW MODE (UNBOOKED) ---
+        timeSelect.value = "Morning";
+        noteInput.value = "";
+
+        // Buttons: Close | Save (Gold)
+        btnContainer.innerHTML = `
+            <button class="btn btn-cancel" onclick="closeModal()">Close</button>
+            <button class="btn btn-save" onclick="handleSave()">Save Booking</button>
+        `;
     }
-    
+
     document.getElementById("modal-overlay").style.display = "flex";
 }
 
@@ -547,38 +631,56 @@ function closeModal() {
     document.getElementById("modal-overlay").style.display = "none";
 }
 
-// Save Logic
-async function saveBooking() {
-    const note = document.getElementById("note-input").value;
-    const exists = bookings.hasOwnProperty(selectedDate);
-    const oldNote = bookings[selectedDate];
-    
-    // Optimistic Update
-    if(exists) {
-        delete bookings[selectedDate];
-    } else {
-        bookings[selectedDate] = note;
+// Unified Save/Update Logic
+async function handleSave() {
+    const time = document.getElementById("time-select").value;
+    const details = document.getElementById("note-input").value.trim();
+
+    if(!details) {
+        alert("Please enter booking details.");
+        return;
     }
-    
+
+    // Combine data
+    const finalNote = `${time} - ${details}`;
+
+    // Optimistic UI Update
+    bookings[selectedDate] = finalNote;
     closeModal();
     renderCalendar();
-    
-    // Send to Server
+
+    // API Call
+    sendData(selectedDate, finalNote);
+}
+
+// Delete Logic
+async function deleteBooking() {
+    if(!confirm("Are you sure you want to cancel this booking?")) return;
+
+    // Optimistic UI Delete
+    delete bookings[selectedDate];
+    closeModal();
+    renderCalendar();
+
+    // API Call (Send empty note)
+    sendData(selectedDate, "");
+}
+
+// API Helper
+async function sendData(date, note) {
     const formData = new URLSearchParams();
-    formData.append("date", selectedDate);
+    formData.append("date", date);
     formData.append("note", note);
-    
+
     try {
         await fetch(API_URL, { method: "POST", mode: "no-cors", body: formData });
     } catch(e) {
-        alert("Network Error: Could not save.");
-        if(exists) bookings[selectedDate] = oldNote;
-        else delete bookings[selectedDate];
-        renderCalendar();
+        console.error("Network Error", e);
+        alert("Warning: Saved locally, but network error occurred.");
     }
 }
 
-// Close on outside click
+// Close modal on background click
 document.getElementById("modal-overlay").addEventListener("click", e => {
     if(e.target.id === "modal-overlay") closeModal();
 });
