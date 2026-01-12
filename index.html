@@ -13,60 +13,91 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
     <style>
-        body {
+        /* RESET & BASE */
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body, html {
             margin: 0;
             padding: 0;
-            background: white;
+            width: 100%;
+            height: 100%;
+            overflow: hidden; /* Strict no-scroll */
             font-family: 'Cinzel', serif;
+        }
+
+        /* ANIMATED BACKGROUND */
+        body {
             display: flex;
             justify-content: center;
             align-items: center;
-            /* Fix height to viewport to prevent scrolling */
-            height: 100vh;
-            overflow: hidden; 
+            
+            /* Background logic */
+            background-image: url('./assets/bg.png');
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: 115% 115%; /* Slightly larger for movement room */
+            
+            /* Subtle breathing animation */
+            animation: subtleDrift 45s ease-in-out infinite;
         }
 
-        /* MAIN FRAME */
+        @keyframes subtleDrift {
+            0%   { background-position: 50% 50%; transform: scale(1); }
+            33%  { background-position: 53% 47%; transform: scale(1.02); }
+            66%  { background-position: 47% 53%; transform: scale(1.01); }
+            100% { background-position: 50% 50%; transform: scale(1); }
+        }
+
+        /* MAIN FRAME CONTAINER */
         .frame {
-            width: 90%;
+            position: relative;
+            z-index: 10;
+            width: 92%;
             max-width: 400px;
-            /* This ensures the frame fits within the height of the screen */
-            max-height: 95vh; 
+            height: 94vh; /* Fits within any window */
+            max-height: 800px; /* Prevents stretching on very tall screens */
             
-            background:
+            /* Layered Backgrounds */
+            background: 
                 url('./assets/frame.png') center/100% 100% no-repeat,
                 url('./assets/Page-bg.jpg') center/cover no-repeat;
 
-            padding: 40px 25px;
+            padding: 60px 30px;
             text-align: center;
-            box-sizing: border-box;
 
-            /* Flex layout inside the frame to distribute space */
+            /* Flex layout to distribute buttons evenly without scrolling */
             display: flex;
             flex-direction: column;
-            justify-content: space-around; 
+            justify-content: space-around;
+            align-items: center;
+            
+            box-shadow: 0 15px 35px rgba(0,0,0,0.4);
         }
 
-        h1 {
-            font-family: 'Cinzel', serif;
+        /* HEADER SECTION */
+        .header-box h1 {
             font-weight: 900;
-            font-size: clamp(24px, 8vw, 34px); /* Scales based on screen size */
+            font-size: clamp(26px, 8vw, 36px);
             color: #3b2c11;
             letter-spacing: 2px;
-            border-radius: 12px;
-            padding: 5px 10px;
-            background: rgba(255, 255, 255, 0.55);
-            -webkit-text-stroke: 1px #d4af37;
-            text-shadow: 0 2px 8px rgba(212, 175, 55, .45);
-            display: inline-block;
-            margin: 0 auto;
+            margin: 0;
+            padding: 8px 15px;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 10px;
+            -webkit-text-stroke: 0.5px #d4af37;
+            text-shadow: 0 2px 8px rgba(212, 175, 55, 0.4);
+            line-height: 1.1;
         }
 
         .subtitle {
             font-size: 11px;
-            margin: 10px 0;
+            margin-top: 12px;
             color: #5a4725;
             letter-spacing: 1px;
+            font-weight: 700;
             text-transform: uppercase;
         }
 
@@ -74,14 +105,15 @@
         .button-group {
             display: flex;
             flex-direction: column;
-            gap: 10px; /* Reduced gap to fit all buttons */
+            gap: 12px;
             width: 100%;
+            padding: 10px 0;
         }
 
-        /* BUTTON */
+        /* INDIVIDUAL BUTTON */
         .btn {
             background: url('./assets/button.png') center/100% 100% no-repeat;
-            padding: 12px;
+            padding: 15px;
             font-size: 15px;
             font-weight: 700;
             color: #3b2c11;
@@ -89,26 +121,37 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
+            gap: 12px;
+            transition: transform 0.2s ease;
+        }
+
+        .btn:active {
+            transform: scale(0.96); /* Visual touch feedback */
         }
 
         .btn i {
             font-size: 18px;
             color: #3b2c11;
+            width: 20px;
+            text-align: center;
         }
 
+        /* FOOTER */
         .footer {
-            margin-top: 15px;
             font-size: 10px;
-            letter-spacing: 2px;
+            letter-spacing: 3px;
             color: #3b2c11;
+            font-weight: bold;
+            opacity: 0.9;
         }
 
-        /* Small mobile optimization */
-        @media (max-height: 650px) {
-            .btn { padding: 8px; font-size: 13px; }
-            .subtitle { margin-bottom: 10px; }
-            h1 { font-size: 24px; }
+        /* ADAPTIVE FIX FOR SHORT SCREENS */
+        @media (max-height: 660px) {
+            .frame { padding: 45px 25px; }
+            .button-group { gap: 8px; }
+            .btn { padding: 12px; font-size: 13px; }
+            .header-box h1 { font-size: 24px; }
+            .subtitle { font-size: 9px; margin-top: 5px; }
         }
     </style>
 </head>
@@ -116,12 +159,14 @@
 <body>
 
 <div class="frame">
-    <div>
+    
+    <div class="header-box">
         <h1>SAMPARK<br>LODGE</h1>
         <div class="subtitle">Comfortable Stay • Easy Access • Extra Parking</div>
     </div>
 
     <div class="button-group">
+
         <a href="https://www.google.com/maps/dir/?api=1&destination=Sampark+Lodge+Chinsurah+Hooghly" class="btn" target="_blank">
             <i class="fa-solid fa-location-dot"></i>
             Get Directions
@@ -139,7 +184,7 @@
 
         <a href="https://www.facebook.com/people/Sampark-Lodge/61585573116174/" target="_blank" class="btn">
             <i class="fa-brands fa-facebook"></i>
-            Follow on Facebook
+            Facebook Page
         </a>
 
         <a href="review.html#wifi" class="btn">
@@ -151,9 +196,11 @@
             <i class="fa-solid fa-indian-rupee-sign"></i>
             Pay Now
         </a>
+
     </div>
 
     <div class="footer">THANK YOU FOR STAYING WITH US</div>
+
 </div>
 
 </body>
