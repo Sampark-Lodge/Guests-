@@ -1,1 +1,213 @@
-1
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <title>SAMPARK LODGE</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <style>
+        /* RESET & BASE */
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden; 
+            font-family: 'Cinzel', serif;
+            background-color: #000000; /* Pitch Black Base */
+        }
+
+        /* SOPHISTICATED DARK GOLDEN WAVE BACKGROUND */
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            
+            /* Dark Gradients: Golden highlights and soft white mists on black */
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(212, 175, 55, 0.18) 0px, transparent 50%),
+                radial-gradient(at 50% 10%, rgba(255, 255, 255, 0.08) 0px, transparent 40%),
+                radial-gradient(at 100% 0%, rgba(212, 175, 55, 0.18) 0px, transparent 50%),
+                radial-gradient(at 50% 50%, rgba(212, 175, 55, 0.1) 0px, transparent 50%),
+                radial-gradient(at 0% 100%, rgba(212, 175, 55, 0.18) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(255, 255, 255, 0.08) 0px, transparent 50%);
+            
+            background-size: 200% 200%;
+            animation: waveFlow 15s ease-in-out infinite alternate;
+        }
+
+        @keyframes waveFlow {
+            0% { background-position: 0% 0%; }
+            100% { background-position: 100% 100%; }
+        }
+
+        /* MAIN FRAME CONTAINER */
+        .frame {
+            position: relative;
+            z-index: 10;
+            width: 92%;
+            max-width: 400px;
+            height: 94vh;
+            max-height: 800px;
+            
+            background: 
+                url('./assets/frame.png') center/100% 100% no-repeat,
+                linear-gradient(rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.75)), /* Darkened internal bg */
+                url('./assets/Page-bg.jpg') center/cover no-repeat;
+
+            padding: 60px 30px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            align-items: center;
+            
+            /* Glow effect to separate from pitch black */
+            box-shadow: 0 0 40px rgba(212, 175, 55, 0.15);
+            border-radius: 15px;
+        }
+
+        /* HEADER SECTION */
+        .header-box h1 {
+            font-weight: 900;
+            font-size: clamp(26px, 8vw, 36px);
+            color: #f3e5ab; /* Lighter gold for readability on black */
+            letter-spacing: 2px;
+            margin: 0;
+            padding: 8px 15px;
+            background: rgba(0, 0, 0, 0.6);
+            border-radius: 10px;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            -webkit-text-stroke: 0.3px #d4af37;
+            text-shadow: 0 0 15px rgba(212, 175, 55, 0.5);
+            line-height: 1.1;
+        }
+
+        .subtitle {
+            font-size: 11px;
+            margin-top: 12px;
+            color: #d4af37; /* Gold text */
+            letter-spacing: 1px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        /* BUTTON GROUP */
+        .button-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            width: 100%;
+            padding: 10px 0;
+        }
+
+        /* INDIVIDUAL BUTTON */
+        .btn {
+            background: url('./assets/button.png') center/100% 100% no-repeat;
+            padding: 15px;
+            font-size: 15px;
+            font-weight: 700;
+            color: #3b2c11;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            transition: all 0.3s ease;
+            /* Buttons stay bright to remain the focal point */
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.5));
+        }
+
+        .btn:active {
+            transform: scale(0.96);
+            filter: brightness(1.2) contrast(1.1);
+        }
+
+        .btn i {
+            font-size: 18px;
+            color: #3b2c11;
+            width: 20px;
+            text-align: center;
+        }
+
+        /* FOOTER */
+        .footer {
+            font-size: 10px;
+            letter-spacing: 3px;
+            color: #d4af37; /* Gold footer */
+            font-weight: bold;
+            text-shadow: 0 0 5px rgba(0,0,0,1);
+        }
+
+        /* ADAPTIVE FIX FOR SHORT SCREENS */
+        @media (max-height: 660px) {
+            .frame { padding: 45px 25px; }
+            .button-group { gap: 8px; }
+            .btn { padding: 12px; font-size: 13px; }
+            .header-box h1 { font-size: 24px; }
+            .subtitle { font-size: 9px; margin-top: 5px; }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="frame">
+    
+    <div class="header-box">
+        <h1>SAMPARK<br>LODGE</h1>
+        <div class="subtitle">Comfortable Stay • Easy Access • Extra Parking</div>
+    </div>
+
+    <div class="button-group">
+
+        <a href="https://www.google.com/maps/dir/?api=1&destination=Sampark+Lodge+Chinsurah+Hooghly" class="btn" target="_blank">
+            <i class="fa-solid fa-location-dot"></i>
+            Get Directions
+        </a>
+
+        <a href="https://g.page/r/CXIP9_KZOQYBEBI/review" target="_blank" class="btn">
+            <i class="fa-solid fa-star"></i>
+            আপনার মতামত দিন
+        </a>
+
+        <a href="tel:9830779721" class="btn">
+            <i class="fa-solid fa-phone"></i>
+            Call 9830779721
+        </a>
+
+        <a href="https://www.facebook.com/people/Sampark-Lodge/61585573116174/" target="_blank" class="btn">
+            <i class="fa-brands fa-facebook"></i>
+            Facebook Page
+        </a>
+
+        <a href="review.html#wifi" class="btn">
+            <i class="fa-solid fa-wifi"></i>
+            Connect to Wi-Fi
+        </a>
+
+        <a href="upi://pay?pa=7003642977@ybl&pn=Sampark%20Lodge&tn=Sampark%20Lodge%20Event%20Payment&cu=INR" class="btn">
+            <i class="fa-solid fa-indian-rupee-sign"></i>
+            Pay Now
+        </a>
+
+    </div>
+
+    <div class="footer">THANK YOU FOR STAYING WITH US</div>
+
+</div>
+
+</body>
+</html>
